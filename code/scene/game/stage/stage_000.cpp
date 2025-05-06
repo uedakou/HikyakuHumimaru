@@ -1,0 +1,214 @@
+//===========================================
+// 
+// ステージ000[stage_tutorial.cpp]
+// Auther:UedaKou
+// 
+//===========================================
+#include "stage_000.h"		// チュートリアル
+
+#include "../../../object/player.h"	// プレイヤー
+#include "../../../object/base/object_2D.h"	// ポップアップ用2D
+#include "../../../object/base/object_3D.h"	// ポップアップ用3D
+#include "../../../object/base/object_fade.h"	// フェード
+#include "../../../object/base/object_billboard.h"	// ビルボード
+#include "../game_data.h"	// ゲームデータ
+#include "../../../object/base/text.h"	// テキスト
+
+namespace Scene {
+	namespace Game {
+		class CScen_Game_StageSelect;
+
+		const bool CStage_000::s_bCameraFollowPlayer = true;
+		const float CStage_000::s_fCameraRot = 2.6f;
+		const float CStage_000::s_fGool = 10000.0f;	// ゴール距離
+
+		// チュートリアル
+		const float CStage_000::s_fTutorial_000 = 1000.0f;	// チュートリアルイベント
+		const float CStage_000::s_fTutorial_001 = 2000.0f;		// チュートリアルイベント
+		const float CStage_000::s_fTutorial_002 = 3000.0f;		// チュートリアルイベント
+		const bool CStage_000::s_bTutorial_000 = false;	// チュートリアルイベント
+		const bool CStage_000::s_bTutorial_001 = false;		// チュートリアルイベント
+		const bool CStage_000::s_bTutorial_002 = false;		// チュートリアルイベント
+		//============================================
+		// コンスト
+		//============================================
+		CStage_000::CStage_000(CBase* scene, CGameData* gameData) :
+			CBase(scene, gameData)
+		{
+			CObject::ReleaseScene();	// シーンリリース
+
+			// メンバ変数設定
+			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
+			m_fCameraRot = s_fCameraRot;		// カメラの角度
+			m_fTutorialRange = 0.0f;	// チュートリアルイベント発生の範囲初期化
+
+			m_bTutorial_000 = s_bTutorial_000;	// チュートリアルイベントフラグ
+			m_bTutorial_001 = s_bTutorial_001;	// チュートリアルイベントフラグ
+			m_bTutorial_002 = s_bTutorial_002;	// チュートリアルイベントフラグ
+
+			// プレイヤー設定
+			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
+			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
+			pPlayer->SetNormalDraw(true);	// 通常時描画設定
+			pPlayer->SetPoseDraw(true);		// ポーズ時描画設定
+			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 位置を初期位置に戻す
+			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
+			pPlayer->SetMotionMove(true);	// モーションの動きを設定
+
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
+			pPlActiv->SetInUP(false);		// 上入力設定
+			pPlActiv->SetInDown(false);		// 下入力設定
+			pPlActiv->SetInLeft(false);		// 左入力設定
+			pPlActiv->SetInRight(false);	// 右入力設定
+
+			float fPLSpeed = pPlayer->GetSpeed();
+			m_fTutorialRange = fPLSpeed + fPLSpeed * 0.9f;
+
+			//pPlayer->SetMove(false);
+
+			// ワールド生成
+			CObject3D* pField = nullptr;
+			pField = CObject3D::creat(
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
+			pField->SetBlock(3, 10);
+			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+
+			// カメラ向き
+			CManager* pManager = CManager::GetInstance();
+			CCamera* pCamera = pManager->GetCamera();
+			pCamera->SetRotX(1.3f);
+
+
+
+			//CFade::creat(CFade::TYPE::WHITE_IN, 30);
+		}
+		//============================================
+		// デストラクタ
+		//============================================
+		CStage_000::~CStage_000()
+		{
+
+		}
+		//============================================
+		// 更新
+		//============================================
+		nsPrev::CBase* CStage_000::Update()
+		{
+			CManager* pManager = CManager::GetInstance();	// マネージャー取得
+			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
+			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
+			CPlayer* pPlayer = m_gameData->GetPlayer();
+			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
+
+			// カメラをプレイヤーに追従させるなら
+			if (m_bCameraFollowPlayer == true)
+			{
+				// プレイヤーが有るなら
+				if (pPlayer != nullptr)
+				{
+					// カメラをプレイヤーに追従させる
+					pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
+				}
+			}
+
+			// チュートリアルイベント発動
+			if (playerPos.z > s_fGool &&
+				playerPos.z < s_fGool + 3.0f)
+			{
+				return makeScene<CScen_Game_StageSelect>(m_gameData);
+			}
+			else if (playerPos.z > s_fTutorial_000 &&
+				playerPos.z < s_fTutorial_000 + m_fTutorialRange)
+			{
+				if (m_bTutorial_000 == false)
+				{
+					pPlayer->SetMove(false);	// 動きを止める
+					pPlayer->SetMotionMove(false);	// モーションの動きを設定
+					CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
+					pPlActiv->SetInLeft(true);	// 左入力を受け付けるようにする
+					pPlActiv->SetInRight(true);	// 右入力を受け付けるようにする
+					m_bTutorial_000 = true;		// フラグを立てる
+				}
+			}
+			else if (playerPos.z > s_fTutorial_001 &&
+				playerPos.z < s_fTutorial_001 + m_fTutorialRange)
+			{
+				if (m_bTutorial_001 == false)
+				{
+					m_bTutorial_001 = true;
+				}
+			}
+			else if (playerPos.z > s_fTutorial_002 &&
+				playerPos.z < s_fTutorial_002 + m_fTutorialRange)
+			{
+				if (m_bTutorial_002 == false)
+				{
+
+					m_bTutorial_002 = true;
+				}
+			}
+
+			// チュートリアルイベント
+			if (m_bTutorial_000)
+			{
+				// 左に入力したら
+				if (pKey->GetTrigger(DIK_A) ||
+					pKey->GetTrigger(DIK_LEFT) ||
+					pKey->GetTrigger(DIK_D) ||
+					pKey->GetTrigger(DIK_RIGHT))
+				{
+					m_bTutorial_000 = false;	// フラグを降ろす
+					pPlayer->SetMove(true);		// 動かす
+					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+				}
+			}
+			else if (m_bTutorial_001)
+			{
+				// 左に入力したら
+				if (pKey->GetTrigger(DIK_W) ||
+					pKey->GetTrigger(DIK_UP))
+				{
+					m_bTutorial_001 = false;
+
+				}
+			}
+			else if (m_bTutorial_002)
+			{
+				// 右に入力したら
+				if (pKey->GetTrigger(DIK_S) ||
+					pKey->GetTrigger(DIK_DOWN))
+				{
+					m_bTutorial_002 = false;
+
+				}
+			}
+
+			// デバッグ時ステージ移行
+			if (pKey->GetTrigger(DIK_L))
+			{
+				return makeScene<CScen_Game_StageSelect>(m_gameData);
+			}
+			return this;
+		}
+		void CStage_000::Draw() const
+		{
+		}
+		//============================================
+		// デストラクタ
+		//============================================
+		bool CStage_000::GetPose()
+		{
+			return false;
+		}
+
+		//============================================
+		// 生成
+		//============================================
+		template<>
+		nsPrev::CBase* CBase::makeScene<CStage_000>(CGameData* gamaData) {
+			return new CStage_000(this, gamaData);
+		}
+	}
+}
