@@ -18,17 +18,21 @@ namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
 
-		const bool CStage_000::s_bCameraFollowPlayer = true;
-		const float CStage_000::s_fCameraRot = 2.6f;
-		const float CStage_000::s_fGool = 10000.0f;	// ゴール距離
+		const bool CStage_000::s_bCameraFollowPlayer = true;	// カメラがプレイヤーを追従するかどうか
+		const float CStage_000::s_fCameraRot = 2.6f;	// プレイヤーからのカメラの角度
+		const float CStage_000::s_fGool = 20000.0f;	// ゴール距離
 
 		// チュートリアル
-		const float CStage_000::s_fTutorial_000 = 1000.0f;	// チュートリアルイベント
-		const float CStage_000::s_fTutorial_001 = 2000.0f;		// チュートリアルイベント
-		const float CStage_000::s_fTutorial_002 = 3000.0f;		// チュートリアルイベント
+		const float CStage_000::s_fTutorial_000 = 2000.0f;	// チュートリアルイベント
+		const float CStage_000::s_fTutorial_001 = 4000.0f;		// チュートリアルイベント
+		const float CStage_000::s_fTutorial_002 = 6000.0f;		// チュートリアルイベント
+		const float CStage_000::s_fTutorial_003 = 6000.0f;		// チュートリアルイベント
 		const bool CStage_000::s_bTutorial_000 = false;	// チュートリアルイベント
 		const bool CStage_000::s_bTutorial_001 = false;		// チュートリアルイベント
 		const bool CStage_000::s_bTutorial_002 = false;		// チュートリアルイベント
+		const bool CStage_000::s_bTutorial_003 = false;		// チュートリアルイベント
+		const D3DXVECTOR3 CStage_000::s_TutorialPopupPos = { 1000.0f, 300.0f, 0.0f };	// チュートリアルのポップアップの位置
+		const D3DXVECTOR3 CStage_000::s_TutorialPopupSiz = { 300.0f, 200.0f, 0.0f };	// チュートリアルのポップアップの大きさ
 		//============================================
 		// コンスト
 		//============================================
@@ -39,12 +43,38 @@ namespace Scene {
 
 			// メンバ変数設定
 			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
-			m_fCameraRot = s_fCameraRot;		// カメラの角度
+			m_fCameraRot = s_fCameraRot;	// プレイヤーからのカメラの角度
 			m_fTutorialRange = 0.0f;	// チュートリアルイベント発生の範囲初期化
 
 			m_bTutorial_000 = s_bTutorial_000;	// チュートリアルイベントフラグ
 			m_bTutorial_001 = s_bTutorial_001;	// チュートリアルイベントフラグ
 			m_bTutorial_002 = s_bTutorial_002;	// チュートリアルイベントフラグ
+			m_bTutorial_003 = s_bTutorial_003;	// チュートリアルイベントフラグ
+
+			for (int nCnt = 0; nCnt < static_cast<int>(TUTORIAL::MAX); nCnt++)
+			{
+				m_pTutorealPopup[nCnt] = CObject2D::creat(D3DXVECTOR3(s_TutorialPopupPos), D3DXVECTOR3(s_TutorialPopupSiz));// 生成
+				m_pTutorealPopup[nCnt]->SetPoseDraw(false);
+				m_pTutorealPopup[nCnt]->SetNormalDraw(false);
+				switch (static_cast<TUTORIAL>(nCnt))
+				{
+				case TUTORIAL::Tutorial_000:
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					break;
+				case TUTORIAL::Tutorial_001:
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					break;
+				case TUTORIAL::Tutorial_002:
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					break;
+				case TUTORIAL::Tutorial_003:
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					break;
+				default:
+					Beep(1000, 300);
+					break;
+				}
+			}
 
 			// プレイヤー設定
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
@@ -80,8 +110,6 @@ namespace Scene {
 			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
 
-
-
 			//CFade::creat(CFade::TYPE::WHITE_IN, 30);
 		}
 		//============================================
@@ -101,6 +129,7 @@ namespace Scene {
 			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
 			CPlayer* pPlayer = m_gameData->GetPlayer();
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
 
 			// カメラをプレイヤーに追従させるなら
 			if (m_bCameraFollowPlayer == true)
@@ -126,9 +155,8 @@ namespace Scene {
 				{
 					pPlayer->SetMove(false);	// 動きを止める
 					pPlayer->SetMotionMove(false);	// モーションの動きを設定
-					CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
-					pPlActiv->SetInLeft(true);	// 左入力を受け付けるようにする
-					pPlActiv->SetInRight(true);	// 右入力を受け付けるようにする
+					pPlActiv->SetInLeft(true);		// 左入力設定
+					pPlActiv->SetInRight(true);	// 右入力設定
 					m_bTutorial_000 = true;		// フラグを立てる
 				}
 			}
@@ -137,7 +165,10 @@ namespace Scene {
 			{
 				if (m_bTutorial_001 == false)
 				{
-					m_bTutorial_001 = true;
+					pPlayer->SetMove(false);	// 動きを止める
+					pPlayer->SetMotionMove(false);	// モーションの動きを設定
+					pPlActiv->SetInUP(true);		// 上入力設定
+					m_bTutorial_001 = true;		// フラグを立てる
 				}
 			}
 			else if (playerPos.z > s_fTutorial_002 &&
@@ -145,8 +176,20 @@ namespace Scene {
 			{
 				if (m_bTutorial_002 == false)
 				{
-
+					pPlayer->SetMove(false);	// 動きを止める
+					pPlayer->SetMotionMove(false);	// モーションの動きを設定
+					pPlActiv->SetInDown(true);		// 下入力設定
 					m_bTutorial_002 = true;
+				}
+			}
+			else if (playerPos.z > s_fTutorial_003 &&
+				playerPos.z < s_fTutorial_003 + m_fTutorialRange)
+			{
+				if (m_bTutorial_003 == false)
+				{
+					pPlayer->SetMove(false);	// 動きを止める
+					pPlayer->SetMotionMove(false);	// モーションの動きを設定
+					m_bTutorial_003 = true;
 				}
 			}
 
@@ -155,13 +198,21 @@ namespace Scene {
 			{
 				// 左に入力したら
 				if (pKey->GetTrigger(DIK_A) ||
-					pKey->GetTrigger(DIK_LEFT) ||
-					pKey->GetTrigger(DIK_D) ||
+					pKey->GetTrigger(DIK_LEFT))
+				{
+					pPlayer->SetMove(true);			// 動かす
+					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					pPlActiv->InputLeft();
+					m_bTutorial_000 = false;		// フラグを降ろす
+				}
+
+				if(pKey->GetTrigger(DIK_D) ||
 					pKey->GetTrigger(DIK_RIGHT))
 				{
-					m_bTutorial_000 = false;	// フラグを降ろす
-					pPlayer->SetMove(true);		// 動かす
+					pPlayer->SetMove(true);			// 動かす
 					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					pPlActiv->InputRight();
+					m_bTutorial_000 = false;		// フラグを降ろす
 				}
 			}
 			else if (m_bTutorial_001)
@@ -170,8 +221,9 @@ namespace Scene {
 				if (pKey->GetTrigger(DIK_W) ||
 					pKey->GetTrigger(DIK_UP))
 				{
-					m_bTutorial_001 = false;
-
+					pPlayer->SetMove(true);			// 動かす
+					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					m_bTutorial_001 = false;		// フラグを降ろす
 				}
 			}
 			else if (m_bTutorial_002)
@@ -180,8 +232,19 @@ namespace Scene {
 				if (pKey->GetTrigger(DIK_S) ||
 					pKey->GetTrigger(DIK_DOWN))
 				{
-					m_bTutorial_002 = false;
-
+					pPlayer->SetMove(true);			// 動かす
+					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					m_bTutorial_002 = false;		// フラグを降ろす
+				}
+			}
+			else if (m_bTutorial_003)
+			{
+				// 何か入力したら
+				if (pKey->GetTrigger())
+				{
+					pPlayer->SetMove(true);			// 動かす
+					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					m_bTutorial_003= false;		// フラグを降ろす
 				}
 			}
 

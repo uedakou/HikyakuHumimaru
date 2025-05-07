@@ -34,20 +34,14 @@ public:
 	void Uninit()override;
 	void Update()override;
 
-	bool GetPless() {
-		for (int nCnt = 0; nCnt < NUM_KEY_MAX; nCnt++)
-		{
-			if ((m_aPless[nCnt] & 0x80) != 0)
-			{
-				return true;
-			}
-		}
-		return false;
-	}		// プレス
-	bool GetPless(int Key) { return (m_aPless[Key] & 0x80) != 0; }		// プレス
-	bool GetTrigger(int Key) { return (m_aTrigger[Key] & 0x80) != 0; }	// トリガー
-	bool GetRepeat(int Key) { return (m_aRepeat[Key] & 0x80) != 0; }	// リピート
-	bool GetRelease(int Key) { return (m_aRelease[Key] & 0x80) != 0; }	// リリース
+	bool GetPless();	// 全キープレス取得
+	bool GetTrigger();	// 全キープレス取得
+	bool GetRepeat();	// 全キープレス取得
+	bool GetRelease();	// 全キープレス取得
+	bool GetPless(int Key) { return (m_aPless[Key] & 0x80) != 0; }		// プレス取得
+	bool GetTrigger(int Key) { return (m_aTrigger[Key] & 0x80) != 0; }	// トリガー取得
+	bool GetRepeat(int Key) { return (m_aRepeat[Key] & 0x80) != 0; }	// リピート取得
+	bool GetRelease(int Key) { return (m_aRelease[Key] & 0x80) != 0; }	// リリース取得
 private:
 	BYTE m_aPless[NUM_KEY_MAX];		// プレス
 	BYTE m_aTrigger[NUM_KEY_MAX];	// トリガー

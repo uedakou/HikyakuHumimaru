@@ -147,6 +147,66 @@ void CInputKeyboard::Update()
 		m_pDevice->Acquire();
 	}
 }
+/// <summary>
+/// 全キープレス取得
+/// </summary>
+/// <returns>キーのプレス情報</returns>
+bool CInputKeyboard::GetPless()	// プレス
+{
+	for (int nCnt = 0; nCnt < NUM_KEY_MAX; nCnt++)
+	{
+		if ((m_aPless[nCnt] & 0x80) != 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+/// <summary>
+/// 全キートリガー取得
+/// </summary>
+/// <returns>キーのトリガー情報</returns>
+bool CInputKeyboard::GetTrigger()
+{
+	for (int nCnt = 0; nCnt < NUM_KEY_MAX; nCnt++)
+	{
+		if ((m_aTrigger[nCnt] & 0x80) != 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+/// <summary>
+/// 全キーリピート取得
+/// </summary>
+/// <returns>キーのリピート情報</returns>
+bool CInputKeyboard::GetRepeat()
+{
+	for (int nCnt = 0; nCnt < NUM_KEY_MAX; nCnt++)
+	{
+		if ((m_aRepeat[nCnt] & 0x80) != 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+/// <summary>
+/// 全キーリリース取得
+/// </summary>
+/// <returns>キーのリリース情報</returns>
+bool CInputKeyboard::GetRelease()
+{
+	for (int nCnt = 0; nCnt < NUM_KEY_MAX; nCnt++)
+	{
+		if ((m_aRelease[nCnt] & 0x80) != 0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 //============================================
 // コンスト(マウス)
 //============================================
