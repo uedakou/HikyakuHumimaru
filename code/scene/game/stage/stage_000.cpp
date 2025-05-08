@@ -9,6 +9,7 @@
 #include "../../../object/player.h"	// プレイヤー
 #include "../../../object/base/object_2D.h"	// ポップアップ用2D
 #include "../../../object/base/object_3D.h"	// ポップアップ用3D
+#include "../../../object/base/object_X.h"	// ポップアップ用X
 #include "../../../object/base/object_fade.h"	// フェード
 #include "../../../object/base/object_billboard.h"	// ビルボード
 #include "../game_data.h"	// ゲームデータ
@@ -157,6 +158,10 @@ namespace Scene {
 					pPlayer->SetMotionMove(false);	// モーションの動きを設定
 					pPlActiv->SetInLeft(true);		// 左入力設定
 					pPlActiv->SetInRight(true);	// 右入力設定
+
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetPoseDraw(true);		// ポップアップを表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetNormalDraw(true);	// ポップアップを表示
+
 					m_bTutorial_000 = true;		// フラグを立てる
 				}
 			}
@@ -168,6 +173,8 @@ namespace Scene {
 					pPlayer->SetMove(false);	// 動きを止める
 					pPlayer->SetMotionMove(false);	// モーションの動きを設定
 					pPlActiv->SetInUP(true);		// 上入力設定
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetPoseDraw(true);		// ポップアップを表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetNormalDraw(true);	// ポップアップを表示
 					m_bTutorial_001 = true;		// フラグを立てる
 				}
 			}
@@ -179,6 +186,8 @@ namespace Scene {
 					pPlayer->SetMove(false);	// 動きを止める
 					pPlayer->SetMotionMove(false);	// モーションの動きを設定
 					pPlActiv->SetInDown(true);		// 下入力設定
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetPoseDraw(true);		// ポップアップを表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetNormalDraw(true);	// ポップアップを表示
 					m_bTutorial_002 = true;
 				}
 			}
@@ -189,6 +198,8 @@ namespace Scene {
 				{
 					pPlayer->SetMove(false);	// 動きを止める
 					pPlayer->SetMotionMove(false);	// モーションの動きを設定
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetPoseDraw(true);		// ポップアップを表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetNormalDraw(true);	// ポップアップを表示
 					m_bTutorial_003 = true;
 				}
 			}
@@ -202,7 +213,9 @@ namespace Scene {
 				{
 					pPlayer->SetMove(true);			// 動かす
 					pPlayer->SetMotionMove(true);	// モーションの動きを設定
-					pPlActiv->InputLeft();
+					pPlActiv->InputLeft();	// 左入力
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetPoseDraw(false);		// ポップアップを非表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetNormalDraw(false);	// ポップアップを非表示
 					m_bTutorial_000 = false;		// フラグを降ろす
 				}
 
@@ -211,7 +224,9 @@ namespace Scene {
 				{
 					pPlayer->SetMove(true);			// 動かす
 					pPlayer->SetMotionMove(true);	// モーションの動きを設定
-					pPlActiv->InputRight();
+					pPlActiv->InputRight();	// 右入力
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetPoseDraw(false);		// ポップアップを非表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetNormalDraw(false);	// ポップアップを非表示
 					m_bTutorial_000 = false;		// フラグを降ろす
 				}
 			}
@@ -223,6 +238,9 @@ namespace Scene {
 				{
 					pPlayer->SetMove(true);			// 動かす
 					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					pPlActiv->InputUP();	// 上入力
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetPoseDraw(false);		// ポップアップを非表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetNormalDraw(false);	// ポップアップを非表示
 					m_bTutorial_001 = false;		// フラグを降ろす
 				}
 			}
@@ -234,6 +252,9 @@ namespace Scene {
 				{
 					pPlayer->SetMove(true);			// 動かす
 					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					pPlActiv->InputDown();	// 下入力
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetPoseDraw(false);		// ポップアップを非表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetNormalDraw(false);	// ポップアップを非表示
 					m_bTutorial_002 = false;		// フラグを降ろす
 				}
 			}
@@ -244,6 +265,8 @@ namespace Scene {
 				{
 					pPlayer->SetMove(true);			// 動かす
 					pPlayer->SetMotionMove(true);	// モーションの動きを設定
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetPoseDraw(false);		// ポップアップを非表示
+					m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetNormalDraw(false);	// ポップアップを非表示
 					m_bTutorial_003= false;		// フラグを降ろす
 				}
 			}

@@ -165,6 +165,9 @@
     <ClCompile Include="code\scene\game\stage\stage_tutorial.cpp">
       <Filter>ソース ファイル\scene\game\stage</Filter>
     </ClCompile>
+    <ClCompile Include="code\object\obstacles.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\base\calculation.h">
@@ -283,6 +286,9 @@
     </ClInclude>
     <ClInclude Include="code\scene\game\stage\stage_tutorial.h">
       <Filter>ヘッダー ファイル\scene\game\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\obstacles.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
