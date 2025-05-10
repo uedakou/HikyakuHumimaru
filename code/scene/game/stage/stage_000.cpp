@@ -64,6 +64,7 @@ namespace Scene {
 			m_bHasShownTutorial_002 = false;	// イベントを行ったかどうか
 			m_bHasShownTutorial_003 = false;	// イベントを行ったかどうか
 
+			// 障害物生成
 			CObstacles::clate(CObstacles::TYPE::TALL, D3DXVECTOR3(0.0f, 0.0f, s_fTutorial_000));
 
 			for (int nCnt = 0; nCnt < static_cast<int>(TUTORIAL::MAX); nCnt++)
@@ -98,6 +99,7 @@ namespace Scene {
 			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 位置を初期位置に戻す
 			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
 			pPlayer->SetMotionMove(true);	// モーションの動きを設定
+			pPlayer->SetMove(true);	// 動きを設定
 
 			pPlActiv->SetInUP(false);		// 上入力設定
 			pPlActiv->SetInDown(false);		// 下入力設定

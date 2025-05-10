@@ -19,8 +19,8 @@ namespace Scene {
 		{
 			CPlayer* pPlayer = CPlayer::creat();
 			pPlayer->SetReleaseScene(false);
-			pPlayer->SetNormalDraw(false);
-			pPlayer->SetPoseDraw(false);
+			//pPlayer->SetNormalDraw(false);
+			//pPlayer->SetPoseDraw(false);
 			m_gameData->SetPlayer(pPlayer);
 
 			CObject::ReleaseScene();

@@ -9,7 +9,7 @@
 #include "../game_data.h"		// ゲームデータ
 #include "../../../object/base/object_3D.h"	// ３Dオブジェクト
 #include "../../../object/base/text.h"	// ３Dオブジェクト
-
+#include "../../../object/obstacles.h"	// 障害物
 
 namespace Scene {
 	namespace Game {
@@ -25,11 +25,33 @@ namespace Scene {
 		{
 			CObject::ReleaseScene();	// シーンリリース
 
-		// プレイヤー設定
 			CPlayer* pPlayer = m_gameData->GetPlayer();
-			pPlayer->SetNormalDraw(true);
-			pPlayer->SetPoseDraw(true);
-			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
+
+			// プレイヤー設定
+			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
+			pPlayer->SetNormalDraw(true);	// 通常時描画設定
+			pPlayer->SetPoseDraw(true);		// ポーズ時描画設定
+			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 位置を初期位置に戻す
+			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
+			pPlayer->SetMotionMove(true);	// モーションの動きを設定
+
+			pPlActiv->SetInUP(false);		// 上入力設定
+			pPlActiv->SetInDown(false);		// 下入力設定
+			pPlActiv->SetInLeft(false);		// 左入力設定
+			pPlActiv->SetInRight(false);	// 右入力設定
+
+			// カメラ向き
+			CManager* pManager = CManager::GetInstance();
+			CCamera* pCamera = pManager->GetCamera();
+			pCamera->SetRotX(1.3f);
+
+			// テキスト生成
+			m_pText = CText::creat();
+
+			m_fCameraRot = s_fCameraRot;	// カメラがプレイヤーを追従するかどうか
+
+			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
 
 			// ワールド生成
 			CObject3D* pField = nullptr;
@@ -40,19 +62,11 @@ namespace Scene {
 			pField->SetBlock(3, 10);
 			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 
-			// カメラ向き
-			CManager* pManager = CManager::GetInstance();
-			CCamera* pCamera = pManager->GetCamera();
-			pCamera->SetRotX(1.3f);
+			// 障害物
+			CObstacles::clate(CObstacles::TYPE::TALL, D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
 
-			// テキスト生成
-			m_pText = CText::creat();
 
-			m_fCameraRot = s_fCameraRot;
 
-			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
-
-			//CFade::creat(CFade::TYPE::WHITE_IN, 30);
 		}
 		//============================================
 		// デストラクタ

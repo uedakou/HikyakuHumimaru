@@ -27,6 +27,8 @@ namespace Scene {
 			CBase(scene, gameData)
 		{
 			CObject::ReleaseScene();	// シーンリリース
+			CManager* pManager = CManager::GetInstance();
+			CCamera* pCamera = pManager->GetCamera();
 
 			m_nCntMakeFilde = 0;
 #if Stage
@@ -58,6 +60,17 @@ namespace Scene {
 
 			m_pUpdate = new CTutorial000(gameData);
 
+			CPlayer* pPlayer = m_gameData->GetPlayer();
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
+
+			pCamera->SetRotX(1.3f);	// カメラ向き
+
+			// プレイヤー設定
+			pPlayer->SetNormalUpdate(false);	// 通常時更新設定
+			pPlayer->SetNormalDraw(false);	// 通常時描画設定
+			pPlayer->SetPoseDraw(false);		// ポーズ時描画設定
+			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 位置を初期位置に戻す
+			pPlayer->SetMotionMove(false);	// モーションの動きを設定
 
 			CFade::creat(CFade::TYPE::WHITE_IN, 30);
 		}

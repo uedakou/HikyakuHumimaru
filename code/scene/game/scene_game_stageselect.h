@@ -29,6 +29,7 @@ namespace Scene {
 
 			virtual bool GetPose()override;
 		private:
+			bool m_bPose;
 			bool m_bNext;	// 次のシーンに移行中かどうか
 			int m_nSetlect;	// 現在選択中の次シーン
 			int m_nCntPressHold;	// 長押し時間

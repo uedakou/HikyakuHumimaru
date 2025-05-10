@@ -183,7 +183,10 @@ CParts::~CParts()
 //============================================
 void CParts::Init()
 {
-	SetNormalUpdate(false);
+	SetNormalUpdate(false);	// 通常時更新設定
+	SetPoseUpdate(false);	// 通常時更新設定
+	SetNormalDraw(false);	// 通常時描画設定
+	SetPoseDraw(false);		// ポーズ時描画設定
 	CObjectX::Init();
 }
 //============================================
@@ -800,6 +803,10 @@ bool CObjectMotion::Load(const char* aFileName)
 	file.close();
 	return true;
 }
+/// <summary>
+/// モーション設定
+/// </summary>
+/// <param name="nMotion">次モーション</param>
 void CObjectMotion::SetMotion(int nMotion)
 {
 	for (int nCnt = 0; nCnt < m_nParts; nCnt++)
@@ -816,6 +823,66 @@ void CObjectMotion::SetMotion(int nMotion)
 				pTarget->GetRotTarget(),	// 向き
 				pTarget->GetSclTarget(),
 				10);	// 大きさ
+		}
+	}
+}
+/// <summary>
+/// 通常時更新設定
+/// </summary>
+/// <param name="bUpdate">通常時更新するかどうか</param>
+void CObjectMotion::SetPartsNormalUpdate(bool bUpdate)
+{
+	for (int nCnt = 0; nCnt < m_nParts; nCnt++)
+	{
+		CParts* pParts = GetParts(nCnt);
+		if (pParts != nullptr)
+		{
+			pParts->SetNormalUpdate(bUpdate);
+		}
+	}
+}
+/// <summary>
+/// ポーズ時更新設定
+/// </summary>
+/// <param name="bUpdate">ポーズ時更新するかどうか</param>
+void CObjectMotion::SetPartsPoseUpdate(bool bUpdate)
+{
+	for (int nCnt = 0; nCnt < m_nParts; nCnt++)
+	{
+		CParts* pParts = GetParts(nCnt);
+		if (pParts != nullptr)
+		{
+			pParts->SetNormalUpdate(bUpdate);
+		}
+	}
+}
+/// <summary>
+/// 通常時描画設定
+/// </summary>
+/// <param name="bDraw">通常時描画するかどうか</param>
+void CObjectMotion::SetPartsNormalDraw(bool bDraw)
+{
+	for (int nCnt = 0; nCnt < m_nParts; nCnt++)
+	{
+		CParts* pParts = GetParts(nCnt);
+		if (pParts != nullptr)
+		{
+			pParts->SetNormalUpdate(bDraw);
+		}
+	}
+}
+/// <summary>
+/// ポーズ時描画設定
+/// </summary>
+/// <param name="bDraw">ポーズ時描画するかどうか</param>
+void CObjectMotion::SetPartsPoseDraw(bool bDraw)
+{
+	for (int nCnt = 0; nCnt < m_nParts; nCnt++)
+	{
+		CParts* pParts = GetParts(nCnt);
+		if (pParts != nullptr)
+		{
+			pParts->SetNormalUpdate(bDraw);
 		}
 	}
 }

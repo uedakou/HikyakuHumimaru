@@ -214,6 +214,10 @@ public:
 	virtual void SetReleaseScene(bool bRelease) override;	// シーンでリリースするか
 	void SetMotion(int nMotion);	// モーション設定
 	void SetMotionMove(bool bMotion) { m_bMotion = bMotion; }	// モーションを動かすかどうか設定
+	virtual void SetPartsNormalUpdate(bool bUpdate);	// 全体で更新するか設定
+	virtual void SetPartsPoseUpdate(bool bUpdate);		// ポーズ中更新するか設定
+	virtual void SetPartsNormalDraw(bool bDraw);		// 全体で描画するか設定
+	virtual void SetPartsPoseDraw(bool bDraw);			// ポーズ中描画するか設定
 
 	// 取得
 	X GetOldX() { return m_xold; }
