@@ -32,6 +32,7 @@ namespace Scene {
 			virtual bool GetPose()override;
 		private:
 			// メンバ変数設定
+			bool m_bPose;	// ポーズ状態
 			//CText* m_pText;
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
 			float m_fCameraRot;		// カメラの角度

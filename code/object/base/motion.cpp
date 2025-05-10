@@ -245,7 +245,7 @@ void CParts::Draw()
 
 	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);
 
-	SetMtx(mtxWorld);
+	SetMtxworld(mtxWorld);
 
 	// ワールドマトリクスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
