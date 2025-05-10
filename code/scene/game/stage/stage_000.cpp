@@ -22,17 +22,20 @@ namespace Scene {
 
 		const bool CStage_000::s_bCameraFollowPlayer = true;	// カメラがプレイヤーを追従するかどうか
 		const float CStage_000::s_fCameraRot = 2.6f;	// プレイヤーからのカメラの角度
+		const float CStage_000::s_fTutorialRange = 200.0f;	// プレイヤーからのカメラの角度
 		const float CStage_000::s_fGool = 20000.0f;	// ゴール距離
 
 		// チュートリアル
-		const float CStage_000::s_fTutorial_000 = 2000.0f;	// チュートリアルイベント
+		const float CStage_000::s_fTutorial_000 = 2000.0f;		// チュートリアルイベント
 		const float CStage_000::s_fTutorial_001 = 4000.0f;		// チュートリアルイベント
 		const float CStage_000::s_fTutorial_002 = 6000.0f;		// チュートリアルイベント
 		const float CStage_000::s_fTutorial_003 = 6000.0f;		// チュートリアルイベント
-		const bool CStage_000::s_bTutorial_000 = false;	// チュートリアルイベント
-		const bool CStage_000::s_bTutorial_001 = false;		// チュートリアルイベント
-		const bool CStage_000::s_bTutorial_002 = false;		// チュートリアルイベント
-		const bool CStage_000::s_bTutorial_003 = false;		// チュートリアルイベント
+
+		const bool CStage_000::s_bCanShownTutorial_000 = false;	// チュートリアルイベント
+		const bool CStage_000::s_bCanShownTutorial_001 = false;		// チュートリアルイベント
+		const bool CStage_000::s_bCanShownTutorial_002 = false;		// チュートリアルイベント
+		const bool CStage_000::s_bCanShownTutorial_003 = false;		// チュートリアルイベント
+
 		const D3DXVECTOR3 CStage_000::s_TutorialPopupPos = { 1000.0f, 300.0f, 0.0f };	// チュートリアルのポップアップの位置
 		const D3DXVECTOR3 CStage_000::s_TutorialPopupSiz = { 300.0f, 200.0f, 0.0f };	// チュートリアルのポップアップの大きさ
 		//============================================
@@ -42,17 +45,24 @@ namespace Scene {
 			CBase(scene, gameData)
 		{
 			CObject::ReleaseScene();	// シーンリリース
+			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
 			// メンバ変数設定
 			m_bPose = false;
 			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
 			m_fCameraRot = s_fCameraRot;	// プレイヤーからのカメラの角度
-			m_fTutorialRange = 0.0f;	// チュートリアルイベント発生の範囲初期化
+			m_fTutorialRange = s_fTutorialRange;	// チュートリアルイベント発生の範囲初期化
 
-			m_bTutorial_000 = s_bTutorial_000;	// チュートリアルイベントフラグ
-			m_bTutorial_001 = s_bTutorial_001;	// チュートリアルイベントフラグ
-			m_bTutorial_002 = s_bTutorial_002;	// チュートリアルイベントフラグ
-			m_bTutorial_003 = s_bTutorial_003;	// チュートリアルイベントフラグ
+			m_bCanShownTutorial_000 = s_bCanShownTutorial_000;	// チュートリアルイベントフラグ
+			m_bCanShownTutorial_001 = s_bCanShownTutorial_001;	// チュートリアルイベントフラグ
+			m_bCanShownTutorial_002 = s_bCanShownTutorial_002;	// チュートリアルイベントフラグ
+			m_bCanShownTutorial_003 = s_bCanShownTutorial_003;	// チュートリアルイベントフラグ
+
+			m_bHasShownTutorial_000 = false;	// イベントを行ったかどうか
+			m_bHasShownTutorial_001 = false;	// イベントを行ったかどうか
+			m_bHasShownTutorial_002 = false;	// イベントを行ったかどうか
+			m_bHasShownTutorial_003 = false;	// イベントを行ったかどうか
 
 			CObstacles::clate(CObstacles::TYPE::TALL, D3DXVECTOR3(0.0f, 0.0f, s_fTutorial_000));
 
@@ -82,7 +92,6 @@ namespace Scene {
 			}
 
 			// プレイヤー設定
-			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
 			pPlayer->SetNormalDraw(true);	// 通常時描画設定
 			pPlayer->SetPoseDraw(true);		// ポーズ時描画設定
@@ -90,14 +99,10 @@ namespace Scene {
 			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
 			pPlayer->SetMotionMove(true);	// モーションの動きを設定
 
-			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 			pPlActiv->SetInUP(false);		// 上入力設定
 			pPlActiv->SetInDown(false);		// 下入力設定
 			pPlActiv->SetInLeft(false);		// 左入力設定
 			pPlActiv->SetInRight(false);	// 右入力設定
-
-			float fPLSpeed = pPlayer->GetSpeed();
-			m_fTutorialRange = fPLSpeed + fPLSpeed * 0.9f;
 
 			// ワールド生成
 			CObject3D* pField = nullptr;
@@ -168,10 +173,10 @@ namespace Scene {
 				{
 					return makeScene<CScen_Game_StageSelect>(m_gameData);
 				}
-				else if (playerPos.z > s_fTutorial_000 &&
-					playerPos.z < s_fTutorial_000 + m_fTutorialRange)
+				else if (playerPos.z < s_fTutorial_000 &&
+					playerPos.z > s_fTutorial_000 - m_fTutorialRange)
 				{
-					if (m_bTutorial_000 == false)
+					if (m_bCanShownTutorial_000 == false)
 					{
 						pPlayer->SetMove(false);	// 動きを止める
 						pPlayer->SetMotionMove(false);	// モーションの動きを設定
@@ -181,112 +186,116 @@ namespace Scene {
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetPoseDraw(true);		// ポップアップを表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetNormalDraw(true);	// ポップアップを表示
 
-						m_bTutorial_000 = true;		// フラグを立てる
+						m_bCanShownTutorial_000 = true;		// フラグを立てる
 					}
 				}
-				else if (playerPos.z > s_fTutorial_001 &&
-					playerPos.z < s_fTutorial_001 + m_fTutorialRange)
+				else if (playerPos.z < s_fTutorial_001 &&
+					playerPos.z > s_fTutorial_001 - m_fTutorialRange)
 				{
-					if (m_bTutorial_001 == false)
+					if (m_bCanShownTutorial_001 == false)
 					{
 						pPlayer->SetMove(false);	// 動きを止める
 						pPlayer->SetMotionMove(false);	// モーションの動きを設定
 						pPlActiv->SetInUP(true);		// 上入力設定
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetPoseDraw(true);		// ポップアップを表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetNormalDraw(true);	// ポップアップを表示
-						m_bTutorial_001 = true;		// フラグを立てる
+						m_bCanShownTutorial_001 = true;		// フラグを立てる
 					}
 				}
-				else if (playerPos.z > s_fTutorial_002 &&
-					playerPos.z < s_fTutorial_002 + m_fTutorialRange)
+				else if (playerPos.z < s_fTutorial_002 &&
+					playerPos.z > s_fTutorial_002 - m_fTutorialRange)
 				{
-					if (m_bTutorial_002 == false)
+					if (m_bCanShownTutorial_002 == false)
 					{
 						pPlayer->SetMove(false);	// 動きを止める
 						pPlayer->SetMotionMove(false);	// モーションの動きを設定
 						pPlActiv->SetInDown(true);		// 下入力設定
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetPoseDraw(true);		// ポップアップを表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetNormalDraw(true);	// ポップアップを表示
-						m_bTutorial_002 = true;
+						m_bCanShownTutorial_002 = true;
 					}
 				}
-				else if (playerPos.z > s_fTutorial_003 &&
-					playerPos.z < s_fTutorial_003 + m_fTutorialRange)
+				else if (playerPos.z < s_fTutorial_003 &&
+					playerPos.z > s_fTutorial_003 - m_fTutorialRange)
 				{
-					if (m_bTutorial_003 == false)
+					if (m_bCanShownTutorial_003 == false)
 					{
 						pPlayer->SetMove(false);	// 動きを止める
 						pPlayer->SetMotionMove(false);	// モーションの動きを設定
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetPoseDraw(true);		// ポップアップを表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetNormalDraw(true);	// ポップアップを表示
-						m_bTutorial_003 = true;
+						m_bCanShownTutorial_003 = true;
 					}
 				}
 
 				// チュートリアルイベント
-				if (m_bTutorial_000)
+				if (m_bCanShownTutorial_000 &&
+					m_bHasShownTutorial_000 == false)
 				{
 					// 左に入力したら
 					if (pKey->GetTrigger(DIK_A) ||
 						pKey->GetTrigger(DIK_LEFT))
 					{
+						m_bHasShownTutorial_000 = true;
 						pPlayer->SetMove(true);			// 動かす
 						pPlayer->SetMotionMove(true);	// モーションの動きを設定
 						pPlActiv->InputLeft();	// 左入力
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetPoseDraw(false);		// ポップアップを非表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetNormalDraw(false);	// ポップアップを非表示
-						m_bTutorial_000 = false;		// フラグを降ろす
 					}
 
 					if (pKey->GetTrigger(DIK_D) ||
 						pKey->GetTrigger(DIK_RIGHT))
 					{
+						m_bHasShownTutorial_000 = true;
 						pPlayer->SetMove(true);			// 動かす
 						pPlayer->SetMotionMove(true);	// モーションの動きを設定
 						pPlActiv->InputRight();	// 右入力
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetPoseDraw(false);		// ポップアップを非表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetNormalDraw(false);	// ポップアップを非表示
-						m_bTutorial_000 = false;		// フラグを降ろす
 					}
 				}
-				else if (m_bTutorial_001)
+				else if (m_bCanShownTutorial_001 &&
+					m_bHasShownTutorial_001 == false)
 				{
 					// 左に入力したら
 					if (pKey->GetTrigger(DIK_W) ||
 						pKey->GetTrigger(DIK_UP))
 					{
+						m_bHasShownTutorial_001 = true;
 						pPlayer->SetMove(true);			// 動かす
 						pPlayer->SetMotionMove(true);	// モーションの動きを設定
 						pPlActiv->InputUP();	// 上入力
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetPoseDraw(false);		// ポップアップを非表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetNormalDraw(false);	// ポップアップを非表示
-						m_bTutorial_001 = false;		// フラグを降ろす
 					}
 				}
-				else if (m_bTutorial_002)
+				else if (m_bCanShownTutorial_002 &&
+					m_bHasShownTutorial_002 == false)
 				{
 					// 右に入力したら
 					if (pKey->GetTrigger(DIK_S) ||
 						pKey->GetTrigger(DIK_DOWN))
 					{
+						m_bHasShownTutorial_002 = true;
 						pPlayer->SetMove(true);			// 動かす
 						pPlayer->SetMotionMove(true);	// モーションの動きを設定
 						pPlActiv->InputDown();	// 下入力
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetPoseDraw(false);		// ポップアップを非表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetNormalDraw(false);	// ポップアップを非表示
-						m_bTutorial_002 = false;		// フラグを降ろす
 					}
 				}
-				else if (m_bTutorial_003)
+				else if (m_bCanShownTutorial_003 &&
+					m_bHasShownTutorial_003 == false)
 				{
 					// 何か入力したら
 					if (pKey->GetTrigger())
 					{
+						m_bHasShownTutorial_003 = true;
 						pPlayer->SetMove(true);			// 動かす
 						pPlayer->SetMotionMove(true);	// モーションの動きを設定
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetPoseDraw(false);		// ポップアップを非表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_003)]->SetNormalDraw(false);	// ポップアップを非表示
-						m_bTutorial_003 = false;		// フラグを降ろす
 					}
 				}
 			}

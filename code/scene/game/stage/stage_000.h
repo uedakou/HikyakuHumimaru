@@ -36,29 +36,40 @@ namespace Scene {
 			//CText* m_pText;
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
 			float m_fCameraRot;		// カメラの角度
-			float m_fTutorialRange;	// チュートリアルイベント発生の範囲(PLの移動量以上＆PLの移動量*2以下)
+			float m_fTutorialRange;	// チュートリアルイベント発生の範囲
 			// チュートリアル
-			bool m_bTutorial_000;	// イベントフラグ
-			bool m_bTutorial_001;	// イベントフラグ
-			bool m_bTutorial_002;	// イベントフラグ
-			bool m_bTutorial_003;	// イベントフラグ
+			bool m_bCanShownTutorial_000;	// イベントフラグ
+			bool m_bCanShownTutorial_001;	// イベントフラグ
+			bool m_bCanShownTutorial_002;	// イベントフラグ
+			bool m_bCanShownTutorial_003;	// イベントフラグ
+
+			bool m_bHasShownTutorial_000;	// イベントを行ったかどうか
+			bool m_bHasShownTutorial_001;	// イベントを行ったかどうか
+			bool m_bHasShownTutorial_002;	// イベントを行ったかどうか
+			bool m_bHasShownTutorial_003;	// イベントを行ったかどうか
+			
+
+
 			CObject2D* m_pTutorealPopup[static_cast<int>(TUTORIAL::MAX)];	// チュートリアルポップアップ
 
 			// メンバ変数の初期値
-			static const bool s_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかどうか
-			static const float s_fCameraRot;	// プレイヤーからのカメラの角度
+			static const bool s_bCameraFollowPlayer;	// 初期カメラがプレイヤーを追従するかどうか
+			static const float s_fCameraRot;	// 初期プレイヤーからのカメラの角度
+			static const float s_fTutorialRange;	// チュートリアルイベント発生の範囲
 			static const float s_fGool;			// ゴール距離
 			// チュートリアル
-			static const float s_fTutorial_000;	// チュートリアルのイベント発生位置
-			static const float s_fTutorial_001;	// チュートリアルのイベント発生位置
-			static const float s_fTutorial_002;	// チュートリアルのイベント発生位置
-			static const float s_fTutorial_003;	// チュートリアルのイベント発生位置
-			static const bool s_bTutorial_000;	// チュートリアルのイベントフラグ
-			static const bool s_bTutorial_001;	// チュートリアルのイベントフラグ
-			static const bool s_bTutorial_002;	// チュートリアルのイベントフラグ
-			static const bool s_bTutorial_003;	// チュートリアルのイベントフラグ
-			static const D3DXVECTOR3 s_TutorialPopupPos;	// チュートリアルのポップアップの位置
-			static const D3DXVECTOR3 s_TutorialPopupSiz;	// チュートリアルのポップアップの大きさ
+			static const float s_fTutorial_000;	// 初期チュートリアルのイベント発生位置
+			static const float s_fTutorial_001;	// 初期チュートリアルのイベント発生位置
+			static const float s_fTutorial_002;	// 初期チュートリアルのイベント発生位置
+			static const float s_fTutorial_003;	// 初期チュートリアルのイベント発生位置
+
+			static const bool s_bCanShownTutorial_000;	// 初期チュートリアルのイベントフラグ
+			static const bool s_bCanShownTutorial_001;	// 初期チュートリアルのイベントフラグ
+			static const bool s_bCanShownTutorial_002;	// 初期チュートリアルのイベントフラグ
+			static const bool s_bCanShownTutorial_003;	// 初期チュートリアルのイベントフラグ
+
+			static const D3DXVECTOR3 s_TutorialPopupPos;	// 初期チュートリアルのポップアップの位置
+			static const D3DXVECTOR3 s_TutorialPopupSiz;	// 初期チュートリアルのポップアップの大きさ
 
 		};
 	}
