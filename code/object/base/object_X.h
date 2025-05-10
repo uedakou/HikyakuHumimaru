@@ -51,6 +51,12 @@ private:
 class CObjectX :public CObject
 {
 public:
+	enum class TYPE {
+		TYPE_NULL = 0,
+		MOTION_PARTS,	// モーションパーツ
+		OBSTACLES,	// 障害物
+		MAX,
+	};
 	CObjectX();
 	CObjectX(int nPriority);
 	virtual ~CObjectX()		override;
@@ -59,18 +65,19 @@ public:
 	virtual void Update()	override;	// 更新
 	virtual void Draw()		override;	// 描画
 
-	void SetMtx(D3DXMATRIX mtx) { m_mtxWorld = mtx; }
+	void SetType(TYPE type) { m_type = type; }	// 種類設定
+	void SetMtxworld(D3DXMATRIX mtx) { m_mtxWorld = mtx; }	// ワールドマトリクス
+	void SetID(int nID) { m_nID = nID; }	// モデルID設定
 
-	void SetID(int nID);
-
-	D3DXMATRIX GetMtx() { return m_mtxWorld; }
-
-	int GetID() { return m_nID; }
+	TYPE GetType() { return m_type; }	// 種類取得
+	D3DXMATRIX GetMtx() { return m_mtxWorld; }	// ワールドマトリクス取得
+	int GetID() { return m_nID; }	// 取得
 
 	static CObjectX* creat(const char* aFileName);	// 生成
 	static CObjectX* creat(string aFileName);	// 生成
 protected:
 private:
+	TYPE m_type;	// 種類
 	D3DXMATRIX m_mtxWorld;	// ワールドマトリクス
 
 	static int m_nNum;	// Xオブジェクト数
