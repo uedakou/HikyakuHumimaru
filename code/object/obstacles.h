@@ -8,6 +8,7 @@
 #define _OBSTACLES_H_
 #include "base/object_X.h"
 
+class CPlayer;	// プレイヤー
 class CObstacles : public CObjectX
 {
 public:
@@ -18,7 +19,7 @@ public:
 		MAX
 	};	// 種類
 	CObstacles();
-	~CObstacles();
+	virtual ~CObstacles();
 	virtual void Init() override;	// 初期化
 	virtual void Uninit() override;	// 終了
 	virtual void Update() override;	// 更新
@@ -27,41 +28,39 @@ public:
 	static CObstacles* clate(TYPE type, D3DXVECTOR3 pos);	// 生成
 private:	// プライベート
 	// 基底ストラテジー
-	class UpdatStrateg
+	
+	class HitStrateg
 	{
 	public:
-		UpdatStrateg() {}
-		~UpdatStrateg() {}
-		CObstacles* update() {}	// 更新
+		HitStrateg() {}
+		virtual ~HitStrateg() {}
+		virtual void update(CPlayer* pPlayer) {}	// 更新
 	};
 	// 背の高い障害物ストラテジー
-	class TALLUpdatStrateg : public UpdatStrateg
+	class TallHitStrateg : public HitStrateg
 	{
 	public:
-		TALLUpdatStrateg();
-		~TALLUpdatStrateg();
-		CObstacles* update();	// 更新
+		TallHitStrateg();
+		virtual ~TallHitStrateg();
+		void update(CPlayer* pPlayer) override;	// 更新
 	};
 	// 高い位置の障害物ストラテジー
-	class HIGHUpdatStrateg : public UpdatStrateg
+	class HighHitStrateg : public HitStrateg
 	{
 	public:
-		HIGHUpdatStrateg();
-		~HIGHUpdatStrateg();
-		CObstacles* update();	// 更新
+		HighHitStrateg();
+		virtual ~HighHitStrateg();
+		void update(CPlayer* pPlayer) override;	// 更新
 	};
 	// 低いの位置障害物ストラテジー
-	class LOWUpdatStrateg : public UpdatStrateg
+	class LowHitStrateg : public HitStrateg
 	{
 	public:
-		LOWUpdatStrateg();
-		~LOWUpdatStrateg();
-		CObstacles* update();	// 更新
+		LowHitStrateg();
+		virtual ~LowHitStrateg();
+		void update(CPlayer* pPlayer) override;	// 更新
 	};
-
-
-
-
+	HitStrateg* m_pHitStrateg;	// ヒットストラテジ
 
 	TYPE m_type;	// 種類
 

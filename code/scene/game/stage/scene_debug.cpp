@@ -127,6 +127,13 @@ namespace Scene {
 				}
 			}
 
+			// プレイヤーの体力が０以下なら
+			if (pPlayer->GetLife() <= 0)
+			{
+				return makeScene<CScen_Game_StageSelect>(m_gameData);
+			}
+
+			// デバッグシーンチェンジ
 			if (pKey->GetTrigger(DIK_L))
 			{
 				return makeScene<CScen_Game_StageSelect>(m_gameData);
