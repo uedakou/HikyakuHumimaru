@@ -7,6 +7,11 @@
 #include"obstacles.h"	// オブジェクト障害物
 #include "player.h"		// プレイヤー
 #include "base/character.h"	// キャラクター
+
+
+
+
+const D3DXVECTOR3 CObstacles::s_Collision = { 100.0f, 100.0f, 200.0f };
 /// <summary>
 /// コンストラクタ
 /// </summary>
@@ -51,7 +56,6 @@ void CObstacles::Update()
 	CObjectX::Update();
 	if (m_pHitStrateg != nullptr)
 	{
-
 		CObject* pObject[MAX_PRIORITY];
 		CObject* pNext = nullptr;
 		CObject::GetAllObject(pObject);
@@ -60,12 +64,19 @@ void CObstacles::Update()
 			while (pObject[nCnt] != nullptr)
 			{
 				pNext = pObject[nCnt]->GetNext();
-				CPlayer* player = static_cast<CPlayer*>(pObject[nCnt]);
+				CPlayer* player = dynamic_cast<CPlayer*>(pObject[nCnt]);
 				if (player)
 				{
-					bool a;
-					a = player->IsMove();
-					a = false;
+					D3DXVECTOR3 PLpos = player->GetPos();
+					D3DXVECTOR3 PLcol = player->GetCollisionSiz();
+					D3DXVECTOR3 pos = GetPos();
+
+					if (PLpos.z + PLcol.z * 0.5f > pos.z - s_Collision.z * 0.5f &&
+						PLpos.z - PLcol.z * 0.5f < pos.z + s_Collision.z * 0.5f)
+					{
+						m_pHitStrateg->update(player);
+					}
+
 				}
 				pObject[nCnt] = pNext;
 			}
@@ -137,7 +148,7 @@ CObstacles::TallHitStrateg::~TallHitStrateg()
 /// </summary>
 void CObstacles::TallHitStrateg::update(CPlayer* pPlayer)
 {
-
+	pPlayer->Hit(1);
 }
 /// <summary>
 /// 高い位置の障害物コンストラクタ

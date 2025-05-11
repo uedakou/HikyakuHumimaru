@@ -29,12 +29,14 @@ namespace Scene {
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
 			// プレイヤー設定
+			// プレイヤー設定
 			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
 			pPlayer->SetNormalDraw(true);	// 通常時描画設定
 			pPlayer->SetPoseDraw(true);		// ポーズ時描画設定
 			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 位置を初期位置に戻す
 			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
 			pPlayer->SetMotionMove(true);	// モーションの動きを設定
+			pPlayer->SetMove(true);	// 動きを設定
 
 			pPlActiv->SetInUP(false);		// 上入力設定
 			pPlActiv->SetInDown(false);		// 下入力設定
