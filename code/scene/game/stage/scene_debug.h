@@ -16,7 +16,7 @@ namespace Scene {
 		{
 		public:
 			CSceneDebug(CBase* scene, CGameData* gameData);
-			~CSceneDebug()		override;
+			virtual ~CSceneDebug()		override;
 			virtual nsPrev::CBase* Update()	override;	// XV
 			virtual void Draw() const override;	// •`‰æ
 			virtual bool GetPose()override;

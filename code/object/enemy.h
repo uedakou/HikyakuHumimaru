@@ -19,7 +19,7 @@ public:
 
 
 	CEnemy();
-	virtual~CEnemy()		override;
+	virtual ~CEnemy()		override;
 	virtual void Init()		override;	// ‰Šú‰»
 	virtual void Uninit()	override;	// I—¹
 	virtual void Update()	override;	// XV

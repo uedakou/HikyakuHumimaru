@@ -18,7 +18,7 @@ public:
 	}TYPE;
 	CObjectBillbord();
 	CObjectBillbord(const int nPriority);
-	~CObjectBillbord();
+	virtual ~CObjectBillbord();
 	virtual void Init()		override;
 	virtual void Uninit()	override;
 	virtual void Update()	override;

@@ -18,7 +18,7 @@ namespace Scene {
 		CSceneManager();
 		CSceneManager(const CSceneManager&) = delete;
 		CSceneManager& operator = (const CSceneManager &) = delete;
-		~CSceneManager();
+		virtual ~CSceneManager();
 
 		CBase* Update() override;
 		void Draw() const override;

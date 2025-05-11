@@ -18,7 +18,7 @@ public:
 	}Type;	// フォントタイプ
 	CText();
 	CText(int nPriorithi);
-	~CText()	override;
+	virtual ~CText()		override;
 	virtual void Init()		override;
 	virtual void Uninit()	override;
 	virtual void Update()	override;

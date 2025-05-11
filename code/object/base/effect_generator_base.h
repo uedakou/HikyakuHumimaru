@@ -11,7 +11,7 @@ class CEffectGeneratorBase : public CObject
 {
 public:
 	CEffectGeneratorBase();
-	~CEffectGeneratorBase();
+	virtual ~CEffectGeneratorBase();
 	void Init()		override;
 	void Uninit()	override;
 	void Update()	override;

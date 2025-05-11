@@ -14,7 +14,7 @@ namespace Scene {
 		{
 		public:
 			CGameData();
-			~CGameData();
+			virtual ~CGameData();
 			// İ’è
 			void SetPlayer(CPlayer* player) { m_player = player; }	// ƒvƒŒƒCƒ„[İ’è
 			// æ“¾

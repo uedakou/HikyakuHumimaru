@@ -21,7 +21,7 @@ public:
 	};
 	CFade();
 	CFade(int nPriority);	// 優先度付き
-	~CFade()		override;
+	virtual ~CFade()override;
 	void Init()		override;	// 初期化
 	void Uninit()	override;	// 終了
 	void Update()	override;	// 更新

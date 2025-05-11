@@ -12,7 +12,7 @@ class CEffectGeneratorPaeticle : public CEffectGeneratorBase
 {
 public:
 	CEffectGeneratorPaeticle();
-	~CEffectGeneratorPaeticle();
+	virtual ~CEffectGeneratorPaeticle();
 	void Init()		override;
 	void Uninit()	override;
 	void Update()	override;

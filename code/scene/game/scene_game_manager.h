@@ -13,7 +13,7 @@ namespace Scene {
 		{
 		public:
 			CGameManager(nsPrev::CBase* pScene);
-			~CGameManager();
+			virtual ~CGameManager();
 		private:
 			nsPrev::CBase* m_pScene;		// シーン
 			nsPrev::CBase* m_pStageController;	// ステージ生成

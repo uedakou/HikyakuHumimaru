@@ -12,7 +12,7 @@ class CEffectParticle : public CObjectBillbord
 {
 public:
 	CEffectParticle();
-	~CEffectParticle();
+	virtual ~CEffectParticle();
 
 	void Update()override;
 	void Draw()override;

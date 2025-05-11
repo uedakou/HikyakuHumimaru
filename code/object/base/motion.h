@@ -26,7 +26,7 @@ class CPartsData
 {
 public:
 	CPartsData();
-	~CPartsData();
+	virtual ~CPartsData();
 
 	void SetPosTarget(D3DXVECTOR3 pos) { m_x.pos = pos; }
 	void SetRotTarget(D3DXVECTOR3 rot) { m_x.rot = rot; }
@@ -45,7 +45,7 @@ class CKye
 {
 public:
 	CKye();
-	~CKye();
+	virtual ~CKye();
 	void SetFrame(int nFrame) { m_nFrame = nFrame; }
 
 	CPartsData* GetPartsData(int nParts) { return m_pParts[nParts]; }
@@ -81,7 +81,7 @@ class CNowMotion
 {
 public:
 	CNowMotion();
-	~CNowMotion();
+	virtual ~CNowMotion();
 	// 設定
 	void SetMotion(int nMosyon) { m_nCntMotion = nMosyon; }		// モーションカウント
 	void SetKye(int nKye) { m_nCntKye = nKye; }			// キーカウント
@@ -109,7 +109,7 @@ class CParts : public CObjectX
 public:
 	CParts();
 	CParts(int nPriority);
-	~CParts()					override;
+	virtual ~CParts()					override;
 	virtual void Init()		override; // 初期化
 	virtual void Uninit()	override; // 終了
 	virtual void Update()	override; // 更新

@@ -15,7 +15,7 @@ public:
 	CSelect(int nP):
 		CObject2D(nP)
 	{};
-	~CSelect() {};
+	virtual ~CSelect() {};
 	virtual void Init() = 0;
 	virtual void Uninit() = 0;
 	virtual void Update() = 0;

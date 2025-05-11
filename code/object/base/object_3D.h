@@ -21,7 +21,7 @@ public:
 	};
 	CObject3D();
 	CObject3D(const int nPriority);
-	~CObject3D()			override;
+	virtual ~CObject3D()	override;
 	virtual void Init()		override;
 	virtual void Uninit()	override;
 	virtual void Update()	override;
