@@ -55,7 +55,7 @@ CPlayer::~CPlayer()
 void CPlayer::Init()
 {
 	//m_obje[0] = CObjectX::creat(pos, rot, siz, CObjectX::TYPE_X_PLAYER);
-	CObjectMotion::Load(PLAYER_MOTIONFILE_B);
+	CObjectMotion::Load(PLAYER_MOTIONFILE_A);
 	CCharacter::Init();
 	CCharacter::SetCollisionX(PLAYER_SIZE);
 	CObjectMotion::SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
