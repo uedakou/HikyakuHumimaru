@@ -87,6 +87,13 @@ void CPlayer::Update()
 	{
 		SetPosY(0.0f);
 		SetMovePosY(0.0f);
+		//地面についているときジャンプモーションなら
+		int nMotion = GetMotion();
+		if (nMotion == static_cast<int>(Motion::ACTIVITY_JANP))
+		{
+			// 走りモーションに設定
+			SetMotion(static_cast<int>(Motion::ACTIVITY_MOVE));
+		}
 	}
 
 	// 自動移動がtrueなら
@@ -176,11 +183,12 @@ int CPlayer::GetNextMotion()
 	D3DXVECTOR3 move = GetMovePos();
 	if (GetLife() <= 0)
 	{
-		return static_cast<int>(Motion::ACTIVITY_DETHILoop); ;
+		// 死亡モーション
+		//return static_cast<int>(Motion::ACTIVITY_DETHILoop); ;
 	}
 	else
 	{
-		if (move.x > 0.5f)
+		if (GetMotion() == static_cast<int>(Motion::ACTIVITY_JANP))
 		{
 			return static_cast<int>(Motion::ACTIVITY_MOVE);
 		}
@@ -208,7 +216,8 @@ void CPlayer::PlayerNomarActivity::InputUP()
 {
 	if (m_bInUP)
 	{
-
+		m_pPrimary->AddMovePosY(20.0f);
+		m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_JANP));
 	}
 }
 

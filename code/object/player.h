@@ -24,9 +24,8 @@ public:
 	enum class Motion{
 		ACTIVITY_NEUTRAL = 0,//	ニュートラル
 		ACTIVITY_MOVE,		// 動き
-		ACTIVITY_ATTACK,	// 攻撃
-		ACTIVITY_DETHI,		// 死亡
-		ACTIVITY_DETHILoop,	// 死亡ループ
+		ACTIVITY_SLIDING,	// スライディング
+		ACTIVITY_JANP,		// ジャンプ
 		ACTIVITY_MAX,
 	};
 

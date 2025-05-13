@@ -358,9 +358,7 @@ CObjectMotion::CObjectMotion()
 
 	//	現在モーション
 	m_nNextMotion = 0;
-
-
-	m_xold = {};	// 旧位置設定
+	m_nNowMotion = 0;
 
 	m_bMotion = s_bMotion;	// モーションを動かすかどうかを設定
 }
@@ -809,6 +807,7 @@ bool CObjectMotion::Load(const char* aFileName)
 /// <param name="nMotion">次モーション</param>
 void CObjectMotion::SetMotion(int nMotion)
 {
+	m_nNowMotion = nMotion;
 	for (int nCnt = 0; nCnt < m_nParts; nCnt++)
 	{
 		CParts* pParts = GetParts(nCnt);

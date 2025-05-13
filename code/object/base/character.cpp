@@ -34,7 +34,7 @@ void CCharacter::Uninit()
 }
 void CCharacter::Update()
 {
-	CObjectMotion::SetOldPos(CObjectMotion::GetPos());
+	//CObjectMotion::SetOldPos(CObjectMotion::GetPos());
 	CObjectMotion::AddPos(m_xmove.pos);
 	CObjectMotion::AddRot(m_xmove.rot);
 	MoveAttenuation();
@@ -87,6 +87,6 @@ void CCharacter::MoveAttenuation()
 	m_xmove.pos.x += (0 - m_xmove.pos.x) * BASE_RESISTANCE;
 	m_xmove.pos.z += (0 - m_xmove.pos.z) * BASE_RESISTANCE;
 
-	m_xmove.rot.y += (0 - m_xmove.rot.y) * 0.05f;
+	m_xmove.rot.y += (0 - m_xmove.rot.y) * 0.025f;
 
 }

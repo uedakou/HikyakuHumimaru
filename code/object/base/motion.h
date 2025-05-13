@@ -207,10 +207,6 @@ public:
 	virtual void Draw()		override;
 	
 	// 1f前の位置設定
-	void SetOldX(X x) { m_xold = x; }
-	void SetOldPos(D3DXVECTOR3 pos) { m_xold.pos = pos; }// 位置設定
-	void SetOldRot(D3DXVECTOR3 rot) { m_xold.rot = rot; }// 向き設定
-	void SetOldScl(D3DXVECTOR3 siz) { m_xold.scl = siz; }// 大きさ設定
 	virtual void SetReleaseScene(bool bRelease) override;	// シーンでリリースするか
 	void SetMotion(int nMotion);	// モーション設定
 	void SetMotionMove(bool bMotion) { m_bMotion = bMotion; }	// モーションを動かすかどうか設定
@@ -219,20 +215,8 @@ public:
 	virtual void SetPartsNormalDraw(bool bDraw);		// 全体で描画するか設定
 	virtual void SetPartsPoseDraw(bool bDraw);			// ポーズ中描画するか設定
 
-	// 取得
-	X GetOldX() { return m_xold; }
-	D3DXVECTOR3 GetOldPos() { return m_xold.pos; }// 運動量設定
-	D3DXVECTOR3 GetOldRot() { return m_xold.rot; }// 回転量設定
-	D3DXVECTOR3 GetOldScl() { return m_xold.scl; }// 膨張量設定
-
-	// 加算
-	void AddOldX(X x) { m_xold += x; }
-	void AddOldPos(D3DXVECTOR3 pos) { m_xold.pos += pos; }// 位置設定
-	void AddOldRot(D3DXVECTOR3 rot) { m_xold.rot += rot; }// 向き設定
-	void AddOldScl(D3DXVECTOR3 siz) { m_xold.scl += siz; }// 大きさ設定
-
 	CMotion* GetMotion(int nNum) { return m_pMotion[nNum]; }// モーションデータ取得
-
+	int GetMotion() { return m_nNowMotion; }	// 現在モーション
 	int GetNumParts() { return m_nParts; }
 	CParts* GetParts(int nNum) { return m_pParts[nNum]; }	// パーツ取得
 	static CObjectMotion* creat(const char* FileName);
@@ -253,8 +237,9 @@ private:
 	int m_nParts;				// パーツ数
 	CParts* m_pParts[MAX_PARTS];
 
-	int m_nNextMotion;
-	X m_xold;		// 1f前位置
+	int m_nNextMotion;	// 次モーション
+	int m_nNowMotion;	// 現在モーション
+
 	D3DXMATRIX m_mtxWorld;	// ワールドマトリクス
 
 	bool m_bMotion;	// モーションを動かすかどうか

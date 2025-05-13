@@ -75,6 +75,7 @@ namespace Scene {
 		//============================================
 		CSceneDebug::~CSceneDebug()
 		{
+			int a = 0;
 			//if (m_pField != nullptr)
 			//{
 			//	m_pField->DeathFlag();
