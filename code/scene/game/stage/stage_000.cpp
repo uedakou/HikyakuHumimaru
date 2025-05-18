@@ -14,8 +14,9 @@
 #include "../../../object/base/object_billboard.h"	// ビルボード
 #include "../game_data.h"	// ゲームデータ
 #include "../../../object/base/text.h"	// テキスト
-#include "../../../object/obstacles.h"	// 障害物
-
+#include "../../../object/obstacles_tall.h"	// 障害物
+#include "../../../object/obstacles_high.h"	// 障害物
+#include "../../../object/obstacles_low.h"	// 障害物
 namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
@@ -65,7 +66,7 @@ namespace Scene {
 			m_bHasShownTutorial_003 = false;	// イベントを行ったかどうか
 
 			// 障害物生成
-			CObstacles::clate(CObstacles::TYPE::TALL, D3DXVECTOR3(0.0f, 0.0f, s_fTutorial_000));
+			CObstaclesToll::clate(D3DXVECTOR3(0.0f, 0.0f, s_fTutorial_000));
 
 			for (int nCnt = 0; nCnt < static_cast<int>(TUTORIAL::MAX); nCnt++)
 			{

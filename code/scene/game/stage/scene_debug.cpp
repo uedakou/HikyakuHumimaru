@@ -9,7 +9,9 @@
 #include "../game_data.h"		// ゲームデータ
 #include "../../../object/base/object_3D.h"	// ３Dオブジェクト
 #include "../../../object/base/text.h"	// ３Dオブジェクト
-#include "../../../object/obstacles.h"	// 障害物
+#include "../../../object/obstacles_tall.h"	// 障害物
+#include "../../../object/obstacles_high.h"	// 障害物
+#include "../../../object/obstacles_low.h"	// 障害物
 
 namespace Scene {
 	namespace Game {
@@ -65,7 +67,7 @@ namespace Scene {
 			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 
 			// 障害物
-			CObstacles::clate(CObstacles::TYPE::TALL, D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
+			CObstaclesToll::clate(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
 
 
 

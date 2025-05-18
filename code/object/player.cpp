@@ -199,7 +199,7 @@ int CPlayer::GetNextMotion()
 /// <summary>
 /// 通常時ストラテジーコンストラクタ
 /// </summary>
-/// <param name="player"></param>
+/// <param name="player">親</param>
 CPlayer::PlayerNomarActivity::PlayerNomarActivity(CPlayer* player):
 	ActivityStrategy(player)
 {
@@ -211,7 +211,17 @@ CPlayer::PlayerNomarActivity::PlayerNomarActivity(CPlayer* player):
 CPlayer::PlayerNomarActivity::~PlayerNomarActivity()
 {
 }
-
+/// <summary>
+/// 更新
+/// </summary>
+/// <returns>this意外次のストラテジー</returns>
+CPlayer::PlayerNomarActivity* CPlayer::PlayerNomarActivity::Update()
+{
+	return this;
+}
+/// <summary>
+/// 通常時ジャンプ入力処理
+/// </summary>
 void CPlayer::PlayerNomarActivity::InputUP()
 {
 	if (m_bInUP)
@@ -220,15 +230,20 @@ void CPlayer::PlayerNomarActivity::InputUP()
 		m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_JANP));
 	}
 }
-
+/// <summary>
+/// 通常時スライディング処理
+/// </summary>
 void CPlayer::PlayerNomarActivity::InputDown()
 {
 	if (m_bInDown)
 	{
-
+		m_pPrimary->AddMovePosY(20.0f);
+		m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_SLIDING));
 	}
 }
-
+/// <summary>
+/// 通常時左入力処理
+/// </summary>
 void CPlayer::PlayerNomarActivity::InputLeft()
 {
 	if (m_bInLeft)
@@ -243,7 +258,9 @@ void CPlayer::PlayerNomarActivity::InputLeft()
 		}
 	}
 }
-
+/// <summary>
+/// 通常時入力右処理
+/// </summary>
 void CPlayer::PlayerNomarActivity::InputRight()
 {
 	if (m_bInRight)
@@ -257,4 +274,142 @@ void CPlayer::PlayerNomarActivity::InputRight()
 			m_pPrimary->SetPosX(m_pPrimary->m_fLane);
 		}
 	}
+}
+/// <summary>
+/// ジャンプ時コンストラクタ
+/// </summary>
+/// <param name="player">親</param>
+CPlayer::PlayerJanpActivity::PlayerJanpActivity(CPlayer* player) :
+	ActivityStrategy(player)
+{
+}
+/// <summary>
+/// ジャンプ時デストラクタ
+/// </summary>
+CPlayer::PlayerJanpActivity::~PlayerJanpActivity()
+{
+}
+/// <summary>
+/// ジャンプ時更新
+/// </summary>
+/// <returns></returns>
+CPlayer::PlayerJanpActivity* CPlayer::PlayerJanpActivity::Update()
+{
+	return this;
+}
+/// <summary>
+/// ジャンプ時ジャンプ入力
+/// </summary>
+void CPlayer::PlayerJanpActivity::InputUP()
+{
+}
+// ジャンプ時スライディング入力
+void CPlayer::PlayerJanpActivity::InputDown()
+{
+}
+/// <summary>
+/// ジャンプ時左入力
+/// </summary>
+void CPlayer::PlayerJanpActivity::InputLeft()
+{
+}
+/// <summary>
+/// ジャンプ時右入力
+/// </summary>
+void CPlayer::PlayerJanpActivity::InputRight()
+{
+}
+/// <summary>
+/// スライディング時コンストラクタ
+/// </summary>
+/// <param name="player">親</param>
+CPlayer::PlayerSlidingActivity::PlayerSlidingActivity(CPlayer* player) :
+	ActivityStrategy(player)
+
+{
+}
+/// <summary>
+/// スライディング時デストラクタ
+/// </summary>
+CPlayer::PlayerSlidingActivity::~PlayerSlidingActivity()
+{
+}
+/// <summary>
+/// スライティング時アップデート
+/// </summary>
+/// <returns></returns>
+CPlayer::PlayerSlidingActivity* CPlayer::PlayerSlidingActivity::Update()
+{
+	return this;
+}
+/// <summary>
+/// スライディング時ジャンプ入力
+/// </summary>
+void CPlayer::PlayerSlidingActivity::InputUP()
+{
+}
+/// <summary>
+/// スライディング時スライティング入力
+/// </summary>
+void CPlayer::PlayerSlidingActivity::InputDown()
+{
+}
+/// <summary>
+/// スライディング時左入力
+/// </summary>
+void CPlayer::PlayerSlidingActivity::InputLeft()
+{
+}
+/// <summary>
+/// スライディング時右入力
+/// </summary>
+void CPlayer::PlayerSlidingActivity::InputRight()
+{
+}
+/// <summary>
+/// レーンチェンジ時コンストラクタ
+/// </summary>
+/// <param name="player">親</param>
+CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player) :
+	ActivityStrategy(player)
+
+{
+}
+/// <summary>
+/// レーンチェンジ時デストラクタ
+/// </summary>
+CPlayer::PlayerLaneChangeActivity::~PlayerLaneChangeActivity()
+{
+}
+/// <summary>
+/// レーンチェンジ時更新
+/// </summary>
+/// <returns></returns>
+CPlayer::PlayerLaneChangeActivity* CPlayer::PlayerLaneChangeActivity::Update()
+{
+	return this;
+}
+/// <summary>
+/// レーンチェンジ時ジャンプ入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputUP()
+{
+}
+/// <summary>
+/// レーンチェンジ時スライティング入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputDown()
+{
+}
+/// <summary>
+/// レーンチェンジ時左入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputLeft()
+{
+}
+/// <summary>
+/// レーンチェンジ時右入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputRight()
+{
 }

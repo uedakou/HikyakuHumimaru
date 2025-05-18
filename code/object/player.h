@@ -45,6 +45,7 @@ public:
 	float GetSpeed() { return m_fSpeed; }	// 速度取得
 	bool IsMove() { return m_bMove; }		// 自動で移動するかどうかを取得
 	float GetLaneSiz() { return m_fLane; }	// 現在の1レーンの幅の取得
+	D3DXVECTOR3 GetCollision() { return m_Collision; }	// 当たり判定取得
 
 	ActivityStrategy* GetActivity() { return m_pActivityStrategy; }	// ストラテジー取得
 
@@ -53,6 +54,7 @@ public:
 	void SetSpeedNomal() { m_fSpeed = s_fSpeed; }		// 速度設定
 	void SetMove(bool bMove) { m_bMove = bMove; }		// 自動で移動するかどうかを設定
 	void SetLaneSiz(float fLane) { m_fLane = fLane; }	// 現在の1レーンの幅の設定
+	void SetCollision(D3DXVECTOR3 Collision) { m_Collision = Collision; }	// 当たり判定設定
 
 	void SetActivity(ActivityStrategy* pActivityStrategy) { m_pActivityStrategy = pActivityStrategy; }	// ストラテジー設定
 
@@ -82,6 +84,8 @@ public:
 			m_bInUP(true), m_bInDown(true), m_bInLeft(true), m_bInRight(true) {}
 		virtual ~ActivityStrategy() {}
 
+		virtual ActivityStrategy* Update() { return this; }	// 更新
+
 		// 入力
 		virtual void InputUP() {}		// 上入力
 		virtual void InputDown() {}		// 下入力
@@ -100,6 +104,8 @@ public:
 		void SetInLeft(bool bIn) { m_bInLeft = bIn; }// 左入力
 		void SetInRight(bool bIn) { m_bInRight = bIn; }// 右入力
 
+		virtual void Hit() {};
+
 	protected:
 		CPlayer* m_pPrimary;	// プレイヤー
 
@@ -115,6 +121,46 @@ public:
 		PlayerNomarActivity() = delete;
 		PlayerNomarActivity(CPlayer* player);
 		~PlayerNomarActivity();
+		virtual PlayerNomarActivity* Update();	// 更新
+		void InputUP()		override;	// 上入力
+		void InputDown()	override;	// 下入力
+		void InputLeft()	override;	// 左入力
+		void InputRight()	override;	// 右入力
+	};
+	// ラインチェンジ状態
+	class PlayerLaneChangeActivity :public ActivityStrategy
+	{
+	public:
+		PlayerLaneChangeActivity() = delete;
+		PlayerLaneChangeActivity(CPlayer* player);
+		~PlayerLaneChangeActivity();
+		virtual PlayerLaneChangeActivity* Update();	// 更新
+		void InputUP()		override;	// 上入力
+		void InputDown()	override;	// 下入力
+		void InputLeft()	override;	// 左入力
+		void InputRight()	override;	// 右入力
+	};
+	// ジャンプ状態
+	class PlayerJanpActivity :public ActivityStrategy
+	{
+	public:
+		PlayerJanpActivity() = delete;
+		PlayerJanpActivity(CPlayer* player);
+		~PlayerJanpActivity();
+		virtual PlayerJanpActivity* Update();	// 更新
+		void InputUP()		override;	// 上入力
+		void InputDown()	override;	// 下入力
+		void InputLeft()	override;	// 左入力
+		void InputRight()	override;	// 右入力
+	};
+	// スライディング状態
+	class PlayerSlidingActivity :public ActivityStrategy
+	{
+	public:
+		PlayerSlidingActivity() = delete;
+		PlayerSlidingActivity(CPlayer* player);
+		~PlayerSlidingActivity();
+		virtual PlayerSlidingActivity* Update();	// 更新
 		void InputUP()		override;	// 上入力
 		void InputDown()	override;	// 下入力
 		void InputLeft()	override;	// 左入力
@@ -130,6 +176,7 @@ private:
 	float m_fSpeed;	// スピード
 	bool m_bMove;	// 自動で動くかどうか
 	float m_fLane;	// 1レーンの幅
+	D3DXVECTOR3 m_Collision;	// 当たり判定
 
 	ActivityStrategy* m_pActivityStrategy;	// 行動ストラテジ
 	CEffectGeneratorPaeticle* m_pEffect;	// エフェクト

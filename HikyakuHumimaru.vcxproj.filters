@@ -162,11 +162,17 @@
     <ClCompile Include="code\scene\game\stage\stage_000.cpp">
       <Filter>ソース ファイル\scene\game\stage</Filter>
     </ClCompile>
-    <ClCompile Include="code\scene\game\stage\stage_tutorial.cpp">
-      <Filter>ソース ファイル\scene\game\stage</Filter>
-    </ClCompile>
     <ClCompile Include="code\object\obstacles.cpp">
       <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\obstacles_tall.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\obstacles_high.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\obstacles_low.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -284,11 +290,17 @@
     <ClInclude Include="code\scene\game\stage\scene_debug.h">
       <Filter>ヘッダー ファイル\scene\game\stage</Filter>
     </ClInclude>
-    <ClInclude Include="code\scene\game\stage\stage_tutorial.h">
-      <Filter>ヘッダー ファイル\scene\game\stage</Filter>
-    </ClInclude>
     <ClInclude Include="code\object\obstacles.h">
       <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\obstacles_tall.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\obstacles_high.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\obstacles_low.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

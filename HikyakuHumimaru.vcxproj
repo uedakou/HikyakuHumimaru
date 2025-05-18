@@ -169,6 +169,8 @@
     <ClCompile Include="code\object\effect.cpp" />
     <ClCompile Include="code\object\enemy.cpp" />
     <ClCompile Include="code\object\obstacles.cpp" />
+    <ClCompile Include="code\object\obstacles_high.cpp" />
+    <ClCompile Include="code\object\obstacles_low.cpp" />
     <ClCompile Include="code\object\player.cpp" />
     <ClCompile Include="code\object\select.cpp" />
     <ClCompile Include="code\scene\game\game_data.cpp" />
@@ -178,9 +180,9 @@
     <ClCompile Include="code\scene\game\scene_game_stageselect.cpp" />
     <ClCompile Include="code\scene\game\stage\scene_debug.cpp" />
     <ClCompile Include="code\scene\game\stage\stage_000.cpp" />
-    <ClCompile Include="code\scene\game\stage\stage_tutorial.cpp" />
     <ClCompile Include="code\scene\scene_maneger.cpp" />
     <ClCompile Include="code\scene\scene_title.cpp" />
+    <ClCompile Include="code\object\obstacles_tall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\base\calculation.h" />
@@ -209,6 +211,8 @@
     <ClInclude Include="code\object\effect.h" />
     <ClInclude Include="code\object\enemy.h" />
     <ClInclude Include="code\object\obstacles.h" />
+    <ClInclude Include="code\object\obstacles_high.h" />
+    <ClInclude Include="code\object\obstacles_low.h" />
     <ClInclude Include="code\object\player.h" />
     <ClInclude Include="code\object\select.h" />
     <ClInclude Include="code\scene\common_data.h" />
@@ -219,10 +223,10 @@
     <ClInclude Include="code\scene\game\scene_game_stageselect.h" />
     <ClInclude Include="code\scene\game\stage\scene_debug.h" />
     <ClInclude Include="code\scene\game\stage\stage_000.h" />
-    <ClInclude Include="code\scene\game\stage\stage_tutorial.h" />
     <ClInclude Include="code\scene\scene_base.h" />
     <ClInclude Include="code\scene\scene_maneger.h" />
     <ClInclude Include="code\scene\scene_title.h" />
+    <ClInclude Include="code\object\obstacles_tall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
