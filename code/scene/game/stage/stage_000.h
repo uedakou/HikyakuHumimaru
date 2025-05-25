@@ -1,11 +1,11 @@
 //===========================================
 // 
-// チュートリアルステージ[stage_tutorial.h]
+// チュートリアルステージ[stage_000.h]
 // Auther:UedaKou
 // 
 //===========================================
-#ifndef _STAGE_TUTORIAL_H_
-#define _STAGE_TUTORIAL_H_
+#ifndef _STAGE_000_H_
+#define _STAGE_000_H_
 #include "../scene_game.h"	// シーンゲームベース
 #include "./../../../base/pch.h"	// プリコンパイル
 class CObject2D;
@@ -74,4 +74,4 @@ namespace Scene {
 		};
 	}
 }
-#endif // !_STAGE_TUTORIAL_H_
+#endif // !_STAGE_000_H_
