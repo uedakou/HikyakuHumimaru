@@ -13,9 +13,6 @@
 #define PLAYER_MOTIONFILE_B "data\\CHARACTER\\motion.txt"			// プレイヤーモーションファイルパス
 #define PLAYER_RESISTANCE 0.01f		// 移動減衰
 
-#define PLAYER_SIZE X(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3 (10.0f, 10.0f, 70.0f))	// サイズ
-
-
 class CPlayer:public CCharacter
 {
 public:
@@ -45,7 +42,8 @@ public:
 	float GetSpeed() { return m_fSpeed; }	// 速度取得
 	bool IsMove() { return m_bMove; }		// 自動で移動するかどうかを取得
 	float GetLaneSiz() { return m_fLane; }	// 現在の1レーンの幅の取得
-	D3DXVECTOR3 GetCollision() { return m_Collision; }	// 当たり判定取得
+	bool IsJanp() { return m_bJanp; }		// ジャンプ中かどうか設定
+	bool IsSliding() { return m_bSliding; }	// スライディング中かそうか
 
 	ActivityStrategy* GetActivity() { return m_pActivityStrategy; }	// ストラテジー取得
 
@@ -54,7 +52,6 @@ public:
 	void SetSpeedNomal() { m_fSpeed = s_fSpeed; }		// 速度設定
 	void SetMove(bool bMove) { m_bMove = bMove; }		// 自動で移動するかどうかを設定
 	void SetLaneSiz(float fLane) { m_fLane = fLane; }	// 現在の1レーンの幅の設定
-	void SetCollision(D3DXVECTOR3 Collision) { m_Collision = Collision; }	// 当たり判定設定
 
 	void SetActivity(ActivityStrategy* pActivityStrategy) { m_pActivityStrategy = pActivityStrategy; }	// ストラテジー設定
 
@@ -73,18 +70,21 @@ public:
 	class ActivityStrategy
 	{
 	public:
-		enum class TYPE {
-			TYPE_NULL = 0,
-			NORMAL,		// 通常時
-			TUTORIAL,	// チュートリアル
-			MAX
-		}m_type;
+		enum class Type {
+			Null = 0,	// 変更しない
+			Ran,		// 走り
+			LaneChangeL,	// レーンチェンジ
+			LaneChangeR,	// レーンチェンジ
+			Janp,		// ジャンプ
+			Sliding,	// スライディング
+		}m_type;	//　次ストラテジー
+
 		ActivityStrategy() = delete;
-		ActivityStrategy(CPlayer* player) : m_pPrimary(player), m_type(TYPE::TYPE_NULL),
+		ActivityStrategy(CPlayer* player) : m_pPrimary(player), m_type(Type::Null),
 			m_bInUP(true), m_bInDown(true), m_bInLeft(true), m_bInRight(true) {}
 		virtual ~ActivityStrategy() {}
 
-		virtual ActivityStrategy* Update() { return this; }	// 更新
+		virtual ActivityStrategy* Update(); // 更新
 
 		// 入力
 		virtual void InputUP() {}		// 上入力
@@ -121,7 +121,6 @@ public:
 		PlayerNomarActivity() = delete;
 		PlayerNomarActivity(CPlayer* player);
 		~PlayerNomarActivity();
-		virtual PlayerNomarActivity* Update();	// 更新
 		void InputUP()		override;	// 上入力
 		void InputDown()	override;	// 下入力
 		void InputLeft()	override;	// 左入力
@@ -131,14 +130,20 @@ public:
 	class PlayerLaneChangeActivity :public ActivityStrategy
 	{
 	public:
+			enum class LR {
+			L = 0,
+			R,
+		} m_LR;
 		PlayerLaneChangeActivity() = delete;
-		PlayerLaneChangeActivity(CPlayer* player);
+		PlayerLaneChangeActivity(CPlayer* player, LR lr);
 		~PlayerLaneChangeActivity();
-		virtual PlayerLaneChangeActivity* Update();	// 更新
+		virtual ActivityStrategy* Update();	// 更新
 		void InputUP()		override;	// 上入力
 		void InputDown()	override;	// 下入力
 		void InputLeft()	override;	// 左入力
 		void InputRight()	override;	// 右入力
+		int m_nCnt;						// スライディングカウント
+		static const int s_nCnt = 5;	// スライディングカウント最大
 	};
 	// ジャンプ状態
 	class PlayerJanpActivity :public ActivityStrategy
@@ -147,7 +152,7 @@ public:
 		PlayerJanpActivity() = delete;
 		PlayerJanpActivity(CPlayer* player);
 		~PlayerJanpActivity();
-		virtual PlayerJanpActivity* Update();	// 更新
+		virtual ActivityStrategy* Update();	// 更新
 		void InputUP()		override;	// 上入力
 		void InputDown()	override;	// 下入力
 		void InputLeft()	override;	// 左入力
@@ -160,11 +165,13 @@ public:
 		PlayerSlidingActivity() = delete;
 		PlayerSlidingActivity(CPlayer* player);
 		~PlayerSlidingActivity();
-		virtual PlayerSlidingActivity* Update();	// 更新
+		virtual ActivityStrategy* Update();	// 更新
 		void InputUP()		override;	// 上入力
 		void InputDown()	override;	// 下入力
 		void InputLeft()	override;	// 左入力
 		void InputRight()	override;	// 右入力
+		int m_nCnt;						// スライディングカウント
+		static const int s_nCnt = 30;	// スライディングカウント最大
 	};
 
 private:
@@ -176,17 +183,18 @@ private:
 	float m_fSpeed;	// スピード
 	bool m_bMove;	// 自動で動くかどうか
 	float m_fLane;	// 1レーンの幅
-	D3DXVECTOR3 m_Collision;	// 当たり判定
+	bool m_bSliding;	// スライディングしているかどうか
+	bool m_bJanp;	// ジャンプしているかどうか
 
 	ActivityStrategy* m_pActivityStrategy;	// 行動ストラテジ
 	CEffectGeneratorPaeticle* m_pEffect;	// エフェクト
 
 	// 定数
-	static const int s_nLife;		// 体力
-	static const float s_fSpeed;	// 速度
+	static const int s_nLife;		// 体力初期値
+	static const float s_fSpeed;	// 速度初期値
 	static const bool s_bMove;		// 自動移動するかどうか
 	static const float s_fLane;		// 基本の1レーンの幅
-
+	static const X s_Collision;	// 当たり判定初期値
 };
 
 #endif // !_PLAYER_H_

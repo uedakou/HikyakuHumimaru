@@ -69,9 +69,13 @@ public:
 	void SetMtxworld(D3DXMATRIX mtx) { m_mtxWorld = mtx; }	// ワールドマトリクス
 	void SetID(int nID) { m_nID = nID; }	// モデルID設定
 
+
+
 	TYPE GetType() { return m_type; }	// 種類取得
 	D3DXMATRIX GetMtx() { return m_mtxWorld; }	// ワールドマトリクス取得
 	int GetID() { return m_nID; }	// 取得
+
+
 
 	static CObjectX* creat(const char* aFileName);	// 生成
 	static CObjectX* creat(string aFileName);	// 生成

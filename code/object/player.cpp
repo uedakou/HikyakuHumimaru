@@ -13,10 +13,11 @@
 
 #define PlayerMove true
 
-const int CPlayer::s_nLife = 1;
-const float CPlayer::s_fSpeed = 20.0f;
-const bool CPlayer::s_bMove = true;
-const float CPlayer::s_fLane = 500.0f;
+const int CPlayer::s_nLife = 1;			// プレイヤーライフ
+const float CPlayer::s_fSpeed = 20.0f;	// プレイヤー速度
+const bool CPlayer::s_bMove = true;		// プレイヤーが自動で動くかどうか
+const float CPlayer::s_fLane = 500.0f;	// ラインの幅
+const X CPlayer::s_Collision = { { 0.0f, 0.0f, 0.0f }, { 0.0f ,0.0f, 0.0f },{ 10.0f, 10.0f, 70.0f } };	// コリジョン大きさ
 
 //============================================
 // コンスト
@@ -28,7 +29,8 @@ CPlayer::CPlayer()
 	m_bMove = s_bMove;
 	m_fLane = s_fLane;
 
-	//m_bJump = false;	// ジャンプ可能か
+	m_bSliding = false;	// ジャンプ可能か
+	m_bJanp = false;	// ジャンプ可能か
 	SetAttcak(1);
 
 	CCharacter::SetType(CCharacter::TYPE::PLAYER);
@@ -57,7 +59,7 @@ void CPlayer::Init()
 	//m_obje[0] = CObjectX::creat(pos, rot, siz, CObjectX::TYPE_X_PLAYER);
 	CObjectMotion::Load(PLAYER_MOTIONFILE_A);
 	CCharacter::Init();
-	CCharacter::SetCollisionX(PLAYER_SIZE);
+	CCharacter::SetCollisionX(s_Collision);
 	CObjectMotion::SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	//SetMotion(1);
 	SetLife(s_nLife);
@@ -87,13 +89,6 @@ void CPlayer::Update()
 	{
 		SetPosY(0.0f);
 		SetMovePosY(0.0f);
-		//地面についているときジャンプモーションなら
-		int nMotion = GetMotion();
-		if (nMotion == static_cast<int>(Motion::ACTIVITY_JANP))
-		{
-			// 走りモーションに設定
-			SetMotion(static_cast<int>(Motion::ACTIVITY_MOVE));
-		}
 	}
 
 	// 自動移動がtrueなら
@@ -128,8 +123,15 @@ void CPlayer::Update()
 	{
 		m_pActivityStrategy->InputRight();
 	}
-
-
+	// 更新
+	ActivityStrategy* p = m_pActivityStrategy->Update();
+	// 返り値が変わっていたら
+	if (p != m_pActivityStrategy)
+	{
+		// 入れ替える
+		delete m_pActivityStrategy;
+		m_pActivityStrategy = p;
+	}
 
 	CCharacter::Update();
 }
@@ -197,13 +199,49 @@ int CPlayer::GetNextMotion()
 	return static_cast<int>(Motion::ACTIVITY_NEUTRAL);
 }
 /// <summary>
+/// 基底更新
+/// </summary>
+/// <returns>this以外でストラテジーチェンジ</returns>
+CPlayer::ActivityStrategy* CPlayer::ActivityStrategy::Update()
+{
+	switch (m_type)
+	{
+		//走りチェンジ
+	case CPlayer::ActivityStrategy::Type::Ran:
+		return new PlayerNomarActivity(m_pPrimary);
+		break;
+		//レーンチェンジ
+	case CPlayer::ActivityStrategy::Type::LaneChangeL:
+		return new PlayerLaneChangeActivity(m_pPrimary, PlayerLaneChangeActivity::LR::L);
+		break;
+	case CPlayer::ActivityStrategy::Type::LaneChangeR:
+		return new PlayerLaneChangeActivity(m_pPrimary, PlayerLaneChangeActivity::LR::R);
+		break;
+		//ジャンプ
+	case CPlayer::ActivityStrategy::Type::Janp:
+		return new PlayerJanpActivity(m_pPrimary);
+		break;
+		//スライディング
+	case CPlayer::ActivityStrategy::Type::Sliding:
+		return new PlayerSlidingActivity(m_pPrimary);
+		break;
+	default:
+		// 何もなければ続く
+		return this;
+		break;
+	}
+
+}
+
+/// <summary>
 /// 通常時ストラテジーコンストラクタ
 /// </summary>
 /// <param name="player">親</param>
 CPlayer::PlayerNomarActivity::PlayerNomarActivity(CPlayer* player):
 	ActivityStrategy(player)
 {
-	m_type = TYPE::NORMAL;	//　種類を通常に設定
+	// 走りモーションに設定
+	m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_MOVE));
 }
 /// <summary>
 /// 通常時ストラテジーデストラクタ
@@ -212,22 +250,13 @@ CPlayer::PlayerNomarActivity::~PlayerNomarActivity()
 {
 }
 /// <summary>
-/// 更新
-/// </summary>
-/// <returns>this意外次のストラテジー</returns>
-CPlayer::PlayerNomarActivity* CPlayer::PlayerNomarActivity::Update()
-{
-	return this;
-}
-/// <summary>
 /// 通常時ジャンプ入力処理
 /// </summary>
 void CPlayer::PlayerNomarActivity::InputUP()
 {
 	if (m_bInUP)
 	{
-		m_pPrimary->AddMovePosY(20.0f);
-		m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_JANP));
+		m_type = Type::Janp;
 	}
 }
 /// <summary>
@@ -237,8 +266,7 @@ void CPlayer::PlayerNomarActivity::InputDown()
 {
 	if (m_bInDown)
 	{
-		m_pPrimary->AddMovePosY(20.0f);
-		m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_SLIDING));
+		m_type = Type::Sliding;
 	}
 }
 /// <summary>
@@ -247,6 +275,32 @@ void CPlayer::PlayerNomarActivity::InputDown()
 void CPlayer::PlayerNomarActivity::InputLeft()
 {
 	if (m_bInLeft)
+	{
+		m_type = Type::LaneChangeL;
+	}
+}
+/// <summary>
+/// 通常時入力右処理
+/// </summary>
+void CPlayer::PlayerNomarActivity::InputRight()
+{
+	if (m_bInRight)
+	{
+		m_type = Type::LaneChangeR;
+	}
+}
+/// <summary>
+/// レーンチェンジ時コンストラクタ
+/// </summary>
+/// <param name="player">親</param>
+CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player, LR lr) :
+	ActivityStrategy(player)
+
+{
+	m_LR = lr;
+	m_type = Type::Ran;
+	m_nCnt = 0;
+	if (lr == LR::L)
 	{
 		m_pPrimary->AddPosX(-m_pPrimary->m_fLane);	// 左に移動
 		float posX = m_pPrimary->GetPosX();	// プレイヤーの位置取得
@@ -257,13 +311,7 @@ void CPlayer::PlayerNomarActivity::InputLeft()
 			m_pPrimary->SetPosX(-m_pPrimary->m_fLane);
 		}
 	}
-}
-/// <summary>
-/// 通常時入力右処理
-/// </summary>
-void CPlayer::PlayerNomarActivity::InputRight()
-{
-	if (m_bInRight)
+	else
 	{
 		m_pPrimary->AddPosX(m_pPrimary->m_fLane);	// 右に移動
 		float posX = m_pPrimary->GetPosX();	// プレイヤーの位置取得
@@ -276,25 +324,78 @@ void CPlayer::PlayerNomarActivity::InputRight()
 	}
 }
 /// <summary>
+/// レーンチェンジ時デストラクタ
+/// </summary>
+CPlayer::PlayerLaneChangeActivity::~PlayerLaneChangeActivity()
+{
+}
+/// <summary>
+/// レーンチェンジ時更新
+/// </summary>
+/// <returns></returns>
+CPlayer::ActivityStrategy* CPlayer::PlayerLaneChangeActivity::Update()
+{
+	m_nCnt++;
+	if (m_nCnt >= s_nCnt)
+	{
+		return ActivityStrategy::Update();
+	}
+	return this;
+}
+/// <summary>
+/// レーンチェンジ時ジャンプ入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputUP()
+{
+}
+/// <summary>
+/// レーンチェンジ時スライティング入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputDown()
+{
+}
+/// <summary>
+/// レーンチェンジ時左入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputLeft()
+{
+}
+/// <summary>
+/// レーンチェンジ時右入力
+/// </summary>
+void CPlayer::PlayerLaneChangeActivity::InputRight()
+{
+}
+/// <summary>
 /// ジャンプ時コンストラクタ
 /// </summary>
 /// <param name="player">親</param>
 CPlayer::PlayerJanpActivity::PlayerJanpActivity(CPlayer* player) :
 	ActivityStrategy(player)
 {
+	m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_JANP));	// モーション設定
+	m_pPrimary->m_bJanp = true;	// ジャンプ中かどうか設定
+	m_type = Type::Ran;			// 次を走りに
+	m_pPrimary->AddMovePosY(20.0f);
 }
 /// <summary>
 /// ジャンプ時デストラクタ
 /// </summary>
 CPlayer::PlayerJanpActivity::~PlayerJanpActivity()
 {
+	m_pPrimary->m_bJanp = true;	// ジャンプ中かどうか設定
 }
 /// <summary>
 /// ジャンプ時更新
 /// </summary>
 /// <returns></returns>
-CPlayer::PlayerJanpActivity* CPlayer::PlayerJanpActivity::Update()
+CPlayer::ActivityStrategy* CPlayer::PlayerJanpActivity::Update()
 {
+	// 着地したら通常に変える
+	if (m_pPrimary->GetPosY() <= 0.0f)
+	{
+		return ActivityStrategy::Update();
+	}
 	return this;
 }
 /// <summary>
@@ -325,21 +426,30 @@ void CPlayer::PlayerJanpActivity::InputRight()
 /// <param name="player">親</param>
 CPlayer::PlayerSlidingActivity::PlayerSlidingActivity(CPlayer* player) :
 	ActivityStrategy(player)
-
 {
+	m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_SLIDING));	// モーション設定
+	m_pPrimary->m_bSliding = true;	// スライディング中かどうか設定
+	m_type = Type::Ran;			// 次を走りに
+	m_nCnt = 0;					// カウント初期化
 }
 /// <summary>
 /// スライディング時デストラクタ
 /// </summary>
 CPlayer::PlayerSlidingActivity::~PlayerSlidingActivity()
 {
+	m_pPrimary->m_bSliding = true;	// スライディング中かどうか設定
 }
 /// <summary>
 /// スライティング時アップデート
 /// </summary>
 /// <returns></returns>
-CPlayer::PlayerSlidingActivity* CPlayer::PlayerSlidingActivity::Update()
+CPlayer::ActivityStrategy* CPlayer::PlayerSlidingActivity::Update()
 {
+	m_nCnt++;
+	if (m_nCnt >= s_nCnt)
+	{
+		return ActivityStrategy::Update();
+	}
 	return this;
 }
 /// <summary>
@@ -364,52 +474,5 @@ void CPlayer::PlayerSlidingActivity::InputLeft()
 /// スライディング時右入力
 /// </summary>
 void CPlayer::PlayerSlidingActivity::InputRight()
-{
-}
-/// <summary>
-/// レーンチェンジ時コンストラクタ
-/// </summary>
-/// <param name="player">親</param>
-CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player) :
-	ActivityStrategy(player)
-
-{
-}
-/// <summary>
-/// レーンチェンジ時デストラクタ
-/// </summary>
-CPlayer::PlayerLaneChangeActivity::~PlayerLaneChangeActivity()
-{
-}
-/// <summary>
-/// レーンチェンジ時更新
-/// </summary>
-/// <returns></returns>
-CPlayer::PlayerLaneChangeActivity* CPlayer::PlayerLaneChangeActivity::Update()
-{
-	return this;
-}
-/// <summary>
-/// レーンチェンジ時ジャンプ入力
-/// </summary>
-void CPlayer::PlayerLaneChangeActivity::InputUP()
-{
-}
-/// <summary>
-/// レーンチェンジ時スライティング入力
-/// </summary>
-void CPlayer::PlayerLaneChangeActivity::InputDown()
-{
-}
-/// <summary>
-/// レーンチェンジ時左入力
-/// </summary>
-void CPlayer::PlayerLaneChangeActivity::InputLeft()
-{
-}
-/// <summary>
-/// レーンチェンジ時右入力
-/// </summary>
-void CPlayer::PlayerLaneChangeActivity::InputRight()
 {
 }

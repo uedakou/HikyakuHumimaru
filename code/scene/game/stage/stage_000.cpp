@@ -101,6 +101,7 @@ namespace Scene {
 			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
 			pPlayer->SetMotionMove(true);	// モーションの動きを設定
 			pPlayer->SetMove(true);	// 動きを設定
+			pPlayer->SetLife(1);	// 体力設定
 
 			pPlActiv->SetInUP(false);		// 上入力設定
 			pPlActiv->SetInDown(false);		// 下入力設定
@@ -126,7 +127,13 @@ namespace Scene {
 		//============================================
 		CStage_000::~CStage_000()
 		{
+			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
+			pPlActiv->SetInUP(true);		// 上入力設定
+			pPlActiv->SetInDown(true);		// 下入力設定
+			pPlActiv->SetInLeft(true);		// 左入力設定
+			pPlActiv->SetInRight(true);	// 右入力設定
 		}
 		//============================================
 		// 更新

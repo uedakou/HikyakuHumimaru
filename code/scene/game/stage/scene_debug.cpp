@@ -39,11 +39,7 @@ namespace Scene {
 			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
 			pPlayer->SetMotionMove(true);	// モーションの動きを設定
 			pPlayer->SetMove(true);	// 動きを設定
-
-			pPlActiv->SetInUP(false);		// 上入力設定
-			pPlActiv->SetInDown(false);		// 下入力設定
-			pPlActiv->SetInLeft(false);		// 左入力設定
-			pPlActiv->SetInRight(false);	// 右入力設定
+			pPlayer->SetLife(1);	// 体力設定
 
 			// カメラ向き
 			CManager* pManager = CManager::GetInstance();
@@ -68,6 +64,10 @@ namespace Scene {
 
 			// 障害物
 			CObstaclesToll::clate(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
+
+			CObstaclesHigh::clate(D3DXVECTOR3(0.0f, 0.0f, 2000.0f));
+
+			CObstaclesLow::clate(D3DXVECTOR3(0.0f, 0.0f, 3000.0f));
 
 
 

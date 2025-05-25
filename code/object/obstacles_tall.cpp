@@ -7,34 +7,43 @@
 #include "obstacles_tall.h"	// トールオブジェクト
 #include "player.h"
 
-CObstaclesToll::CObstaclesToll()
-{
-}
-
+/// <summary>
+/// デストラクタ
+/// </summary>
 CObstaclesToll::~CObstaclesToll()
 {
 }
-
+/// <summary>
+/// 初期化
+/// </summary>
 void CObstaclesToll::Init()
 {
 	CObstacles::Init();
 }
-
+/// <summary>
+/// 終了
+/// </summary>
 void CObstaclesToll::Uninit()
 {
 	CObstacles::Update();
 }
-
+/// <summary>
+/// 更新
+/// </summary>
 void CObstaclesToll::Update()
 {
 	CObstacles::Update();
 }
-
+/// <summary>
+/// 描画
+/// </summary>
 void CObstaclesToll::Draw()
 {
 	CObstacles::Draw();
 }
-
+/// <summary>
+/// 当たり判定
+/// </summary>
 void CObstaclesToll::HitTest()
 {
 	CObject* pObject[MAX_PRIORITY];
@@ -45,8 +54,7 @@ void CObstaclesToll::HitTest()
 		while (pObject[nCnt] != nullptr)
 		{
 			pNext = pObject[nCnt]->GetNext();
-			CPlayer* player = dynamic_cast<CPlayer*>(pObject[nCnt]);
-			if (player)
+			if (CPlayer* player = dynamic_cast<CPlayer*>(pObject[nCnt]))
 			{
 				D3DXVECTOR3 PLpos = player->GetPos();
 				D3DXVECTOR3 PLcol = player->GetCollisionSiz();
@@ -65,8 +73,24 @@ void CObstaclesToll::HitTest()
 		}
 	}
 }
-
+/// <summary>
+/// 生成
+/// </summary>
+/// <param name="pos">生成位置</param>
+/// <returns>生成下障害物</returns>
 CObstaclesToll* CObstaclesToll::clate(D3DXVECTOR3 pos)
 {
-	return nullptr;
+	CObstaclesToll* pToll = new CObstaclesToll();
+
+	pToll->SetPos(pos);
+	pToll->Init();	/// 初期化
+
+	return pToll;
+}
+/// <summary>
+/// コンストラクタ
+/// </summary>
+CObstaclesToll::CObstaclesToll()
+{
+	SetID(CModelX::Load("data/MODEL/Tentative/Obstacles_Tall.x"));
 }

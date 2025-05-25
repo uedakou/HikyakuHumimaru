@@ -7,34 +7,43 @@
 #include "obstacles_low.h"// ロウオブジェクト
 #include "player.h"
 
-CObstaclesLow::CObstaclesLow()
-{
-}
-
+/// <summary>
+/// デストラクタ
+/// </summary>
 CObstaclesLow::~CObstaclesLow()
 {
 }
-
+/// <summary>
+/// 初期化
+/// </summary>
 void CObstaclesLow::Init()
 {
 	CObstacles::Init();
 }
-
+/// <summary>
+/// 終了
+/// </summary>
 void CObstaclesLow::Uninit()
 {
 	CObstacles::Uninit();
 }
-
+/// <summary>
+/// 更新
+/// </summary>
 void CObstaclesLow::Update()
 {
 	CObstacles::Update();
 }
-
+/// <summary>
+/// 描画
+/// </summary>
 void CObstaclesLow::Draw()
 {
 	CObstacles::Draw();
 }
-
+/// <summary>
+/// 当たり判定
+/// </summary>
 void CObstaclesLow::HitTest()
 {
 	CObject* pObject[MAX_PRIORITY];
@@ -56,15 +65,34 @@ void CObstaclesLow::HitTest()
 					PLpos.x + PLcol.x * 0.5f > pos.x - s_Collision.x * 0.5f &&
 					PLpos.x - PLcol.x * 0.5f < pos.x + s_Collision.x * 0.5f)
 				{
-					player->Hit(1);
+					if (player->IsJanp() != true)
+					{
+						player->Hit(1);
+					}
 				}
 			}
 			pObject[nCnt] = pNext;
 		}
 	}
 }
-
+/// <summary>
+/// 生成
+/// </summary>
+/// <param name="pos">生成位置</param>
+/// <returns>生成したオブジェクト</returns>
 CObstaclesLow* CObstaclesLow::clate(D3DXVECTOR3 pos)
 {
-	return nullptr;
+	CObstaclesLow* pLow = new CObstaclesLow();
+
+	pLow->SetPos(pos);
+	pLow->Init();	/// 初期化
+
+	return pLow;
+}
+/// <summary>
+/// コンストラクタ
+/// </summary>
+CObstaclesLow::CObstaclesLow()
+{
+	SetID(CModelX::Load("data/MODEL/Tentative/Obstacles_Low.x"));
 }
