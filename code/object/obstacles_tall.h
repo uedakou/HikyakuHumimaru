@@ -20,6 +20,7 @@ public:
 	virtual void HitTest() override;	// 当たり判定
 
 	static CObstaclesToll* clate(D3DXVECTOR3 pos);	// 生成
+	static CObstaclesToll* clate(D3DXVECTOR3 pos, D3DXVECTOR3 rot);	// 生成
 private:	// プライベート
 	CObstaclesToll();
 };

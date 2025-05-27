@@ -90,6 +90,16 @@ CObstaclesHigh* CObstaclesHigh::clate(D3DXVECTOR3 pos)
 
 	return pHigh;
 }
+CObstaclesHigh* CObstaclesHigh::clate(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+{
+	CObstaclesHigh* pHigh = new CObstaclesHigh();
+
+	pHigh->SetPos(pos);
+	pHigh->SetRot(rot);
+	pHigh->Init();	/// 初期化
+
+	return pHigh;
+}
 /// <summary>
 /// コンストラクタ
 /// </summary>

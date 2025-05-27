@@ -89,6 +89,16 @@ CObstaclesLow* CObstaclesLow::clate(D3DXVECTOR3 pos)
 
 	return pLow;
 }
+CObstaclesLow* CObstaclesLow::clate(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+{
+	CObstaclesLow* pLow = new CObstaclesLow();
+
+	pLow->SetPos(pos);
+	pLow->SetRot(rot);
+	pLow->Init();	/// 初期化
+
+	return pLow;
+}
 /// <summary>
 /// コンストラクタ
 /// </summary>

@@ -87,6 +87,16 @@ CObstaclesToll* CObstaclesToll::clate(D3DXVECTOR3 pos)
 
 	return pToll;
 }
+CObstaclesToll* CObstaclesToll::clate(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+{
+	CObstaclesToll* pToll = new CObstaclesToll();
+
+	pToll->SetPos(pos);
+	pToll->SetRot(rot);
+	pToll->Init();	/// 初期化
+
+	return pToll;
+}
 /// <summary>
 /// コンストラクタ
 /// </summary>

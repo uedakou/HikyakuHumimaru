@@ -232,6 +232,13 @@
     <ClInclude Include="code\scene\scene_title.h" />
     <ClInclude Include="code\object\obstacles_tall.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\STAGE\Stage_001.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\MODEL\Obstacles\Obstacles_High\000\Obstacles_High_000.x" />
+    <None Include="data\MODEL\Obstacles\Obstacles_Low\000\Obstacles_Low_000.x" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

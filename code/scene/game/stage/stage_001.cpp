@@ -59,8 +59,17 @@ namespace Scene {
 			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
 
+			// ワールド生成
+			CObject3D* pField = nullptr;
+			pField = CObject3D::creat(
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
+			pField->SetBlock(3, 10);
+			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+
 			// ステージ読み込み
-			//Load();
+			Load();
 		}
 		//============================================
 		// デストラクタ
@@ -146,7 +155,7 @@ namespace Scene {
 				cerr << "ファイルを開けませんでした\n";
 			}
 			string str0, str1, str2, str3;	// 文字列格納用
-			string skip;			// スキップ用格納
+			string _;	// スキップ用格納
 			string aModelFile[MAX_MOTION_MODEL];	// モデルファイル
 
 		// 抽出演算子>>を使ってデリミタで区切られた単語，値を読み込む
@@ -155,21 +164,70 @@ namespace Scene {
 				// コメントアウト
 				if (str0[0] == '#')
 				{
-					getline(file, skip);	// 一行スキップ
+					getline(file, _);	// 一行スキップ
 				}
 				// 障害物TALL
 				else if (str0.compare("OBSTACLES") == 0)
 				{
+					int nType = 0;	// 種類
+					D3DXVECTOR3 pos = {};	// 位置
+					D3DXVECTOR3 rot = {};	// 向き
+
+
 					while (file >> str1 &&
-						str1.compare("END_OBSTACLES_") != 0)
+						str1.compare("END_OBSTACLES") != 0)
 					{
-
-
-
-
-
-
+						// コメントアウト
+						if (str1[0] == '#')
+						{
+							getline(file, _);	// 一行スキップ
+						}
+						if (str1.compare("TYPE") == 0)
+						{
+							file >> _;	// 一文スキップ
+							file >> str2;	// モデル数を取得
+							nType = atoi(str2.c_str());
+							getline(file, _);	// 一行スキップ
+						}
+						if (str1.compare("POS") == 0)
+						{
+							file >> _;	// 一文スキップ
+							file >> str2;	// モデル数を取得
+							pos.x = stof(str2.c_str());
+							file >> str2;	// モデル数を取得
+							pos.y = stof(str2.c_str());
+							file >> str2;	// モデル数を取得
+							pos.z = stof(str2.c_str());
+							getline(file, _);	// 一行スキップ
+						}
+						if (str1.compare("ROT") == 0)
+						{
+							file >> _;	// 一文スキップ
+							file >> str2;	// モデル名を取得
+							pos.x = stof(str2.c_str());
+							file >> str2;	// モデル名を取得
+							pos.y = stof(str2.c_str());
+							file >> str2;	// モデル名を取得
+							pos.z = stof(str2.c_str());
+							getline(file, _);	// 一行スキップ
+						}
 					}
+					// 障害物生成
+					switch (nType)
+					{
+					case 0:
+						CObstaclesToll::clate(pos, rot);
+						break;
+					case 1:
+						CObstaclesHigh::clate(pos, rot);
+						break;
+					case 2:
+						CObstaclesLow::clate(pos, rot);
+						break;
+					default:
+						break;
+					}
+
 				}
 			}
 			// ファイルを閉じる
