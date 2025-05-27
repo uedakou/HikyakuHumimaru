@@ -17,6 +17,7 @@ namespace Scene {
 		// 他クラス
 		class CSceneDebug;				// デバッグ
 		class CStage_000;				// ステージ000
+		class CStage_001;				// ステージ001
 
 		// 定数定義
 		const int CScen_Game_StageSelect::s_nPressHoldLimit = 10;	// 入力開始カウント
@@ -230,7 +231,7 @@ namespace Scene {
 						return makeScene<CStage_000>(m_gameData);
 						break;
 					case Select::STAGE_001:
-						return makeScene<CSceneDebug>(m_gameData);
+						return makeScene<CStage_001>(m_gameData);
 						break;
 					case Select::STAGE_002:
 						return makeScene<CSceneDebug>(m_gameData);

@@ -16,14 +16,6 @@ namespace Scene {
 		class CStage_001 : public CBase
 		{
 		public:
-			// チュートリアルイベント
-			enum class TUTORIAL {
-				Tutorial_000 = 0,	// 左右避け
-				Tutorial_001,		// 飛び越え
-				Tutorial_002,		// 潜り抜け
-				Tutorial_003,		// アイテム
-				MAX,
-			};
 			CStage_001(CBase* game, CGameData* gameData);
 			virtual ~CStage_001();
 			virtual nsPrev::CBase* Update()	override;
@@ -33,6 +25,7 @@ namespace Scene {
 		private:
 			// 関数
 			void Load();	// ロード
+			void LoadT();	// ロード仮
 
 			// メンバ変数設定
 			bool m_bPose;	// ポーズ状態

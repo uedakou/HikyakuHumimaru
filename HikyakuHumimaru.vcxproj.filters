@@ -165,20 +165,20 @@
     <ClCompile Include="code\object\obstacles.cpp">
       <Filter>ソース ファイル\object</Filter>
     </ClCompile>
-    <ClCompile Include="code\object\obstacles_tall.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="code\object\base\object_FBX.cpp">
+      <Filter>ソース ファイル\object\base</Filter>
     </ClCompile>
     <ClCompile Include="code\object\obstacles_high.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\object</Filter>
     </ClCompile>
     <ClCompile Include="code\object\obstacles_low.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
+    <ClCompile Include="code\object\obstacles_tall.cpp">
+      <Filter>ソース ファイル\object</Filter>
     </ClCompile>
     <ClCompile Include="code\scene\game\stage\stage_001.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\object\base\object_FBX.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\scene\game\stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,20 +299,20 @@
     <ClInclude Include="code\object\obstacles.h">
       <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
-    <ClInclude Include="code\object\obstacles_tall.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="code\object\base\object_FBX.h">
+      <Filter>ヘッダー ファイル\object\base</Filter>
     </ClInclude>
     <ClInclude Include="code\object\obstacles_high.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
     <ClInclude Include="code\object\obstacles_low.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\object</Filter>
+    </ClInclude>
+    <ClInclude Include="code\object\obstacles_tall.h">
+      <Filter>ヘッダー ファイル\object</Filter>
     </ClInclude>
     <ClInclude Include="code\scene\game\stage\stage_001.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\object\base\object_FBX.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\scene\game\stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

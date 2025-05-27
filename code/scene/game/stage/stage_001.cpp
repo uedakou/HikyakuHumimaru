@@ -54,19 +54,13 @@ namespace Scene {
 			pPlayer->SetMove(true);	// 動きを設定
 			pPlayer->SetLife(1);	// 体力設定
 
-			// ワールド生成
-			CObject3D* pField = nullptr;
-			pField = CObject3D::creat(
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
-			pField->SetBlock(3, 10);
-			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
-
 			// カメラ向き
 			CManager* pManager = CManager::GetInstance();
 			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
+
+			// ステージ読み込み
+			//Load();
 		}
 		//============================================
 		// デストラクタ
@@ -155,7 +149,7 @@ namespace Scene {
 			string skip;			// スキップ用格納
 			string aModelFile[MAX_MOTION_MODEL];	// モデルファイル
 
-	// 抽出演算子>>を使ってデリミタで区切られた単語，値を読み込む
+		// 抽出演算子>>を使ってデリミタで区切られた単語，値を読み込む
 			while (file >> str0)
 			{
 				// コメントアウト
@@ -163,14 +157,37 @@ namespace Scene {
 				{
 					getline(file, skip);	// 一行スキップ
 				}
-				// 
-				else if (str0.compare("CHARACTERSET") == 0)
+				// 障害物TALL
+				else if (str0.compare("OBSTACLES") == 0)
 				{
+					while (file >> str1 &&
+						str1.compare("END_OBSTACLES_") != 0)
+					{
 
+
+
+
+
+
+					}
 				}
 			}
 			// ファイルを閉じる
 			file.close();
+		}
+		/// <summary>
+		/// 仮マップ配置
+		/// </summary>
+		void CStage_001::LoadT()
+		{
+			// ワールド生成
+			CObject3D* pField = nullptr;
+			pField = CObject3D::creat(
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
+			pField->SetBlock(3, 10);
+			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 		}
 		//============================================
 		// 生成
