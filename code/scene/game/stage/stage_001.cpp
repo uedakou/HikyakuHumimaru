@@ -4,7 +4,7 @@
 // Auther:UedaKou
 // 
 //===========================================
-#include "stage_001.h"		// チュートリアル
+#include "stage_001.h"		// ステージ
 
 #include "../../../object/player.h"	// プレイヤー
 #include "../../../object/base/object_2D.h"	// ポップアップ用2D
@@ -17,6 +17,10 @@
 #include "../../../object/obstacles_tall.h"	// 障害物
 #include "../../../object/obstacles_high.h"	// 障害物
 #include "../../../object/obstacles_low.h"	// 障害物
+
+#include <fstream>	// ファイルの読み込みに必要
+#include <iostream>	// ファイルの読み込みに必要
+
 namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
@@ -24,6 +28,7 @@ namespace Scene {
 		const bool CStage_001::s_bCameraFollowPlayer = true;	// カメラがプレイヤーを追従するかどうか
 		const float CStage_001::s_fCameraRot = 2.6f;	// プレイヤーからのカメラの角度
 		const float CStage_001::s_fGool = 20000.0f;	// ゴール距離
+		const string CStage_001::s_aStage = "data/STAGE/Stage_001.txt";		// ステージパス
 
 		//============================================
 		// コンスト
@@ -33,7 +38,6 @@ namespace Scene {
 		{
 			CObject::ReleaseScene();	// シーンリリース
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
-			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
 			// メンバ変数設定
 			m_bPose = false;
@@ -49,11 +53,6 @@ namespace Scene {
 			pPlayer->SetMotionMove(true);	// モーションの動きを設定
 			pPlayer->SetMove(true);	// 動きを設定
 			pPlayer->SetLife(1);	// 体力設定
-
-			pPlActiv->SetInUP(false);		// 上入力設定
-			pPlActiv->SetInDown(false);		// 下入力設定
-			pPlActiv->SetInLeft(false);		// 左入力設定
-			pPlActiv->SetInRight(false);	// 右入力設定
 
 			// ワールド生成
 			CObject3D* pField = nullptr;
@@ -143,7 +142,36 @@ namespace Scene {
 		{
 			return m_bPose;
 		}
+		/// <summary>
+		/// ステージ読み込み
+		/// </summary>
+		void CStage_001::Load()
+		{
+			ifstream file(s_aStage.c_str());  // 読み込むファイルのパスを指定
+			if (file.fail()) {
+				cerr << "ファイルを開けませんでした\n";
+			}
+			string str0, str1, str2, str3;	// 文字列格納用
+			string skip;			// スキップ用格納
+			string aModelFile[MAX_MOTION_MODEL];	// モデルファイル
 
+	// 抽出演算子>>を使ってデリミタで区切られた単語，値を読み込む
+			while (file >> str0)
+			{
+				// コメントアウト
+				if (str0[0] == '#')
+				{
+					getline(file, skip);	// 一行スキップ
+				}
+				// 
+				else if (str0.compare("CHARACTERSET") == 0)
+				{
+
+				}
+			}
+			// ファイルを閉じる
+			file.close();
+		}
 		//============================================
 		// 生成
 		//============================================

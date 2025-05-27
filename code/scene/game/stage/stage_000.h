@@ -33,7 +33,6 @@ namespace Scene {
 		private:
 			// メンバ変数設定
 			bool m_bPose;	// ポーズ状態
-			//CText* m_pText;
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
 			float m_fCameraRot;		// カメラの角度
 			float m_fTutorialRange;	// チュートリアルイベント発生の範囲

@@ -21,7 +21,7 @@ namespace Scene {
 			virtual void Draw() const override;	// 描画
 			virtual bool GetPose()override;
 		private:
-			CText* m_pText;		// テキスト
+			bool m_bPose;	// ポーズ状態
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかどうか
 			float m_fCameraRot;		// プレイヤーからのカメラの角度
 

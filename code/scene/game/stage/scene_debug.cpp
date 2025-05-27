@@ -30,7 +30,9 @@ namespace Scene {
 			CPlayer* pPlayer = m_gameData->GetPlayer();
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
-			// プレイヤー設定
+			
+			m_bPose = false;	// ポーズ状態設定
+
 			// プレイヤー設定
 			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
 			pPlayer->SetNormalDraw(true);	// 通常時描画設定
@@ -45,9 +47,6 @@ namespace Scene {
 			CManager* pManager = CManager::GetInstance();
 			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
-
-			// テキスト生成
-			m_pText = CText::creat();
 
 			m_fCameraRot = s_fCameraRot;	// カメラがプレイヤーを追従するかどうか
 
@@ -92,56 +91,76 @@ namespace Scene {
 			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
 			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
 			CPlayer* pPlayer = m_gameData->GetPlayer();
-
-			// カメラをプレイヤーに追従させるなら
-			if (m_bCameraFollowPlayer == true)
+			// ポーズ入力
+			if (pKey->GetTrigger(DIK_P))
 			{
-				// プレイヤーが有るなら
+				m_bPose = !m_bPose;
+				// ポーズしたら
+				if (m_bPose)
+				{
+					// プレイヤーの動きを止める
+					pPlayer->SetMove(false);
+				}
+				// ポーズを解除したら
+				else
+				{
+					// プレイヤーの動かす
+					pPlayer->SetMove(true);
+				}
+			}
+			if (m_bPose == false)
+			{
+
+				// カメラをプレイヤーに追従させるなら
+				if (m_bCameraFollowPlayer == true)
+				{
+					// プレイヤーが有るなら
+					if (pPlayer != nullptr)
+					{
+#if _DEBUG
+						if (pKey->GetTrigger(DIK_UP))
+						{
+							m_fCameraRot += 0.1f;
+						}
+						else if (pKey->GetTrigger(DIK_DOWN))
+						{
+							m_fCameraRot -= 0.1f;
+						}
+#endif // _DEBUG
+						// カメラをプレイヤーに追従させる
+						D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
+						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
+
+						// カメラのプレイヤーからの向き
+						//char text[MAX_TXT];
+						//sprintf_s(text, sizeof(text), "CameraRot:%f\n", m_fCameraRot);
+
+						//m_pText->SetText(text);
+					}
+				}
+
+				// プレイヤーがループするようにする
+				// プレイヤーがnullでなければ
 				if (pPlayer != nullptr)
 				{
-#if _DEBUG
-					if (pKey->GetTrigger(DIK_UP))
+					float posz = pPlayer->GetPosZ();
+					if (posz >= 4000.0f)
 					{
-						m_fCameraRot += 0.1f;
+						pPlayer->SetPosZ(-5000.0f);
 					}
-					else if (pKey->GetTrigger(DIK_DOWN))
-					{
-						m_fCameraRot -= 0.1f;
-					}
-#endif // _DEBUG
-					// カメラをプレイヤーに追従させる
-					D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
-					pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
-
-					// カメラのプレイヤーからの向き
-					//char text[MAX_TXT];
-					//sprintf_s(text, sizeof(text), "CameraRot:%f\n", m_fCameraRot);
-
-					//m_pText->SetText(text);
 				}
-			}
 
-			// プレイヤーがループするようにする
-			// プレイヤーがnullでなければ
-			if (pPlayer != nullptr)
-			{
-				float posz = pPlayer->GetPosZ();
-				if (posz >= 4000.0f)
+				// プレイヤーの体力が０以下なら
+				if (pPlayer->GetLife() <= 0)
 				{
-					pPlayer->SetPosZ(-5000.0f);
+					return makeScene<CScen_Game_StageSelect>(m_gameData);
 				}
-			}
 
-			// プレイヤーの体力が０以下なら
-			if (pPlayer->GetLife() <= 0)
-			{
-				return makeScene<CScen_Game_StageSelect>(m_gameData);
-			}
-
-			// デバッグシーンチェンジ
-			if (pKey->GetTrigger(DIK_L))
-			{
-				return makeScene<CScen_Game_StageSelect>(m_gameData);
+				// デバッグシーンチェンジ
+				if (pKey->GetTrigger(DIK_L))
+				{
+					return makeScene<CScen_Game_StageSelect>(m_gameData);
+				}
 			}
 			return this;
 		}

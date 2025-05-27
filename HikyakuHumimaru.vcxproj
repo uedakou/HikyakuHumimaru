@@ -163,6 +163,7 @@
     <ClCompile Include="code\object\base\object_3D.cpp" />
     <ClCompile Include="code\object\base\object_billboard.cpp" />
     <ClCompile Include="code\object\base\object_fade.cpp" />
+    <ClCompile Include="code\object\base\object_FBX.cpp" />
     <ClCompile Include="code\object\base\object_X.cpp" />
     <ClCompile Include="code\object\base\text.cpp" />
     <ClCompile Include="code\object\collision\obb.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="code\object\base\object_3D.h" />
     <ClInclude Include="code\object\base\object_billboard.h" />
     <ClInclude Include="code\object\base\object_fade.h" />
+    <ClInclude Include="code\object\base\object_FBX.h" />
     <ClInclude Include="code\object\base\object_X.h" />
     <ClInclude Include="code\object\base\text.h" />
     <ClInclude Include="code\object\collision\obb.h" />

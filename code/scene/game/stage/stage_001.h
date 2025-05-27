@@ -31,6 +31,9 @@ namespace Scene {
 
 			virtual bool GetPose()override;
 		private:
+			// 関数
+			void Load();	// ロード
+
 			// メンバ変数設定
 			bool m_bPose;	// ポーズ状態
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
@@ -40,6 +43,7 @@ namespace Scene {
 			static const bool s_bCameraFollowPlayer;	// 初期カメラがプレイヤーを追従するかどうか
 			static const float s_fCameraRot;	// 初期プレイヤーからのカメラの角度
 			static const float s_fGool;			// ゴール距離
+			static const string s_aStage;		// ステージパス
 
 		};
 	}
