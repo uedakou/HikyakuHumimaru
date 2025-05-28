@@ -98,7 +98,7 @@ public:
 //***************************************
 // ŒvŽZ
 //***************************************
-float RadianToAngle(float fRad);
-float AngleToRadian(float fAngle);
+float RadianToAngle(float fRad);	// 3.14->360
+float AngleToRadian(float fAngle);	// 360->3.14
 
 #endif // !_CALCULATION_H_

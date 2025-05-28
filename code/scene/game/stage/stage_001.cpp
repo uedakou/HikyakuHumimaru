@@ -27,7 +27,7 @@ namespace Scene {
 
 		const bool CStage_001::s_bCameraFollowPlayer = true;	// カメラがプレイヤーを追従するかどうか
 		const float CStage_001::s_fCameraRot = 2.6f;	// プレイヤーからのカメラの角度
-		const float CStage_001::s_fGool = 20000.0f;	// ゴール距離
+		const float CStage_001::s_fGool = 2000.0f;	// ゴール距離
 		const string CStage_001::s_aStage = "data/STAGE/Stage_001.txt";		// ステージパス
 
 		//============================================
@@ -61,11 +61,13 @@ namespace Scene {
 
 			// ワールド生成
 			CObject3D* pField = nullptr;
+			//フィールド生成
+
 			pField = CObject3D::creat(
+				D3DXVECTOR3(0.0f, 0.0f, s_fGool * 0.5f),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
-			pField->SetBlock(3, 10);
+				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));
+			pField->SetBlock(100, static_cast<int>(s_fGool / 100.0f) + 1000);
 			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 
 			// ステージ読み込み
@@ -115,6 +117,11 @@ namespace Scene {
 			}
 			if (m_bPose == false)
 			{
+				// チュートリアルイベント発動
+				if (playerPos.z > s_fGool)
+				{
+					return makeScene<CScen_Game_StageSelect>(m_gameData);
+				}
 				// カメラをプレイヤーに追従させるなら
 				if (m_bCameraFollowPlayer == true)
 				{
@@ -125,6 +132,11 @@ namespace Scene {
 						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
 					}
 				}
+			}
+			// プレイヤーの体力が０以下なら
+			if (pPlayer->GetLife() <= 0)
+			{
+				return makeScene<CScen_Game_StageSelect>(m_gameData);
 			}
 #ifdef _DEBUG
 			// デバッグ時ステージ移行
@@ -204,11 +216,11 @@ namespace Scene {
 						{
 							file >> _;	// 一文スキップ
 							file >> str2;	// モデル名を取得
-							pos.x = stof(str2.c_str());
+							rot.x = AngleToRadian(stof(str2.c_str()));
 							file >> str2;	// モデル名を取得
-							pos.y = stof(str2.c_str());
+							rot.y = AngleToRadian(stof(str2.c_str()));
 							file >> str2;	// モデル名を取得
-							pos.z = stof(str2.c_str());
+							rot.z = AngleToRadian(stof(str2.c_str()));
 							getline(file, _);	// 一行スキップ
 						}
 					}
@@ -225,6 +237,10 @@ namespace Scene {
 						CObstaclesLow::clate(pos, rot);
 						break;
 					default:
+#ifdef _DEBUG
+						OutputDebugStringA("デバッグ出力：存在しない障害物を生成しようとしました。\n");
+						Beep(1200, 300);
+#endif // _DEBUG
 						break;
 					}
 
