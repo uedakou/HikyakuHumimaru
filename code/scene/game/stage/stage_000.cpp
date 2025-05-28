@@ -108,13 +108,13 @@ namespace Scene {
 			pPlActiv->SetInLeft(false);		// 左入力設定
 			pPlActiv->SetInRight(false);	// 右入力設定
 
-			// ワールド生成
+			//フィールド生成
 			CObject3D* pField = nullptr;
 			pField = CObject3D::creat(
+				D3DXVECTOR3(0.0f, 0.0f, s_fGool * 0.5f),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
-			pField->SetBlock(3, 10);
+				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));
+			pField->SetBlock(100, static_cast<int>(s_fGool / 100.0f) + 1000);
 			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 
 			// カメラ向き

@@ -59,10 +59,8 @@ namespace Scene {
 			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
 
-			// ワールド生成
-			CObject3D* pField = nullptr;
 			//フィールド生成
-
+			CObject3D* pField = nullptr;
 			pField = CObject3D::creat(
 				D3DXVECTOR3(0.0f, 0.0f, s_fGool * 0.5f),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
@@ -70,6 +68,16 @@ namespace Scene {
 			pField->SetBlock(100, static_cast<int>(s_fGool / 100.0f) + 1000);
 			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 
+			for (int nCnt = 0; nCnt < static_cast<int>(s_fGool / 100); nCnt++)
+			{
+				CObjectX* pX = CObjectX::creat("data/MODEL/Building/Building_000.x");
+				pX->SetPos(D3DXVECTOR3(500.0f, 0.0f, nCnt * 500.0f));
+				pX->SetRotY(AngleToRadian(90));
+
+				pX = CObjectX::creat("data/MODEL/Building/Building_001.x");
+				pX->SetPos(D3DXVECTOR3(-500.0f, 0.0f, nCnt * 500.0f));
+				pX->SetRotY(AngleToRadian(-90));
+			}
 			// ステージ読み込み
 			Load();
 		}

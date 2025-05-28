@@ -25,8 +25,10 @@ namespace Scene {
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかどうか
 			float m_fCameraRot;		// プレイヤーからのカメラの角度
 
+
 			static const bool s_bCameraFollowPlayer;
 			static const float s_fCameraRot;
+			static const float s_fGool;
 		};
 	}
 }

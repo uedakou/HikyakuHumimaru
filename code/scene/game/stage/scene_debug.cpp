@@ -19,6 +19,7 @@ namespace Scene {
 
 		const bool CSceneDebug::s_bCameraFollowPlayer = true;
 		const float CSceneDebug::s_fCameraRot = 2.6f;
+		const float CSceneDebug::s_fGool = 10000.0f;
 		//============================================
 		// コンストラクタ
 		//============================================
@@ -52,13 +53,13 @@ namespace Scene {
 
 			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
 
-			// ワールド生成
+			//フィールド生成
 			CObject3D* pField = nullptr;
 			pField = CObject3D::creat(
+				D3DXVECTOR3(0.0f, 0.0f, s_fGool * 0.5f),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
-			pField->SetBlock(3, 10);
+				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));
+			pField->SetBlock(100, static_cast<int>(s_fGool / 100.0f) + 1000);
 			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 
 			// 障害物

@@ -16,7 +16,7 @@
 const int CPlayer::s_nLife = 1;			// プレイヤーライフ
 const float CPlayer::s_fSpeed = 20.0f;	// プレイヤー速度
 const bool CPlayer::s_bMove = true;		// プレイヤーが自動で動くかどうか
-const float CPlayer::s_fLane = 500.0f;	// ラインの幅
+const float CPlayer::s_fLane = 200.0f;	// ラインの幅
 const X CPlayer::s_Collision = { { 0.0f, 0.0f, 0.0f }, { 0.0f ,0.0f, 0.0f },{ 10.0f, 10.0f, 70.0f } };	// コリジョン大きさ
 
 //============================================
