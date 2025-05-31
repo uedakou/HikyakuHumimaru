@@ -142,8 +142,8 @@ public:
 		void InputDown()	override;	// 下入力
 		void InputLeft()	override;	// 左入力
 		void InputRight()	override;	// 右入力
-		int m_nCnt;						// スライディングカウント
-		static const int s_nCnt = 5;	// スライディングカウント最大
+		int m_nCnt;					// 移動カウント
+		static const int s_nCnt = 5;	// カウント最大
 	};
 	// ジャンプ状態
 	class PlayerJanpActivity :public ActivityStrategy
@@ -190,7 +190,7 @@ private:
 	CEffectGeneratorPaeticle* m_pEffect;	// エフェクト
 
 	// 定数
-	static const int s_nLife;		// 体力初期値
+	static const int s_nLife = 1;		// 体力初期値
 	static const float s_fSpeed;	// 速度初期値
 	static const bool s_bMove;		// 自動移動するかどうか
 	static const float s_fLane;		// 基本の1レーンの幅

@@ -7,6 +7,14 @@
 #ifndef _CUMERA_H_
 #define _CUMERA_H_
 #include "main.h"
+
+
+#define s_bCumeraDataDraw (false)
+
+
+
+
+
 class CText;
 class CCamera
 {
@@ -134,7 +142,6 @@ private:	// •Ï”
 	CText* m_pText;
 
 	ProjectionStrategy* m_pCameraStrategy;	// “Š‰e
-
 };
 
 #endif // !_CUMERA_H_

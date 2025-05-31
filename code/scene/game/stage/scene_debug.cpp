@@ -65,9 +65,9 @@ namespace Scene {
 			// áŠQ•¨
 			CObstaclesToll::clate(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
 
-			CObstaclesHigh::clate(D3DXVECTOR3(0.0f, 0.0f, 2000.0f));
+			//CObstaclesHigh::clate(D3DXVECTOR3(0.0f, 0.0f, 2000.0f));
 
-			CObstaclesLow::clate(D3DXVECTOR3(0.0f, 0.0f, 3000.0f));
+			//CObstaclesLow::clate(D3DXVECTOR3(0.0f, 0.0f, 3000.0f));
 
 
 
@@ -78,10 +78,6 @@ namespace Scene {
 		CSceneDebug::~CSceneDebug()
 		{
 			int a = 0;
-			//if (m_pField != nullptr)
-			//{
-			//	m_pField->DeathFlag();
-			//}
 		}
 		//============================================
 		// XV

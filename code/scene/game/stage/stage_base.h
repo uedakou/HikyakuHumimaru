@@ -9,6 +9,7 @@
 #include "../scene_game.h"	// シーンゲームベース
 #include "./../../../base/pch.h"	// プリコンパイル
 
+class CObject2D;
 namespace Scene {
 	namespace Game {
 		class CStage_Base : public CBase
@@ -21,12 +22,50 @@ namespace Scene {
 
 			virtual bool GetPose()override;
 		protected:
+			// 更新描画
+			class Stage_Strategy
+			{
+			public:
+				Stage_Strategy(CStage_Base* pPrimary) : m_pPrimary(pPrimary) {}	// コンストラクタ
+				virtual ~Stage_Strategy() { m_pPrimary = nullptr; };
+				virtual Stage_Strategy* update(nsPrev::CBase*& owner) = 0;
+				CStage_Base* m_pPrimary;	// 親
+			};
+			class Stage_Play_Strategy : public Stage_Strategy
+			{
+			public:
+				Stage_Play_Strategy(CStage_Base* pPrimary);
+				virtual ~Stage_Play_Strategy() {};
+				virtual Stage_Play_Strategy* update(nsPrev::CBase*& owner);
+			};
+			class Stage_Goal_Strategy : public Stage_Strategy
+			{
+			public:
+				virtual Stage_Goal_Strategy* update(nsPrev::CBase*& owner);
+				enum class SelectGoal {
+					StageSelect = 0,	// ステージセレクト
+					ReTry,				// リスタート
+					MAX,
+				};// セレクト種類
+				Stage_Goal_Strategy(CStage_Base* pPrimary);
+				virtual ~Stage_Goal_Strategy();
+
+				SelectGoal m_Select;
+				SelectGoal m_SelectOld;
+				CObject2D* m_pSelect[static_cast<int>(SelectGoal::MAX)];	// セレクト
+				CObject2D* m_GoalPopup;	// ポップアップ
+				static const D3DXVECTOR3 s_SelectSiz;
+			};
+			Stage_Strategy* m_pStrategy;	// 更新ストラテジ
+
 			// 関数
 			void Load(const string& filePath);	// ロード
+
 			// メンバ変数設定
 			bool m_bPose;	// ポーズ状態
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
 			float m_fCameraRot;		// カメラの角度
+			float m_fGool;	// 
 
 		private:
 			// メンバ変数の初期値

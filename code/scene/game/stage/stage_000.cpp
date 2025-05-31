@@ -50,8 +50,8 @@ namespace Scene {
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
 			// メンバ変数設定
-			m_bPose = false;
-
+			m_bPose = false;	// ポーズ状態設定
+			m_fGool = s_fGool;	// ゴール距離設定
 
 			m_fTutorialRange = s_fTutorialRange;	// チュートリアルイベント発生の範囲初期化
 
@@ -148,23 +148,6 @@ namespace Scene {
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
 
-			// ポーズ入力
-			if (pKey->GetTrigger(DIK_P))
-			{
-				m_bPose = !m_bPose;
-				// ポーズしたら
-				if (m_bPose)
-				{
-					// プレイヤーの動きを止める
-					pPlayer->SetMove(false);
-				}
-				// ポーズを解除したら
-				else
-				{
-					// プレイヤーの動かす
-					pPlayer->SetMove(true);
-				}
-			}
 			if (m_bPose == false)
 			{
 				// チュートリアルイベント発動
@@ -299,17 +282,7 @@ namespace Scene {
 					}
 				}
 			}
-#ifdef _DEBUG
-			// デバッグ時ステージ移行
-			if (pKey->GetTrigger(DIK_L))
-			{
-				return makeScene<CScen_Game_StageSelect>(m_gameData);
-			}
-#endif // !_DEBUG
-
-			CStage_Base::Update();
-
-			return this;
+			return CStage_Base::Update();;
 		}
 		void CStage_000::Draw() const
 		{

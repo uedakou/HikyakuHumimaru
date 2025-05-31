@@ -13,7 +13,7 @@
 
 #define PlayerMove true
 
-const int CPlayer::s_nLife = 1;			// プレイヤーライフ
+//const int CPlayer::s_nLife = 1;			// プレイヤーライフ
 const float CPlayer::s_fSpeed = 20.0f;	// プレイヤー速度
 const bool CPlayer::s_bMove = true;		// プレイヤーが自動で動くかどうか
 const float CPlayer::s_fLane = 200.0f;	// ラインの幅
@@ -232,7 +232,6 @@ CPlayer::ActivityStrategy* CPlayer::ActivityStrategy::Update()
 	}
 
 }
-
 /// <summary>
 /// 通常時ストラテジーコンストラクタ
 /// </summary>
@@ -299,10 +298,9 @@ CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player, LR 
 {
 	m_LR = lr;
 	m_type = Type::Ran;
-	m_nCnt = 0;
 	if (lr == LR::L)
 	{
-		m_pPrimary->AddPosX(-m_pPrimary->m_fLane);	// 左に移動
+		//m_pPrimary->AddPosX(-m_pPrimary->m_fLane);	// 左に移動
 		float posX = m_pPrimary->GetPosX();	// プレイヤーの位置取得
 		// プレイヤーがレーン外に出ていたら
 		if (posX < -m_pPrimary->m_fLane)
@@ -310,10 +308,11 @@ CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player, LR 
 			// 中に戻す
 			m_pPrimary->SetPosX(-m_pPrimary->m_fLane);
 		}
+		m_nCnt = s_nCnt;
 	}
 	else
 	{
-		m_pPrimary->AddPosX(m_pPrimary->m_fLane);	// 右に移動
+		//m_pPrimary->AddPosX(m_pPrimary->m_fLane);	// 右に移動
 		float posX = m_pPrimary->GetPosX();	// プレイヤーの位置取得
 		// プレイヤーがレーン外に出ていたら
 		if (posX > m_pPrimary->m_fLane)
@@ -321,6 +320,7 @@ CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player, LR 
 			// 中に戻す
 			m_pPrimary->SetPosX(m_pPrimary->m_fLane);
 		}
+		m_nCnt = -s_nCnt;
 	}
 }
 /// <summary>
@@ -335,9 +335,15 @@ CPlayer::PlayerLaneChangeActivity::~PlayerLaneChangeActivity()
 /// <returns></returns>
 CPlayer::ActivityStrategy* CPlayer::PlayerLaneChangeActivity::Update()
 {
-	m_nCnt++;
-	if (m_nCnt >= s_nCnt)
+	// ０に向かい１動く
+	int nRot = (m_nCnt < 0) - (m_nCnt > 0);
+	m_nCnt += nRot;
+	m_pPrimary->AddPosX(s_fLane / s_nCnt * nRot);
+
+
+	if (m_nCnt == 0)
 	{
+		//m_pPrimary->AddPosX(s_fLane);
 		return ActivityStrategy::Update();
 	}
 	return this;

@@ -221,7 +221,6 @@ namespace Scene {
 
 				}
 
-
 				if (m_bNext == true)
 				{// ‘I‘ð‚ðŒˆ’è‚µ‚½‚ç
 					switch (static_cast<Select>(m_nSetlect))

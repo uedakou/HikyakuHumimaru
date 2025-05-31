@@ -33,13 +33,14 @@ namespace Scene{
 		virtual void Draw() const = 0;	// 描画
 
 		virtual bool GetPose() = 0;
-	protected:
-
-		CCommonData* const m_pCommonData;	// 共有データ
 
 		//実体生成用関数
 		template<typename T>
 		CBase* makeScene();
+	protected:
+
+		CCommonData* const m_pCommonData;	// 共有データ
+
 	private:
 	};
 }

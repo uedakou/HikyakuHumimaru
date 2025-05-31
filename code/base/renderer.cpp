@@ -157,7 +157,7 @@ void CRenderer::Draw(void)
 		Scene->Draw();
 
 #ifdef _DEBUG
-		pCamera->DrawCamera();
+		//pCamera->DrawCamera();
 		DrawFPS();
 
 #endif // !_DEBUG

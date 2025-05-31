@@ -39,6 +39,7 @@ namespace Scene {
 
 			// メンバ変数設定
 			m_bPose = false;
+			m_fGool = s_fGool;
 
 			// プレイヤー設定
 			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
@@ -85,54 +86,10 @@ namespace Scene {
 		//============================================
 		nsPrev::CBase* CStage_001::Update()
 		{
-			CManager* pManager = CManager::GetInstance();	// マネージャー取得
-			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
-			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
-			CPlayer* pPlayer = m_gameData->GetPlayer();
-			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
-			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
 
-			// ポーズ入力
-			if (pKey->GetTrigger(DIK_P))
-			{
-				m_bPose = !m_bPose;
-				// ポーズしたら
-				if (m_bPose)
-				{
-					// プレイヤーの動きを止める
-					pPlayer->SetMove(false);
-				}
-				// ポーズを解除したら
-				else
-				{
-					// プレイヤーの動かす
-					pPlayer->SetMove(true);
-				}
-			}
-			if (m_bPose == false)
-			{
-				// チュートリアルイベント発動
-				if (playerPos.z > s_fGool)
-				{
-					return makeScene<CScen_Game_StageSelect>(m_gameData);
-				}
-			}
-			// プレイヤーの体力が０以下なら
-			if (pPlayer->GetLife() <= 0)
-			{
-				return makeScene<CScen_Game_StageSelect>(m_gameData);
-			}
-#ifdef _DEBUG
-			// デバッグ時ステージ移行
-			if (pKey->GetTrigger(DIK_L))
-			{
-				return makeScene<CScen_Game_StageSelect>(m_gameData);
-			}
-#endif // !_DEBUG
+			
 
-			CStage_Base::Update();
-
-			return this;
+			return CStage_Base::Update();;
 		}
 		void CStage_001::Draw() const
 		{
@@ -147,6 +104,7 @@ namespace Scene {
 
 			return m_bPose;
 		}
+
 		//============================================
 		// 生成
 		//============================================

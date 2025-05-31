@@ -126,7 +126,9 @@ void CCamera::Update(void)
 	}
 	CameraSetR();
 	// カメラ情報テキスト表示
+#if s_bCumeraDataDraw
 	DrawCamera();
+#endif // s_bCumeraDataDraw
 }
 //============================================
 // 描画処理

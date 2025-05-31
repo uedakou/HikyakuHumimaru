@@ -30,11 +30,11 @@ namespace Scene {
 		// コンスト
 		//============================================
 		CStage_Base::CStage_Base(CBase* scene, CGameData* gameData) :
-			CBase(scene, gameData)
+			CBase(scene, gameData),
+			m_bPose(false) , m_bCameraFollowPlayer(true) , m_fGool(0)
 		{
-			m_bPose = false;
-			m_bCameraFollowPlayer = true;
 			m_fCameraRot = s_fCameraRot;
+			m_pStrategy = new Stage_Play_Strategy(this);
 		}
 		//============================================
 		// デストラクタ
@@ -65,6 +65,18 @@ namespace Scene {
 					}
 				}
 			}
+			nsPrev::CBase* result = this;
+
+			if (m_pStrategy != nullptr)
+			{
+				auto p = m_pStrategy->update(result);
+				if (p != m_pStrategy)
+				{
+					delete m_pStrategy;
+					m_pStrategy = p;
+				}
+			}
+
 #ifdef _DEBUG
 			// デバッグ時ステージ移行
 			if (pKey->GetTrigger(DIK_L))
@@ -72,7 +84,7 @@ namespace Scene {
 				return makeScene<CScen_Game_StageSelect>(m_gameData);
 			}
 #endif // !_DEBUG
-			return this;
+			return result;
 		}
 		void CStage_Base::Draw() const
 		{
@@ -83,6 +95,108 @@ namespace Scene {
 		bool CStage_Base::GetPose()
 		{
 			return m_bPose;
+		}
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		/// <param name="pPrimary">親</param>
+		CStage_Base::Stage_Play_Strategy::Stage_Play_Strategy(CStage_Base* pPrimary) :
+			Stage_Strategy(pPrimary)
+		{
+		}
+		/// <summary>
+		/// 通常更新ストラテジ
+		/// </summary>
+		/// <returns></returns>
+		CStage_Base::Stage_Play_Strategy* CStage_Base::Stage_Play_Strategy::update(nsPrev::CBase*& owner)
+		{
+			CManager* pManager = CManager::GetInstance();	// マネージャー取得
+			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
+			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
+			CPlayer* pPlayer = m_pPrimary->m_gameData->GetPlayer();
+			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
+			// ポーズ入力
+			if (pKey->GetTrigger(DIK_P))
+			{
+				m_pPrimary->m_bPose = !(m_pPrimary->m_bPose);
+				// ポーズしたら
+				if (m_pPrimary->m_bPose)
+				{
+					// プレイヤーの動きを止める
+					pPlayer->SetMove(false);
+				}
+				// ポーズを解除したら
+				else
+				{
+					// プレイヤーを動かす
+					pPlayer->SetMove(true);
+				}
+			}
+			if (m_pPrimary->m_bPose == false)
+			{
+				// チュートリアルイベント発動
+				if (playerPos.z > m_pPrimary->m_fGool)
+				{
+					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+				}
+			}
+			// プレイヤーの体力が０以下なら
+			if (pPlayer->GetLife() <= 0)
+			{
+				owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+			}
+#ifdef _DEBUG
+			// デバッグ時ステージ移行
+			if (pKey->GetTrigger(DIK_L))
+			{
+				owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+			}
+#endif // !_DEBUG
+
+			return this;
+		}
+
+
+		const D3DXVECTOR3 CStage_Base::Stage_Goal_Strategy::s_SelectSiz {200.0f, 200.0f, 0.0f};
+		/// <summary>
+		/// ゴール時コンスト
+		/// </summary>
+		/// <param name="pPrimary">親</param>
+		CStage_Base::Stage_Goal_Strategy::Stage_Goal_Strategy(CStage_Base* pPrimary) :
+			Stage_Strategy(pPrimary)
+		{
+			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
+			{
+				m_pSelect[nCnt] = CObject2D::creat(D3DXVECTOR3(SCREEN_W * 0.5f + s_SelectSiz.x * nCnt, SCREEN_H * 0.5f, 0.0f), s_SelectSiz);
+				switch (static_cast<SelectGoal>(nCnt))
+				{
+				case SelectGoal::StageSelect:	// ステージセレクトに戻る
+					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Provisional/End_000.png");
+					break;
+				case SelectGoal::ReTry:	// リトライ
+					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Provisional/End_000.png");
+					break;
+				default:
+					break;
+				}
+			}
+			m_GoalPopup = CObject2D::creat(D3DXVECTOR3(), D3DXVECTOR3());
+			m_GoalPopup->SetTexture("data/TEXTURE/Provisional/End_000.png");
+		}
+		CStage_Base::Stage_Goal_Strategy::~Stage_Goal_Strategy()
+		{
+		}
+		CStage_Base::Stage_Goal_Strategy* CStage_Base::Stage_Goal_Strategy::update(nsPrev::CBase*& owner)
+		{
+
+			
+			if (m_Select != m_SelectOld)
+			{
+				m_pSelect[static_cast<int>(m_Select)]->SetColor(D3DXCOLOR(D3DCOLOR_RGBA(255, 255, 255, 255)));
+				m_pSelect[static_cast<int>(m_SelectOld)]->SetColor(D3DXCOLOR(D3DCOLOR_RGBA(255, 255, 255, 255)));
+			}
+				return this;
 		}
 		/// <summary>
 		/// ステージ読み込み
@@ -243,5 +357,6 @@ namespace Scene {
 			// ファイルを閉じる
 			file.close();
 		}
+
 	}
 }

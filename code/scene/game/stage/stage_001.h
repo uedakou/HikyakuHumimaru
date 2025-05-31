@@ -22,6 +22,8 @@ namespace Scene {
 			virtual void Draw() const override;
 
 			virtual bool GetPose()override;
+		protected:
+
 		private:
 			// ƒƒ“ƒo•Ï”‚Ì‰Šú’l
 			static const float s_fGool;			// ƒS[ƒ‹‹——£
