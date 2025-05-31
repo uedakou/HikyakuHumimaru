@@ -6,14 +6,14 @@
 //===========================================
 #ifndef _STAGE_000_H_
 #define _STAGE_000_H_
-#include "../scene_game.h"	// シーンゲームベース
+#include "stage_base.h"	// シーンゲームベース
 #include "./../../../base/pch.h"	// プリコンパイル
 class CObject2D;
 class CText;
 
 namespace Scene {
 	namespace Game {
-		class CStage_000 : public CBase
+		class CStage_000 : public CStage_Base
 		{
 		public:
 			// チュートリアルイベント
@@ -32,9 +32,6 @@ namespace Scene {
 			virtual bool GetPose()override;
 		private:
 			// メンバ変数設定
-			bool m_bPose;	// ポーズ状態
-			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
-			float m_fCameraRot;		// カメラの角度
 			float m_fTutorialRange;	// チュートリアルイベント発生の範囲
 			// チュートリアル
 			bool m_bCanShownTutorial_000;	// イベントフラグ
@@ -46,16 +43,14 @@ namespace Scene {
 			bool m_bHasShownTutorial_001;	// イベントを行ったかどうか
 			bool m_bHasShownTutorial_002;	// イベントを行ったかどうか
 			bool m_bHasShownTutorial_003;	// イベントを行ったかどうか
-			
-
 
 			CObject2D* m_pTutorealPopup[static_cast<int>(TUTORIAL::MAX)];	// チュートリアルポップアップ
 
 			// メンバ変数の初期値
-			static const bool s_bCameraFollowPlayer;	// 初期カメラがプレイヤーを追従するかどうか
-			static const float s_fCameraRot;	// 初期プレイヤーからのカメラの角度
-			static const float s_fTutorialRange;	// チュートリアルイベント発生の範囲
 			static const float s_fGool;			// ゴール距離
+			static const string s_aStage;	// 初期チュートリアルのポップアップの大きさ
+
+			static const float s_fTutorialRange;	// チュートリアルイベント発生の範囲
 			// チュートリアル
 			static const float s_fTutorial_000;	// 初期チュートリアルのイベント発生位置
 			static const float s_fTutorial_001;	// 初期チュートリアルのイベント発生位置
@@ -69,6 +64,7 @@ namespace Scene {
 
 			static const D3DXVECTOR3 s_TutorialPopupPos;	// 初期チュートリアルのポップアップの位置
 			static const D3DXVECTOR3 s_TutorialPopupSiz;	// 初期チュートリアルのポップアップの大きさ
+
 
 		};
 	}

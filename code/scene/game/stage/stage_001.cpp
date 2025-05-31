@@ -25,24 +25,20 @@ namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
 
-		const bool CStage_001::s_bCameraFollowPlayer = true;	// カメラがプレイヤーを追従するかどうか
-		const float CStage_001::s_fCameraRot = 2.6f;	// プレイヤーからのカメラの角度
-		const float CStage_001::s_fGool = 2000.0f;	// ゴール距離
+		const float CStage_001::s_fGool = 20000.0f;	// ゴール距離
 		const string CStage_001::s_aStage = "data/STAGE/Stage_001.txt";		// ステージパス
 
 		//============================================
 		// コンスト
 		//============================================
 		CStage_001::CStage_001(CBase* scene, CGameData* gameData) :
-			CBase(scene, gameData)
+			CStage_Base(scene, gameData)
 		{
 			CObject::ReleaseScene();	// シーンリリース
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 
 			// メンバ変数設定
 			m_bPose = false;
-			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
-			m_fCameraRot = s_fCameraRot;	// プレイヤーからのカメラの角度
 
 			// プレイヤー設定
 			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
@@ -66,20 +62,10 @@ namespace Scene {
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));
 			pField->SetBlock(100, static_cast<int>(s_fGool / 100.0f) + 1000);
-			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+			pField->SetTexture("data/TEXTURE/Load_000.png");
 
-			for (int nCnt = 0; nCnt < static_cast<int>(s_fGool / 100); nCnt++)
-			{
-				CObjectX* pX = CObjectX::creat("data/MODEL/Building/Building_000.x");
-				pX->SetPos(D3DXVECTOR3(500.0f, 0.0f, nCnt * 500.0f));
-				pX->SetRotY(AngleToRadian(90));
-
-				pX = CObjectX::creat("data/MODEL/Building/Building_001.x");
-				pX->SetPos(D3DXVECTOR3(-500.0f, 0.0f, nCnt * 500.0f));
-				pX->SetRotY(AngleToRadian(-90));
-			}
 			// ステージ読み込み
-			Load();
+			Load(s_aStage);
 		}
 		//============================================
 		// デストラクタ
@@ -130,16 +116,6 @@ namespace Scene {
 				{
 					return makeScene<CScen_Game_StageSelect>(m_gameData);
 				}
-				// カメラをプレイヤーに追従させるなら
-				if (m_bCameraFollowPlayer == true)
-				{
-					// プレイヤーが有るなら
-					if (pPlayer != nullptr)
-					{
-						// カメラをプレイヤーに追従させる
-						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
-					}
-				}
 			}
 			// プレイヤーの体力が０以下なら
 			if (pPlayer->GetLife() <= 0)
@@ -153,6 +129,9 @@ namespace Scene {
 				return makeScene<CScen_Game_StageSelect>(m_gameData);
 			}
 #endif // !_DEBUG
+
+			CStage_Base::Update();
+
 			return this;
 		}
 		void CStage_001::Draw() const
@@ -163,113 +142,10 @@ namespace Scene {
 		//============================================
 		bool CStage_001::GetPose()
 		{
+
+			CStage_Base::Draw();
+
 			return m_bPose;
-		}
-		/// <summary>
-		/// ステージ読み込み
-		/// </summary>
-		void CStage_001::Load()
-		{
-			ifstream file(s_aStage.c_str());  // 読み込むファイルのパスを指定
-			if (file.fail()) {
-				cerr << "ファイルを開けませんでした\n";
-			}
-			string str0, str1, str2, str3;	// 文字列格納用
-			string _;	// スキップ用格納
-			string aModelFile[MAX_MOTION_MODEL];	// モデルファイル
-
-		// 抽出演算子>>を使ってデリミタで区切られた単語，値を読み込む
-			while (file >> str0)
-			{
-				// コメントアウト
-				if (str0[0] == '#')
-				{
-					getline(file, _);	// 一行スキップ
-				}
-				// 障害物TALL
-				else if (str0.compare("OBSTACLES") == 0)
-				{
-					int nType = 0;	// 種類
-					D3DXVECTOR3 pos = {};	// 位置
-					D3DXVECTOR3 rot = {};	// 向き
-
-
-					while (file >> str1 &&
-						str1.compare("END_OBSTACLES") != 0)
-					{
-						// コメントアウト
-						if (str1[0] == '#')
-						{
-							getline(file, _);	// 一行スキップ
-						}
-						if (str1.compare("TYPE") == 0)
-						{
-							file >> _;	// 一文スキップ
-							file >> str2;	// モデル数を取得
-							nType = atoi(str2.c_str());
-							getline(file, _);	// 一行スキップ
-						}
-						if (str1.compare("POS") == 0)
-						{
-							file >> _;	// 一文スキップ
-							file >> str2;	// モデル数を取得
-							pos.x = stof(str2.c_str());
-							file >> str2;	// モデル数を取得
-							pos.y = stof(str2.c_str());
-							file >> str2;	// モデル数を取得
-							pos.z = stof(str2.c_str());
-							getline(file, _);	// 一行スキップ
-						}
-						if (str1.compare("ROT") == 0)
-						{
-							file >> _;	// 一文スキップ
-							file >> str2;	// モデル名を取得
-							rot.x = AngleToRadian(stof(str2.c_str()));
-							file >> str2;	// モデル名を取得
-							rot.y = AngleToRadian(stof(str2.c_str()));
-							file >> str2;	// モデル名を取得
-							rot.z = AngleToRadian(stof(str2.c_str()));
-							getline(file, _);	// 一行スキップ
-						}
-					}
-					// 障害物生成
-					switch (nType)
-					{
-					case 0:
-						CObstaclesToll::clate(pos, rot);
-						break;
-					case 1:
-						CObstaclesHigh::clate(pos, rot);
-						break;
-					case 2:
-						CObstaclesLow::clate(pos, rot);
-						break;
-					default:
-#ifdef _DEBUG
-						OutputDebugStringA("デバッグ出力：存在しない障害物を生成しようとしました。\n");
-						Beep(1200, 300);
-#endif // _DEBUG
-						break;
-					}
-
-				}
-			}
-			// ファイルを閉じる
-			file.close();
-		}
-		/// <summary>
-		/// 仮マップ配置
-		/// </summary>
-		void CStage_001::LoadT()
-		{
-			// ワールド生成
-			CObject3D* pField = nullptr;
-			pField = CObject3D::creat(
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
-			pField->SetBlock(3, 10);
-			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
 		}
 		//============================================
 		// 生成

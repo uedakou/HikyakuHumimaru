@@ -21,16 +21,15 @@ namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
 
-		const bool CStage_000::s_bCameraFollowPlayer = true;	// カメラがプレイヤーを追従するかどうか
-		const float CStage_000::s_fCameraRot = 2.6f;	// プレイヤーからのカメラの角度
-		const float CStage_000::s_fTutorialRange = 200.0f;	// プレイヤーからのカメラの角度
 		const float CStage_000::s_fGool = 20000.0f;	// ゴール距離
+		const string CStage_000::s_aStage = "data/STAGE/Stage_000.txt";	// チュートリアルのポップアップの大きさ
 
+		const float CStage_000::s_fTutorialRange = 200.0f;	// チュートリアル当たり判定範囲
 		// チュートリアル
 		const float CStage_000::s_fTutorial_000 = 2000.0f;		// チュートリアルイベント
 		const float CStage_000::s_fTutorial_001 = 4000.0f;		// チュートリアルイベント
 		const float CStage_000::s_fTutorial_002 = 6000.0f;		// チュートリアルイベント
-		const float CStage_000::s_fTutorial_003 = 6000.0f;		// チュートリアルイベント
+		const float CStage_000::s_fTutorial_003 = 8000.0f;		// チュートリアルイベント
 
 		const bool CStage_000::s_bCanShownTutorial_000 = false;	// チュートリアルイベント
 		const bool CStage_000::s_bCanShownTutorial_001 = false;		// チュートリアルイベント
@@ -39,11 +38,12 @@ namespace Scene {
 
 		const D3DXVECTOR3 CStage_000::s_TutorialPopupPos = { 1000.0f, 300.0f, 0.0f };	// チュートリアルのポップアップの位置
 		const D3DXVECTOR3 CStage_000::s_TutorialPopupSiz = { 300.0f, 200.0f, 0.0f };	// チュートリアルのポップアップの大きさ
+
 		//============================================
 		// コンスト
 		//============================================
 		CStage_000::CStage_000(CBase* scene, CGameData* gameData) :
-			CBase(scene, gameData)
+			CStage_Base(scene, gameData)
 		{
 			CObject::ReleaseScene();	// シーンリリース
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
@@ -51,8 +51,8 @@ namespace Scene {
 
 			// メンバ変数設定
 			m_bPose = false;
-			m_bCameraFollowPlayer = s_bCameraFollowPlayer;// カメラがプレイヤーを追従するかどうか
-			m_fCameraRot = s_fCameraRot;	// プレイヤーからのカメラの角度
+
+
 			m_fTutorialRange = s_fTutorialRange;	// チュートリアルイベント発生の範囲初期化
 
 			m_bCanShownTutorial_000 = s_bCanShownTutorial_000;	// チュートリアルイベントフラグ
@@ -64,9 +64,6 @@ namespace Scene {
 			m_bHasShownTutorial_001 = false;	// イベントを行ったかどうか
 			m_bHasShownTutorial_002 = false;	// イベントを行ったかどうか
 			m_bHasShownTutorial_003 = false;	// イベントを行ったかどうか
-
-			// 障害物生成
-			CObstaclesToll::clate(D3DXVECTOR3(0.0f, 0.0f, s_fTutorial_000));
 
 			for (int nCnt = 0; nCnt < static_cast<int>(TUTORIAL::MAX); nCnt++)
 			{
@@ -121,6 +118,10 @@ namespace Scene {
 			CManager* pManager = CManager::GetInstance();
 			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
+
+
+			// ステージ読み込み
+			Load(s_aStage);
 		}
 		//============================================
 		// デストラクタ
@@ -166,17 +167,6 @@ namespace Scene {
 			}
 			if (m_bPose == false)
 			{
-				// カメラをプレイヤーに追従させるなら
-				if (m_bCameraFollowPlayer == true)
-				{
-					// プレイヤーが有るなら
-					if (pPlayer != nullptr)
-					{
-						// カメラをプレイヤーに追従させる
-						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
-					}
-				}
-
 				// チュートリアルイベント発動
 				if (playerPos.z > s_fGool &&
 					playerPos.z < s_fGool + 3.0f)
@@ -316,10 +306,14 @@ namespace Scene {
 				return makeScene<CScen_Game_StageSelect>(m_gameData);
 			}
 #endif // !_DEBUG
+
+			CStage_Base::Update();
+
 			return this;
 		}
 		void CStage_000::Draw() const
 		{
+			CStage_Base::Draw();
 		}
 		//============================================
 		// デストラクタ

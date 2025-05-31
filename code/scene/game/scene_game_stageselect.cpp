@@ -42,13 +42,13 @@ namespace Scene {
 				switch (static_cast<Select>(nCnt))
 				{
 				case Select::STAGE_000:
-					m_pStage[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					m_pStage[nCnt]->SetTexture("data/TEXTURE/StageSelect_000.png");
 					break;
 				case Select::STAGE_001:
-					m_pStage[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					m_pStage[nCnt]->SetTexture("data/TEXTURE/StageSelect_001.png");
 					break;
 				case Select::STAGE_002:
-					m_pStage[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					m_pStage[nCnt]->SetTexture("data/TEXTURE/StageSelect_002.png");
 					break;
 				default:
 					break;

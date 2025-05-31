@@ -48,7 +48,7 @@ namespace Scene {
 
 		// タイトル
 		m_pTitle = CObject2D::creat(4, D3DXVECTOR3(300.0f, 150.0f, 0.0f), D3DXVECTOR3(500.0f, 200.0f, 0));	// 生成
-		m_pTitle->SetTexture("data/TEXTURE/Provisional/Title_000.png");	// テクスチャ
+		m_pTitle->SetTexture("data/TEXTURE/Title_001.png");	// テクスチャ
 		m_pTitle->SetType(CObject2D::TYPE::POPUP);	// 種類をポップアップに設定
 
 		// セレクト
