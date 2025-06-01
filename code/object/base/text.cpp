@@ -43,8 +43,6 @@ CText::CText()
 	m_Space = s_Space;		// 領域
 	m_pCol = s_pCol;		// 文字色
 	m_aText = s_aText;		// 表示テキスト
-
-	CObject::SetType(CObject::TYPE::TEXT);
 }
 CText::CText(int nPriorithi) :
 	CObject(nPriorithi)
@@ -62,8 +60,6 @@ CText::CText(int nPriorithi) :
 	m_Space = s_Space;		// 領域
 	m_pCol = s_pCol;		// 文字色
 	m_aText = s_aText;		// 表示テキスト
-
-	CObject::SetType(CObject::TYPE::TEXT);
 
 }
 //============================================

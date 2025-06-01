@@ -19,8 +19,6 @@ CObjectBillbord::CObjectBillbord()
 	m_pTexture = nullptr;
 	m_pVtxBuff = nullptr;
 
-	CObject::SetType(CObject::TYPE::BILLBOARD);
-	m_type = Null;
 }
 CObjectBillbord::CObjectBillbord(const int nPriority):
 	CObject(nPriority)
@@ -28,8 +26,6 @@ CObjectBillbord::CObjectBillbord(const int nPriority):
 	m_pTexture = nullptr;
 	m_pVtxBuff = nullptr;
 
-	CObject::SetType(CObject::TYPE::BILLBOARD);
-	m_type = Null;
 }
 //============================================
 // デストラクタ

@@ -12,9 +12,6 @@ CEnemy::CEnemy()
 {
 	m_bSearch = false; 
 	m_pTarget = nullptr;
-
-	m_type = ENEMY_TYPE::Enemy000;
-	CCharacter::SetType(CCharacter::TYPE::ENEMY);
 }
 //============================================
 // デストラクタ

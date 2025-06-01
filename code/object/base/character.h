@@ -16,12 +16,6 @@
 class CCharacter : public CObjectMotion
 {
 public:
-	enum class TYPE {
-		TYPE_NULL = 0,
-		PLAYER,		// プレイヤー
-		ENEMY,		// 敵
-		MAX
-	};
 	CCharacter();
 	virtual ~CCharacter()	override;
 	virtual void Init()		override;	// 初期化
@@ -33,16 +27,12 @@ public:
 
 
 	// ステータス設定
-	void SetType(TYPE type) { m_type = type; }	// 種類設定
-
 	void SetLife(int nLife)				{ m_nLife = nLife; }				// 体力設定
 	void SetInvincible(int nInvincible) { m_nCntInvincible = nInvincible; }	// 無敵時間設定
 	void SetAttcak(int nAttcak)			{ m_nAttcak = nAttcak; }			// 攻撃力設定
 	void SetDefense(int nDefense)		{ m_nDefense = nDefense; }			// 防御力設定
 	void SetSpeed(int nSpeed)			{ m_fSpeed = nSpeed; }				// 速度設定
 	// ステータス取得
-	TYPE GetType() { return m_type; }	// 種類取得
-
 	int GetLife()		{ return m_nLife; }				// 体力設定
 	int GetInvincible() { return m_nCntInvincible; }	// 無敵時間設定
 	int GetAttcak()		{ return m_nAttcak; }			// 攻撃力設定
@@ -108,8 +98,6 @@ protected :
 	virtual void MoveAttenuation();	// 移動減衰
 
 private:
-	TYPE m_type;	// 種類
-
 	int m_nLife;	// 体力
 	int m_nCntInvincible;	// 無敵時間
 	int m_nAttcak;	// 攻撃力

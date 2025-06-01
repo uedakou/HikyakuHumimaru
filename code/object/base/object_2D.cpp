@@ -17,7 +17,6 @@ CObject2D::CObject2D()
 	m_pVtxBuff = nullptr;
 	m_pTexture = nullptr;
 	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	CObject::SetType(CObject::TYPE::OBJECT2D);
 }
 CObject2D::CObject2D(int nPriority):
 	CObject(nPriority)
@@ -25,7 +24,6 @@ CObject2D::CObject2D(int nPriority):
 	m_pVtxBuff = nullptr;
 	m_pTexture = nullptr;
 	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	CObject::SetType(CObject::TYPE::OBJECT2D);
 }
 //============================================
 // デストラクト

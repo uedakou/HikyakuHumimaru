@@ -33,8 +33,6 @@ CPlayer::CPlayer()
 	m_bJanp = false;	// ƒWƒƒƒ“ƒv‰Â”\‚©
 	SetAttcak(1);
 
-	CCharacter::SetType(CCharacter::TYPE::PLAYER);
-
 	m_pActivityStrategy = new PlayerNomarActivity(this);
 
 	m_pEffect = nullptr;

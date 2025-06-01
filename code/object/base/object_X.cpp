@@ -32,43 +32,6 @@ CModelX::~CModelX()
 {
 }
 //============================================
-// リリースする（タグ付き）
-//============================================
-void CModelX::ReleaseTag(TAG tag)
-{
-	CModelX* pModel = m_pTop;
-	CModelX* pNext;
-	while (pModel != nullptr)
-	{
-		pNext = pModel;
-		if (pModel->m_Tag == tag)
-		{
-			if (pModel->m_pBuffMat != nullptr)
-			{
-				pModel->m_pBuffMat->Release();
-				pModel->m_pBuffMat = nullptr;
-			}
-			if (pModel->m_pMesh != nullptr)
-			{
-				pModel->m_pMesh->Release();
-				pModel->m_pMesh = nullptr;
-			}
-			for (int nCntTex = 0; nCntTex < MAX_MODEL_X; nCntTex++)
-			{
-				if (pModel->m_pTexture[nCntTex] != nullptr)
-				{
-					pModel->m_pTexture[nCntTex]->Release();
-					pModel->m_pTexture[nCntTex] = nullptr;
-				}
-			}
-			delete pModel;
-		}
-		pModel = pNext;
-	}
-
-
-}
-//============================================
 // リリースする
 //============================================
 void CModelX::ReleaseAll()

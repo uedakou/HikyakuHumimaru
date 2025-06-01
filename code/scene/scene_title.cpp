@@ -44,12 +44,10 @@ namespace Scene {
 		// 背景
 		m_pBG = CObject2D::creat(D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0));	// 生成
 		m_pBG->SetTexture("data/TEXTURE/Provisional/BG_000.png");	// テクスチャ
-		m_pBG->SetType(CObject2D::TYPE::BG);	// 種類を背景に設定
 
 		// タイトル
 		m_pTitle = CObject2D::creat(4, D3DXVECTOR3(300.0f, 150.0f, 0.0f), D3DXVECTOR3(500.0f, 200.0f, 0));	// 生成
 		m_pTitle->SetTexture("data/TEXTURE/Title_001.png");	// テクスチャ
-		m_pTitle->SetType(CObject2D::TYPE::POPUP);	// 種類をポップアップに設定
 
 		// セレクト
 		m_nSelect = 0;	// 現在の選択
@@ -189,36 +187,6 @@ namespace Scene {
 			// シーン変更のカウントをする
 			m_nCnt++;
 		}
-
-		CObject* Top[MAX_PRIORITY];
-		CObject::GetAllObject(Top);
-		for (int nCnt = 0; nCnt < MAX_PRIORITY; nCnt++)
-		{
-			CObject* pObject = Top[nCnt];
-			CObject* pNext = nullptr;
-			while (pObject != nullptr)
-			{
-				pNext = pObject->GetNext();
-
-				if (pObject->GetType() == CObject::TYPE::BILLBOARD)
-				{
-
-					CObjectBillbord* pTree = (CObjectBillbord*)pObject;
-					pTree->AddPos(D3DXVECTOR3(0.0f, 0.0f, -10.0f));
-
-
-					D3DXVECTOR3 pos = pTree->GetPos();
-					if (pos.z <= -500.0f)
-					{
-						pTree->DeathFlag();
-					}
-
-				}
-				pObject = pNext;
-			}
-		}
-
-
 		return this;
 	}
 	//============================================

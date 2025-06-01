@@ -13,12 +13,7 @@
 class CObject3D : public CObject
 {
 public:
-	enum class TYPE{
-		TYPE_NULL = 0,
-		FIELD,		// 地面
-		WALL,		// 壁
-		MAX,
-	};
+
 	CObject3D();
 	CObject3D(const int nPriority);
 	virtual ~CObject3D()	override;
@@ -26,8 +21,6 @@ public:
 	virtual void Uninit()	override;
 	virtual void Update()	override;
 	virtual void Draw()		override;
-	
-	void SetType(TYPE type) { m_type = type; }	// 種類設定
 
 	void SetVtxBuff(LPDIRECT3DVERTEXBUFFER9 pVtxBuff) { m_pVtxBuff = pVtxBuff; }
 
@@ -43,8 +36,6 @@ public:
 	void SetSizY(const float y) { m_siz.y = y; }
 	void SetSizZ(const float z) { m_siz.z = z; }
 
-	TYPE GetType() { return m_type; }	// 種類取得
-
 	LPDIRECT3DVERTEXBUFFER9* GetVtxBuff() { return &m_pVtxBuff; }
 
 	LPDIRECT3DTEXTURE9 GetTexture() { return m_pTexture; }
@@ -55,7 +46,6 @@ public:
 
 	static CObject3D* creat(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 siz);
 private:
-	TYPE m_type;	// 種類
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// バーテックスバッファ
 	LPDIRECT3DTEXTURE9 m_pTexture;	// テクスチャ
 	D3DXMATRIX m_mtxWorld;		// ワールドマトリクス

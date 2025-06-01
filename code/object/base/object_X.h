@@ -15,21 +15,13 @@
 class CModelX
 {
 public:
-	typedef enum {
-		TAG_NULL = 0,	// タグ無し
-		TAG_STAGE,		// ステージオブジェクト
-		TAG_CHARACTER,	// キャラクター
-		TAG_MAX
-	}TAG;	// どこの３Dオブジェクトか
 	CModelX();
 	~CModelX();
 	LPD3DXBUFFER GetBuffMtx() { return m_pBuffMat; }
 	DWORD GetNumMat() { return m_dwNumMat; }
 	LPD3DXMESH GetMesh() { return m_pMesh; }
 	LPDIRECT3DTEXTURE9 GetTexture(int nCnt) { return m_pTexture[nCnt]; }
-	void SetTag(TAG tag) { m_Tag = tag; }
 
-	static void ReleaseTag(TAG tag);
 	static void ReleaseAll();
 	static int Load(const char* aFileName);
 	static CModelX* GetModel(int nID);
@@ -45,7 +37,6 @@ private:
 	LPD3DXMESH m_pMesh;							// メッシュ(頂点情報)へのポインタ
 	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEX_X];	// プレイヤーのテクスチャ[テクスチャ数]
 
-	TAG m_Tag;
 };
 
 class CObjectX :public CObject

@@ -14,14 +14,6 @@
 class CObject2D : public CObject
 {
 public:
-
-	enum class TYPE {
-		TYPE_NULL = 0,
-		POPUP,			// ポップアップ
-		BG,				// 背景
-		SELECT,			// 選択
-		MAX
-	};
 	CObject2D();
 	CObject2D(int nPriority);
 	virtual ~CObject2D()	override;
@@ -29,7 +21,6 @@ public:
 	virtual void Uninit()	override;	// 終了
 	virtual void Update()	override;	// 更新
 	virtual void Draw()		override;	// 描画
-	void SetType(TYPE type) { m_type = type; }		// 種類設定
 
 	// 設定
 	virtual void SetX(X x)		override;
@@ -58,10 +49,9 @@ public:
 	void SetTexture(const char aName[MAX_TXT]);		// テクスチャ設定
 	void SetTexture(std::string aName);				// テクスチャ設定
 
-	TYPE GetType() { return m_type; }		// 種類取得
-
-	D3DXCOLOR GetColor() { return m_col; }	// 色取得
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff() { return m_pVtxBuff; }	// バッファ取得
+	D3DXCOLOR GetColor() { return m_col; }	// 色取得
+	D3DXVECTOR3 GetSiz() { return m_siz; }	// 大きさ取得
 
 	// 加算
 	virtual void AddX(X x) override;	// トランスフォーム設定
@@ -90,7 +80,6 @@ private:
 	void SetVtxPos();	// バーテックスの位置を設定
 private:
 	// プライベート変数
-	TYPE m_type;	// 種類
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファへのポインタ
 	LPDIRECT3DTEXTURE9 m_pTexture;			// テクスチャ
 	D3DXCOLOR m_col;

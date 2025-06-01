@@ -18,18 +18,6 @@
 class CObject
 {
 public:
-	// 種類
-	enum class TYPE {
-		TYPE_NULL = 0,
-		BILLBOARD,	// ビルボード
-		OBJECT2D,	// 2D
-		OBJECT3D,	// 3D
-		TEXT,		// テキスト
-		EFFECT,		// エフェクト
-		CHARACTER,	// キャラクター
-		MAX,
-	};			// オブジェクト種類
-
 	CObject();
 	CObject(const int nPriority);
 	virtual ~CObject();
@@ -64,10 +52,6 @@ public:
 	virtual void SetPrev(CObject* pPrev) { m_pPrev = pPrev; }	// 前設定
 	virtual CObject* GetNext() { return m_pNext; }//	次取得
 	virtual CObject* GetPrev() { return m_pPrev; }//	次取得
-
-	// 種類
-	void SetType(TYPE type);	// 自身の種類設定
-	TYPE GetType();				// 種類取得
 
 	// 位置
 	virtual void SetX(X x) { m_x = x; }
@@ -154,7 +138,6 @@ private:
 	int m_ID;	// オブジェクトID
 	int m_nPriority;
 	// 変数
-	TYPE m_type;							// 種類
 
 	X m_x;	// トランスフォーム
 	float m_fDistance;	// カメラからの距離

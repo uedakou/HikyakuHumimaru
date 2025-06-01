@@ -4,14 +4,12 @@
 // Author:Uedakou
 // 
 //============================================
-#include "object.h"
-
-using namespace std;
+#include "object.h"	// オブジェクト
+#include "object_billboard.h"	// ビルボード
 
 //============================================
 // コンストラクタ
 //============================================
-
 CObject* CObject::m_pTop[MAX_PRIORITY] = {};	// オブジェクトデータ
 CObject* CObject::m_pCur[MAX_PRIORITY] = {};	// オブジェクトデータ
 int CObject::m_nNumObject[MAX_PRIORITY] = {};	// 階層ごとオブジェクト数
@@ -23,8 +21,6 @@ CObject::CObject()
 	m_ID = m_nNumObject[MAX_PRIORITY];	// IDを記録
 
 	m_nPriority = MAX_PRIORITY;		// オブジェクトプライオリティ
-
-	m_type = TYPE::TYPE_NULL;		// 種類;
 
 	// トランスフォーム
 	m_x = X(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f));
@@ -60,8 +56,6 @@ CObject::CObject(const int nPriority)
 
 	m_nPriority = nPriority;	// オブジェクトプライオリティ
 
-	m_type = TYPE::TYPE_NULL;		// 種類
-
 	// トランスフォーム
 	m_x = X(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 	m_fDistance = 0.0f;
@@ -94,13 +88,6 @@ CObject::~CObject()
 {
 
 	m_nNumObject[m_nPriority]--;
-}
-//============================================
-// 描
-//============================================
-CObject::TYPE CObject::GetType()
-{
-	return m_type;
 }
 //============================================
 // オブジェクト解放
@@ -351,7 +338,7 @@ void CObject::Sort()
 			// 未ソートリストから条件を満たす最大値を探す
 			while (prevComp->m_pNext != NULL) {
 				// 条件を満たす場合のみ比較
-				if ((prevComp->m_pNext)->m_type == TYPE::BILLBOARD) {
+				if (dynamic_cast<CObjectBillbord*>(prevComp->m_pNext)) {
 					// ソート条件
 					if ((prevComp->m_pNext)->m_fDistance < max->m_fDistance) {
 						max = prevComp->m_pNext;         // 最大値を更新
@@ -418,11 +405,4 @@ void CObject::CalculateDistance(D3DXVECTOR3 pos)
 {
 	D3DXVECTOR3 diff = m_x.pos - pos;
 	m_fDistance = D3DXVec3LengthSq(&diff); // 距離の二乗を計算
-}
-//============================================
-// 種類設定
-//============================================
-void CObject::SetType(TYPE type)
-{
-	m_type = type;
 }

@@ -17,7 +17,6 @@ CObject3D::CObject3D()
 	m_col = D3DXCOLOR(0.0f, 0.0f ,0.0f ,0.0f);
 	BlockX = 1;
 	BlockY = 1;
-	m_type = TYPE::TYPE_NULL;
 }
 CObject3D::CObject3D(const int nPriority):
 	CObject(nPriority)
@@ -27,7 +26,6 @@ CObject3D::CObject3D(const int nPriority):
 	m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
 	BlockX = 1;
 	BlockY = 1;
-	m_type = TYPE::TYPE_NULL;
 }
 //============================================
 // ƒfƒXƒgƒ‰
