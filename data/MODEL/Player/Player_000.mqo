@@ -371,7 +371,7 @@ Object "Arm" {
 	}
 }
 Object "Hand" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -505,7 +505,7 @@ Object "Hand" {
 	}
 }
 Object "UpLeg" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -559,7 +559,7 @@ Object "UpLeg" {
 	}
 }
 Object "Leg" {
-	visible 0
+	visible 15
 	locking 0
 	shading 1
 	facet 59.5
@@ -613,7 +613,7 @@ Object "Leg" {
 	}
 }
 Object "Foot" {
-	visible 15
+	visible 0
 	locking 0
 	shading 1
 	facet 59.5
