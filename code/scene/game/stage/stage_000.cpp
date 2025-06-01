@@ -21,7 +21,7 @@ namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
 
-		const float CStage_000::s_fGool = 20000.0f;	// ゴール距離
+		const float CStage_000::s_fGool = 15000.0f;	// ゴール距離
 		const string CStage_000::s_aStage = "data/STAGE/Stage_000.txt";	// チュートリアルのポップアップの大きさ
 
 		const float CStage_000::s_fTutorialRange = 200.0f;	// チュートリアル当たり判定範囲
@@ -112,7 +112,7 @@ namespace Scene {
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));
 			pField->SetBlock(100, static_cast<int>(s_fGool / 100.0f) + 1000);
-			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+			pField->SetTexture("data/TEXTURE/Load_000.png");
 
 			// カメラ向き
 			CManager* pManager = CManager::GetInstance();

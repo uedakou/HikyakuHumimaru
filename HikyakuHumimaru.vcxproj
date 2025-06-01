@@ -186,6 +186,7 @@
     <ClCompile Include="code\scene\scene_maneger.cpp" />
     <ClCompile Include="code\scene\scene_title.cpp" />
     <ClCompile Include="code\object\obstacles_tall.cpp" />
+    <ClCompile Include="code\object\scroll.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\base\calculation.h" />
@@ -233,13 +234,31 @@
     <ClInclude Include="code\scene\scene_maneger.h" />
     <ClInclude Include="code\scene\scene_title.h" />
     <ClInclude Include="code\object\obstacles_tall.h" />
+    <ClInclude Include="code\object\scroll.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="data\STAGE\Stage_000.txt" />
     <Text Include="data\STAGE\Stage_001.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\MODEL\Obstacles\Obstacles_High\000\Obstacles_High_000.x" />
     <None Include="data\MODEL\Obstacles\Obstacles_Low\000\Obstacles_Low_000.x" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\TEXTURE\Load_000.png" />
+    <Image Include="data\TEXTURE\QUITGAME.png" />
+    <Image Include="data\TEXTURE\Result000.png" />
+    <Image Include="data\TEXTURE\Retry_000.png" />
+    <Image Include="data\TEXTURE\Select_StageSelect_000.png" />
+    <Image Include="data\TEXTURE\shadow000.jpg" />
+    <Image Include="data\TEXTURE\StageClear_000.png" />
+    <Image Include="data\TEXTURE\StageSelect_000.png" />
+    <Image Include="data\TEXTURE\StageSelect_001.png" />
+    <Image Include="data\TEXTURE\StageSelect_002.png" />
+    <Image Include="data\TEXTURE\START.png" />
+    <Image Include="data\TEXTURE\Title000.png" />
+    <Image Include="data\TEXTURE\Title_001.png" />
+    <Image Include="data\TEXTURE\tree000.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

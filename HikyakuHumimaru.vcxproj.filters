@@ -183,6 +183,9 @@
     <ClCompile Include="code\scene\game\stage\stage_base.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="code\object\scroll.cpp">
+      <Filter>ソース ファイル\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\base\calculation.h">
@@ -320,12 +323,60 @@
     <ClInclude Include="code\scene\game\stage\stage_base.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="code\object\scroll.h">
+      <Filter>ソース ファイル\object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\STAGE\Stage_001.txt" />
+    <Text Include="data\STAGE\Stage_000.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\MODEL\Obstacles\Obstacles_High\000\Obstacles_High_000.x" />
     <None Include="data\MODEL\Obstacles\Obstacles_Low\000\Obstacles_Low_000.x" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\TEXTURE\Load_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\QUITGAME.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Result000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Retry_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Select_StageSelect_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\shadow000.jpg">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\StageClear_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\StageSelect_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\StageSelect_001.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\StageSelect_002.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\START.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Title_001.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Title000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\tree000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

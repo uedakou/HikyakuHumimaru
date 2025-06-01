@@ -19,6 +19,13 @@ namespace Scene {
 			void SetPlayer(CPlayer* player) { m_player = player; }	// プレイヤー設定
 			// 取得
 			CPlayer* GetPlayer() { return m_player; }	// プレイヤー取得
+			enum class Select {
+				STAGE_000 = 0,	// ステージチュートリアル
+				STAGE_001,	// ステージ1
+				STAGE_002,	// ステージ2
+				MAX
+			};		// 次に移行するシーンの選択肢
+			int m_nScore[static_cast<int>(Select::MAX)];
 		private:
 			CPlayer* m_player;	// プレイヤー
 

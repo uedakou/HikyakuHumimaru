@@ -4,10 +4,10 @@
 // Author:Uedakou
 // 
 //============================================
-#include "obstacles.h"
 #ifndef _OBJECT_TOLL_H_
 #define _OBJECT_TOLL_H_
 
+#include "obstacles.h"
 class CObstaclesToll : public CObstacles
 {
 public:

@@ -36,12 +36,11 @@ namespace Scene {
 			public:
 				Stage_Play_Strategy(CStage_Base* pPrimary);
 				virtual ~Stage_Play_Strategy() {};
-				virtual Stage_Play_Strategy* update(nsPrev::CBase*& owner);
+				virtual Stage_Strategy* update(nsPrev::CBase*& owner);
 			};
 			class Stage_Goal_Strategy : public Stage_Strategy
 			{
 			public:
-				virtual Stage_Goal_Strategy* update(nsPrev::CBase*& owner);
 				enum class SelectGoal {
 					StageSelect = 0,	// ステージセレクト
 					ReTry,				// リスタート
@@ -49,12 +48,18 @@ namespace Scene {
 				};// セレクト種類
 				Stage_Goal_Strategy(CStage_Base* pPrimary);
 				virtual ~Stage_Goal_Strategy();
-
-				SelectGoal m_Select;
-				SelectGoal m_SelectOld;
+				virtual Stage_Strategy* update(nsPrev::CBase*& owner);
+				int m_nSelect;
+				int m_nSelectOld;
 				CObject2D* m_pSelect[static_cast<int>(SelectGoal::MAX)];	// セレクト
+				CObject2D* m_pSelectBG;	// セレクト
 				CObject2D* m_GoalPopup;	// ポップアップ
-				static const D3DXVECTOR3 s_SelectSiz;
+				CObject2D* m_BG;	// ポップアップ
+				static const D3DXVECTOR3 s_SelectPos;	// セレクト位置
+				static const D3DXVECTOR3 s_SelectSiz;	// セレクト大きさ
+				static const D3DXVECTOR3 s_PopupPos;	// セレクト位置
+				static const D3DXVECTOR3 s_PopupSiz;	// セレクト大きさ
+
 			};
 			Stage_Strategy* m_pStrategy;	// 更新ストラテジ
 
@@ -62,6 +67,7 @@ namespace Scene {
 			void Load(const string& filePath);	// ロード
 
 			// メンバ変数設定
+			int m_nScroll;	// スクロール
 			bool m_bPose;	// ポーズ状態
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
 			float m_fCameraRot;		// カメラの角度

@@ -4,9 +4,9 @@
 // Author:Uedakou
 // 
 //============================================
-#include "obstacles.h"
 #ifndef _OBJECT_LOW_H_
 #define _OBJECT_LOW_H_
+#include "obstacles.h"
 
 class CObstaclesLow : public CObstacles
 {

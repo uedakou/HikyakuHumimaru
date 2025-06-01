@@ -13,6 +13,11 @@ namespace Scene
 		CGameData::CGameData()
 		{
 			m_player = nullptr;
+			for (int nCnt = 0; nCnt < static_cast<int>(Select::MAX); nCnt++)
+			{
+				m_nScore[nCnt] = 0;
+			}
+
 		}
 		CGameData::~CGameData()
 		{

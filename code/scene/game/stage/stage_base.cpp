@@ -5,6 +5,9 @@
 // 
 //===========================================
 #include "stage_base.h"		// ステージ
+#include "stage_000.h"		// ステージ000
+#include "stage_001.h"		// ステージ001
+#include "scene_debug.h"	// ステージデバッグ
 
 #include "../../../object/player.h"	// プレイヤー
 #include "../../../object/base/object_2D.h"	// ポップアップ用2D
@@ -17,6 +20,7 @@
 #include "../../../object/obstacles_tall.h"	// 障害物
 #include "../../../object/obstacles_high.h"	// 障害物
 #include "../../../object/obstacles_low.h"	// 障害物
+#include "../../../object/scroll.h"	// スクロール
 
 #include <fstream>	// ファイルの読み込みに必要
 #include <iostream>	// ファイルの読み込みに必要
@@ -31,7 +35,7 @@ namespace Scene {
 		//============================================
 		CStage_Base::CStage_Base(CBase* scene, CGameData* gameData) :
 			CBase(scene, gameData),
-			m_bPose(false) , m_bCameraFollowPlayer(true) , m_fGool(0)
+			m_nScroll(0), m_bPose(false) , m_bCameraFollowPlayer(true) , m_fGool(0)
 		{
 			m_fCameraRot = s_fCameraRot;
 			m_pStrategy = new Stage_Play_Strategy(this);
@@ -41,6 +45,17 @@ namespace Scene {
 		//============================================
 		CStage_Base::~CStage_Base()
 		{
+			int nStage = 0;// ステージ
+			if(dynamic_cast<CStage_000*>(this))nStage = 0;
+			else if(dynamic_cast<CStage_001*>(this))nStage = 1;
+			//else if(dynamic_cast<CStage_002*>(this))nStage = 1;
+
+			// スクロール数が前より多ければ足す
+			if (m_gameData->m_nScore[nStage] < m_nScroll)
+			{
+				m_gameData->m_nScore[nStage] = m_nScroll;
+			}
+			
 		}
 		//============================================
 		// 更新
@@ -52,19 +67,7 @@ namespace Scene {
 			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
 			CPlayer* pPlayer = m_gameData->GetPlayer();
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
-			if (m_bPose == false)
-			{
-				// カメラをプレイヤーに追従させるなら
-				if (m_bCameraFollowPlayer == true)
-				{
-					// プレイヤーが有るなら
-					if (pPlayer != nullptr)
-					{
-						// カメラをプレイヤーに追従させる
-						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
-					}
-				}
-			}
+
 			nsPrev::CBase* result = this;
 
 			if (m_pStrategy != nullptr)
@@ -77,13 +80,6 @@ namespace Scene {
 				}
 			}
 
-#ifdef _DEBUG
-			// デバッグ時ステージ移行
-			if (pKey->GetTrigger(DIK_L))
-			{
-				return makeScene<CScen_Game_StageSelect>(m_gameData);
-			}
-#endif // !_DEBUG
 			return result;
 		}
 		void CStage_Base::Draw() const
@@ -108,7 +104,7 @@ namespace Scene {
 		/// 通常更新ストラテジ
 		/// </summary>
 		/// <returns></returns>
-		CStage_Base::Stage_Play_Strategy* CStage_Base::Stage_Play_Strategy::update(nsPrev::CBase*& owner)
+		CStage_Base::Stage_Strategy* CStage_Base::Stage_Play_Strategy::update(nsPrev::CBase*& owner)
 		{
 			CManager* pManager = CManager::GetInstance();	// マネージャー取得
 			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
@@ -135,10 +131,48 @@ namespace Scene {
 			}
 			if (m_pPrimary->m_bPose == false)
 			{
-				// チュートリアルイベント発動
+				// ゴール判定
 				if (playerPos.z > m_pPrimary->m_fGool)
 				{
-					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+					return new Stage_Goal_Strategy(m_pPrimary);
+				}
+
+				// カメラをプレイヤーに追従させるなら
+				if (m_pPrimary->m_bCameraFollowPlayer == true)
+				{
+					// プレイヤーが有るなら
+					if (pPlayer != nullptr)
+					{
+						// カメラをプレイヤーに追従させる
+						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_pPrimary->m_fCameraRot) * 300.0f, playerPos.z + cosf(m_pPrimary->m_fCameraRot) * 300.0f));	// カメラに適応
+					}
+				}
+			}
+			// 巻物とプレイヤーの当たり判定
+			CObject* pObject[MAX_PRIORITY];
+			CObject* pNext = nullptr;
+			CObject::GetAllObject(pObject);
+			for (int nCnt = 0; nCnt < MAX_PRIORITY; nCnt++)
+			{
+				while (pObject[nCnt] != nullptr)
+				{
+					pNext = pObject[nCnt]->GetNext();
+					if (CScroll* pScroll = dynamic_cast<CScroll*>(pObject[nCnt]))
+					{
+						D3DXVECTOR3 PLpos = pPlayer->GetPos();	// プレイヤー位置
+						D3DXVECTOR3 PLcol = pPlayer->GetCollisionSiz();	// プレイヤーコリジョン
+						D3DXVECTOR3 pos = pScroll->GetPos();	// 巻物位置
+						D3DXVECTOR3 coll = pScroll->GetCollisionSiz();
+						if (PLpos.z + PLcol.z * 0.5f > pos.z - coll.z * 0.5f &&
+							PLpos.z - PLcol.z * 0.5f < pos.z + coll.z * 0.5f &&
+							PLpos.x + PLcol.x * 0.5f > pos.x - coll.x * 0.5f &&
+							PLpos.x - PLcol.x * 0.5f < pos.x + coll.x * 0.5f)
+						{
+							m_pPrimary->m_nScroll++;
+							pScroll->Release();
+						}
+					}
+					pObject[nCnt] = pNext;
 				}
 			}
 			// プレイヤーの体力が０以下なら
@@ -150,15 +184,18 @@ namespace Scene {
 			// デバッグ時ステージ移行
 			if (pKey->GetTrigger(DIK_L))
 			{
-				owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+				return new Stage_Goal_Strategy(m_pPrimary);
 			}
 #endif // !_DEBUG
 
 			return this;
 		}
 
-
-		const D3DXVECTOR3 CStage_Base::Stage_Goal_Strategy::s_SelectSiz {200.0f, 200.0f, 0.0f};
+		// ゴール時ストラテジー定数
+		const D3DXVECTOR3 CStage_Base::Stage_Goal_Strategy::s_SelectPos{ SCREEN_W * 0.5f, SCREEN_H * 0.5f + 100.0f, 0.0f};
+		const D3DXVECTOR3 CStage_Base::Stage_Goal_Strategy::s_SelectSiz {100.0f, 100.0f, 0.0f};
+		const D3DXVECTOR3 CStage_Base::Stage_Goal_Strategy::s_PopupPos{ SCREEN_W * 0.5f, 200.0f, 0.0f};
+		const D3DXVECTOR3 CStage_Base::Stage_Goal_Strategy::s_PopupSiz {100.0f, 100.0f, 0.0f};
 		/// <summary>
 		/// ゴール時コンスト
 		/// </summary>
@@ -166,37 +203,126 @@ namespace Scene {
 		CStage_Base::Stage_Goal_Strategy::Stage_Goal_Strategy(CStage_Base* pPrimary) :
 			Stage_Strategy(pPrimary)
 		{
+			// 選択初期化
+			m_nSelect = 0;
+			m_nSelectOld = 0;
+
+			// 選択肢生成
 			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
 			{
-				m_pSelect[nCnt] = CObject2D::creat(D3DXVECTOR3(SCREEN_W * 0.5f + s_SelectSiz.x * nCnt, SCREEN_H * 0.5f, 0.0f), s_SelectSiz);
+				m_pSelect[nCnt] = CObject2D::creat(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
 				switch (static_cast<SelectGoal>(nCnt))
 				{
 				case SelectGoal::StageSelect:	// ステージセレクトに戻る
-					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Provisional/End_000.png");
+					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Select_StageSelect_000.png");
 					break;
 				case SelectGoal::ReTry:	// リトライ
-					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Provisional/End_000.png");
+					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Retry_000.png");
 					break;
 				default:
 					break;
 				}
 			}
-			m_GoalPopup = CObject2D::creat(D3DXVECTOR3(), D3DXVECTOR3());
-			m_GoalPopup->SetTexture("data/TEXTURE/Provisional/End_000.png");
+			// 選択物カーソル
+			m_pSelectBG = CObject2D::creat(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
+
+			// ポップアップ
+			m_GoalPopup = CObject2D::creat(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
+			m_GoalPopup->SetTexture("data/TEXTURE/StageClear_000.png");
+
+			// 背景
+			m_BG = CObject2D::creat(0, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+			m_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 		}
+
+		/// <summary>
+		/// ゴール時デストラクタ
+		/// </summary>
 		CStage_Base::Stage_Goal_Strategy::~Stage_Goal_Strategy()
 		{
-		}
-		CStage_Base::Stage_Goal_Strategy* CStage_Base::Stage_Goal_Strategy::update(nsPrev::CBase*& owner)
-		{
-
-			
-			if (m_Select != m_SelectOld)
+			// セレクト解放
+			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
 			{
-				m_pSelect[static_cast<int>(m_Select)]->SetColor(D3DXCOLOR(D3DCOLOR_RGBA(255, 255, 255, 255)));
-				m_pSelect[static_cast<int>(m_SelectOld)]->SetColor(D3DXCOLOR(D3DCOLOR_RGBA(255, 255, 255, 255)));
+				if (m_pSelect[nCnt] != nullptr)
+				{
+					m_pSelect[nCnt]->Release();
+					m_pSelect[nCnt] = nullptr;
+				}
 			}
-				return this;
+			// ポップアップ解放
+			if (m_GoalPopup != nullptr)
+			{
+				m_GoalPopup->Release();
+				m_GoalPopup = nullptr;
+			}
+		}
+		/// <summary>
+		/// クリア更新
+		/// </summary>
+		/// <param name="owner">次シーン</param>
+		/// <returns>this以外次のストラテジー</returns>
+		CStage_Base::Stage_Strategy* CStage_Base::Stage_Goal_Strategy::update(nsPrev::CBase*& owner)
+		{
+			CManager* pManager = CManager::GetInstance();	// マネージャー取得
+			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
+
+			m_nSelectOld = m_nSelect;	//旧位置保存
+
+			// 上選択
+			if (pKey->GetTrigger(DIK_W) ||
+				pKey->GetTrigger(DIK_UP))
+			{
+				m_nSelect--;
+				if (m_nSelect < 0)
+				{
+					m_nSelect = static_cast<int>(SelectGoal::MAX) - 1;
+				}
+			}
+			// 下選択
+			else if (pKey->GetTrigger(DIK_S) ||
+				pKey->GetTrigger(DIK_DOWN))
+			{
+				m_nSelect++;
+				if (m_nSelect >= static_cast<int>(SelectGoal::MAX))
+				{
+					m_nSelect = 0;
+				}
+			}
+			// 選択が変更していたら
+			if (m_nSelect != m_nSelectOld)
+			{
+				// 位置を変える
+				m_pSelectBG->SetPos(m_pSelect[m_nSelect]->GetPos());
+			}
+
+			if (pKey->GetTrigger(DIK_RETURN) ||
+				pKey->GetTrigger(DIK_SPACE))
+			{
+				switch (static_cast<SelectGoal>(m_nSelect))
+				{
+				case SelectGoal::ReTry:	// リトライ
+					m_pPrimary;
+					if (dynamic_cast<CStage_000*>(m_pPrimary))
+					{
+						owner = m_pPrimary->makeScene<CStage_000>(m_pPrimary->m_gameData);
+					}
+					else if (dynamic_cast<CStage_001*>(m_pPrimary))
+					{
+						owner = m_pPrimary->makeScene<CStage_001>(m_pPrimary->m_gameData);
+					}
+					else if (dynamic_cast<CSceneDebug*>(m_pPrimary))
+					{
+						owner = m_pPrimary->makeScene<CSceneDebug>(m_pPrimary->m_gameData);
+					}
+					break;
+				case SelectGoal::StageSelect:	// ステージセレクト
+					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+					break;
+				default:
+					break;
+				}
+			}
+			return this;
 		}
 		/// <summary>
 		/// ステージ読み込み
@@ -276,6 +402,9 @@ namespace Scene {
 						break;
 					case 2:
 						CObstaclesLow::clate(pos, rot);
+						break;
+					case 3:
+						CScroll::clate(pos, rot);
 						break;
 					default:
 #ifdef _DEBUG

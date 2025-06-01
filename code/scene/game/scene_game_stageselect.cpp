@@ -57,15 +57,11 @@ namespace Scene {
 			// 一つ目のサイズを選択済みにする
 			m_pStage[0]->SetScl(D3DXVECTOR3(2.0f, 2.0f, 0.0f));
 
-			// フィールド
-			CObject3D* pField = nullptr;
-			// アスファルト
-			pField = CObject3D::creat(
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
-				D3DXVECTOR3(1000.0f, 0.0f, 1000.0f));
-			pField->SetBlock(1, 1);
-			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+
+			// 背景
+			CObject2D* pBG = nullptr;
+			pBG = CObject2D::creat(2, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0));	// 生成
+			pBG->SetTexture("data/TEXTURE/Provisional/BG_000.png");	// テクスチャ
 
 			pCamera->SetPosV(D3DXVECTOR3(0.0f, 100.0f, -400.0f));
 			pCamera->SetRotX(1.3f);	// カメラ向き

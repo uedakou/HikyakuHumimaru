@@ -19,12 +19,12 @@ namespace Scene {
 
 		const bool CSceneDebug::s_bCameraFollowPlayer = true;
 		const float CSceneDebug::s_fCameraRot = 2.6f;
-		const float CSceneDebug::s_fGool = 10000.0f;
+		const float CSceneDebug::s_fGool = 2000.0f;
 		//============================================
 		// コンストラクタ
 		//============================================
 		CSceneDebug::CSceneDebug(CBase* scene, CGameData* gameData) :
-			CBase(scene, gameData)
+			CStage_Base(scene, gameData)
 		{
 			CObject::ReleaseScene();	// シーンリリース
 
@@ -33,6 +33,7 @@ namespace Scene {
 
 			
 			m_bPose = false;	// ポーズ状態設定
+			m_fGool = s_fGool;
 
 			// プレイヤー設定
 			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
@@ -84,81 +85,13 @@ namespace Scene {
 		//============================================
 		nsPrev::CBase* CSceneDebug::Update()
 		{
-			CManager* pManager = CManager::GetInstance();	// マネージャー取得
-			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
-			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
-			CPlayer* pPlayer = m_gameData->GetPlayer();
-			// ポーズ入力
-			if (pKey->GetTrigger(DIK_P))
-			{
-				m_bPose = !m_bPose;
-				// ポーズしたら
-				if (m_bPose)
-				{
-					// プレイヤーの動きを止める
-					pPlayer->SetMove(false);
-				}
-				// ポーズを解除したら
-				else
-				{
-					// プレイヤーの動かす
-					pPlayer->SetMove(true);
-				}
-			}
-			if (m_bPose == false)
-			{
+			//CManager* pManager = CManager::GetInstance();	// マネージャー取得
+			//CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
+			//CCamera* pCamera = pManager->GetCamera();		// カメラ取得
+			//CPlayer* pPlayer = m_gameData->GetPlayer();
 
-				// カメラをプレイヤーに追従させるなら
-				if (m_bCameraFollowPlayer == true)
-				{
-					// プレイヤーが有るなら
-					if (pPlayer != nullptr)
-					{
-#if _DEBUG
-						if (pKey->GetTrigger(DIK_UP))
-						{
-							m_fCameraRot += 0.1f;
-						}
-						else if (pKey->GetTrigger(DIK_DOWN))
-						{
-							m_fCameraRot -= 0.1f;
-						}
-#endif // _DEBUG
-						// カメラをプレイヤーに追従させる
-						D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
-						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_fCameraRot) * 300.0f, playerPos.z + cosf(m_fCameraRot) * 300.0f));	// カメラに適応
-
-						// カメラのプレイヤーからの向き
-						//char text[MAX_TXT];
-						//sprintf_s(text, sizeof(text), "CameraRot:%f\n", m_fCameraRot);
-
-						//m_pText->SetText(text);
-					}
-				}
-
-				// プレイヤーがループするようにする
-				// プレイヤーがnullでなければ
-				if (pPlayer != nullptr)
-				{
-					float posz = pPlayer->GetPosZ();
-					if (posz >= 4000.0f)
-					{
-						pPlayer->SetPosZ(-5000.0f);
-					}
-				}
-
-				// プレイヤーの体力が０以下なら
-				if (pPlayer->GetLife() <= 0)
-				{
-					return makeScene<CScen_Game_StageSelect>(m_gameData);
-				}
-
-				// デバッグシーンチェンジ
-				if (pKey->GetTrigger(DIK_L))
-				{
-					return makeScene<CScen_Game_StageSelect>(m_gameData);
-				}
-			}
+			return CStage_Base::Update();;
+			
 			return this;
 		}
 		//============================================
@@ -166,6 +99,7 @@ namespace Scene {
 		//============================================
 		void CSceneDebug::Draw() const
 		{
+			return CStage_Base::Draw();;
 		}
 
 		//============================================

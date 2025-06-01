@@ -29,6 +29,7 @@ const D3DXVECTOR3 CCamera::CAMERA_ROT = D3DXVECTOR3(1.5f, 0.0f, 0.0f);	// カメラ
 const D3DXVECTOR3 CCamera::CAMERA_U = D3DXVECTOR3(0.0f, 1.0f, 0.0f);			// 上方向
 const float CCamera::MOVE_SPEED = 10.0f;	// 移動速度
 const float CCamera::MOVE_SPEED_FAST = 50.0f;// シフト移動速度
+
 //============================================
 // コンスト
 //============================================

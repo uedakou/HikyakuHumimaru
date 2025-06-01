@@ -4,10 +4,10 @@
 // Author:Uedakou
 // 
 //============================================
-#include "obstacles.h"
 #ifndef _OBJECT_HIGH_H_
 #define _OBJECT_HIGH_H_
 
+#include "obstacles.h"
 class CObstaclesHigh : public CObstacles
 {
 public:

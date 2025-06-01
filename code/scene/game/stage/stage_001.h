@@ -4,8 +4,8 @@
 // Auther:UedaKou
 // 
 //===========================================
-#ifndef _STAGE_000_H_
-#define _STAGE_000_H_
+#ifndef _STAGE_001_H_
+#define _STAGE_001_H_
 #include "stage_base.h"	// シーンゲームベース
 #include "./../../../base/pch.h"	// プリコンパイル
 class CObject2D;

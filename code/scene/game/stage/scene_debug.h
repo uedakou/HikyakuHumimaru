@@ -5,14 +5,15 @@
 // 
 //===========================================
 #ifndef _SCENE_DEBUG_H_
-#include "../scene_game.h"	// ベースシーン
+#define _SCENE_DEBUG_H_
+#include "stage_base.h"	// シーンゲームベース
 
 class CObject3D;	// オブジェクト３Ｄ
 class CText;	// テキスト
 
 namespace Scene {
 	namespace Game {
-		class CSceneDebug : public CBase
+		class CSceneDebug : public CStage_Base
 		{
 		public:
 			CSceneDebug(CBase* scene, CGameData* gameData);

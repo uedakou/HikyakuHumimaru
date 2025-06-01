@@ -9,7 +9,7 @@
 #include "main.h"
 
 
-#define s_bCumeraDataDraw (false)
+#define s_bCumeraDataDraw (true)
 
 
 
