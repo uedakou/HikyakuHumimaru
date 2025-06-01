@@ -9,8 +9,7 @@
 #include "base/character.h"	// キャラクター
 #include "base/effect_generator_particle.h"	// エフェクトジェネレーターパーティクル
 
-#define PLAYER_MOTIONFILE_A "data\\CHARACTER\\motion_Player.txt"	// プレイヤーモーションファイルパス
-#define PLAYER_MOTIONFILE_B "data\\CHARACTER\\motion.txt"			// プレイヤーモーションファイルパス
+#define PLAYER_MOTIONFILE_A "data\\CHARACTER\\motion_Humimaru.txt"	// プレイヤーモーションファイルパス
 #define PLAYER_RESISTANCE 0.01f		// 移動減衰
 
 class CPlayer:public CCharacter

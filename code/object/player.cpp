@@ -301,24 +301,21 @@ CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player, LR 
 		//m_pPrimary->AddPosX(-m_pPrimary->m_fLane);	// 左に移動
 		float posX = m_pPrimary->GetPosX();	// プレイヤーの位置取得
 		// プレイヤーがレーン外に出ていたら
-		if (posX < -m_pPrimary->m_fLane)
+		if (posX > -m_pPrimary->m_fLane)
 		{
-			// 中に戻す
-			m_pPrimary->SetPosX(-m_pPrimary->m_fLane);
+			m_nCnt = s_nCnt;
 		}
-		m_nCnt = s_nCnt;
+
 	}
 	else
 	{
 		//m_pPrimary->AddPosX(m_pPrimary->m_fLane);	// 右に移動
 		float posX = m_pPrimary->GetPosX();	// プレイヤーの位置取得
 		// プレイヤーがレーン外に出ていたら
-		if (posX > m_pPrimary->m_fLane)
+		if (posX < m_pPrimary->m_fLane)
 		{
-			// 中に戻す
-			m_pPrimary->SetPosX(m_pPrimary->m_fLane);
+			m_nCnt = -s_nCnt;
 		}
-		m_nCnt = -s_nCnt;
 	}
 }
 /// <summary>
@@ -387,7 +384,7 @@ CPlayer::PlayerJanpActivity::PlayerJanpActivity(CPlayer* player) :
 /// </summary>
 CPlayer::PlayerJanpActivity::~PlayerJanpActivity()
 {
-	m_pPrimary->m_bJanp = true;	// ジャンプ中かどうか設定
+	m_pPrimary->m_bJanp = false;	// ジャンプ中かどうか設定
 }
 /// <summary>
 /// ジャンプ時更新
@@ -441,7 +438,7 @@ CPlayer::PlayerSlidingActivity::PlayerSlidingActivity(CPlayer* player) :
 /// </summary>
 CPlayer::PlayerSlidingActivity::~PlayerSlidingActivity()
 {
-	m_pPrimary->m_bSliding = true;	// スライディング中かどうか設定
+	m_pPrimary->m_bSliding = false;	// スライディング中かどうか設定
 }
 /// <summary>
 /// スライティング時アップデート
