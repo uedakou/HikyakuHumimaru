@@ -102,5 +102,5 @@ CObstaclesToll* CObstaclesToll::clate(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 /// </summary>
 CObstaclesToll::CObstaclesToll()
 {
-	SetID(CModelX::Load("data/MODEL/Tentative/Obstacles_Tall.x"));
+	SetID(CModelX::Load("data/MODEL/Obstacles/Obstacles_Tall/Obstacles_Tall_000.x"));
 }

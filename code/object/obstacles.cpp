@@ -11,7 +11,7 @@
 
 
 
-const D3DXVECTOR3 CObstacles::s_Collision = { 100.0f, 100.0f, 200.0f };
+const D3DXVECTOR3 CObstacles::s_Collision = { 50.0f, 50.0f, 200.0f };
 /// <summary>
 /// コンストラクタ
 /// </summary>

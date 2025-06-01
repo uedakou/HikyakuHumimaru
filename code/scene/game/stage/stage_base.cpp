@@ -45,17 +45,6 @@ namespace Scene {
 		//============================================
 		CStage_Base::~CStage_Base()
 		{
-			int nStage = 0;// ステージ
-			if(dynamic_cast<CStage_000*>(this))nStage = 0;
-			else if(dynamic_cast<CStage_001*>(this))nStage = 1;
-			//else if(dynamic_cast<CStage_002*>(this))nStage = 1;
-
-			// スクロール数が前より多ければ足す
-			if (m_gameData->m_nScore[nStage] < m_nScroll)
-			{
-				m_gameData->m_nScore[nStage] = m_nScroll;
-			}
-			
 		}
 		//============================================
 		// 更新
@@ -203,6 +192,27 @@ namespace Scene {
 		CStage_Base::Stage_Goal_Strategy::Stage_Goal_Strategy(CStage_Base* pPrimary) :
 			Stage_Strategy(pPrimary)
 		{
+			CPlayer* pPlayer = m_pPrimary->m_gameData->GetPlayer();	// プレイヤー取得
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
+
+			pPlActiv->SetInUP(false);		// 上入力設定
+			pPlActiv->SetInDown(false);		// 下入力設定
+			pPlActiv->SetInLeft(false);		// 左入力設定
+			pPlActiv->SetInRight(false);	// 右入力設定
+
+			// スクロール数を保存
+			int nStage = 0;// ステージ
+			if (dynamic_cast<CStage_000*>(this))nStage = 0;
+			else if (dynamic_cast<CStage_001*>(this))nStage = 1;
+			//else if(dynamic_cast<CStage_002*>(this))nStage = 1;
+
+
+
+			// スクロール数が前より多ければ足す
+			if (m_pPrimary->m_gameData->m_nScore[nStage] < m_pPrimary->m_nScroll)
+			{
+				m_pPrimary->m_gameData->m_nScore[nStage] = m_pPrimary->m_nScroll;
+			}
 			// 選択初期化
 			m_nSelect = 0;
 			m_nSelectOld = 0;
@@ -231,7 +241,7 @@ namespace Scene {
 			m_GoalPopup->SetTexture("data/TEXTURE/StageClear_000.png");
 
 			// 背景
-			m_BG = CObject2D::creat(0, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+			m_BG = CObject2D::creat(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
 			m_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 		}
 
@@ -240,6 +250,13 @@ namespace Scene {
 		/// </summary>
 		CStage_Base::Stage_Goal_Strategy::~Stage_Goal_Strategy()
 		{
+			CPlayer* pPlayer = m_pPrimary->m_gameData->GetPlayer();	// プレイヤー取得
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
+
+			pPlActiv->SetInUP(true);		// 上入力設定
+			pPlActiv->SetInDown(true);		// 下入力設定
+			pPlActiv->SetInLeft(true);		// 左入力設定
+			pPlActiv->SetInRight(true);	// 右入力設定
 			// セレクト解放
 			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
 			{

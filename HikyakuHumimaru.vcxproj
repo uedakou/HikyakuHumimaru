@@ -187,6 +187,7 @@
     <ClCompile Include="code\scene\scene_title.cpp" />
     <ClCompile Include="code\object\obstacles_tall.cpp" />
     <ClCompile Include="code\object\scroll.cpp" />
+    <ClCompile Include="stage_002.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\base\calculation.h" />
@@ -235,10 +236,12 @@
     <ClInclude Include="code\scene\scene_title.h" />
     <ClInclude Include="code\object\obstacles_tall.h" />
     <ClInclude Include="code\object\scroll.h" />
+    <ClInclude Include="stage_002.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\STAGE\Stage_000.txt" />
     <Text Include="data\STAGE\Stage_001.txt" />
+    <Text Include="data\STAGE\Stage_002.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\MODEL\Obstacles\Obstacles_High\000\Obstacles_High_000.x" />
@@ -259,6 +262,9 @@
     <Image Include="data\TEXTURE\Title000.png" />
     <Image Include="data\TEXTURE\Title_001.png" />
     <Image Include="data\TEXTURE\tree000.png" />
+    <Image Include="data\TEXTURE\Tutorial_000.png" />
+    <Image Include="data\TEXTURE\Tutorial_001.png" />
+    <Image Include="data\TEXTURE\Tutorial_002.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

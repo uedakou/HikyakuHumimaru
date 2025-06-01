@@ -14,88 +14,147 @@
 #=====================================
 
 OBSTACLES
-	TYPE = 1			# 種類
-	POS = 0.0 0.0 1000.0	# 位置
+	TYPE = 0			# 種類
+	POS = 200.0 0.0 1000.0	# 位置
+	ROT = 0.0 90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 2			# 種類
+	POS = -200.0 0.0 2000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 1			# 種類
 	POS = 0.0 0.0 2000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
-END_OBSTACLES
-
-
-OBSTACLES
-	TYPE = 1			# 種類
-	POS = 0.0 0.0 3000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
+	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
-	TYPE = 1			# 種類
-	POS = 0.0 0.0 3000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
+	TYPE = 0			# 種類
+	POS = 200.0 0.0 3000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 1			# 種類
+	POS = -200.0 0.0 3000.0	# 位置
+	ROT = 0.0 90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
 	POS = 0.0 0.0 4000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 2			# 種類
+	POS = -200.0 0.0 4000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 1			# 種類
+	POS = 200.0 0.0 5000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 1			# 種類
-	POS = 0.0 0.0 5000.0	# 位置
+	POS = -200.0 0.0 5000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
-	TYPE = 1			# 種類
-	POS = 0.0 0.0 6000.0	# 位置
+	TYPE = 0			# 種類
+	POS = 200.0 0.0 6000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
-	TYPE = 1			# 種類
+	TYPE = 0			# 種類
 	POS = 0.0 0.0 7000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
+	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
-	TYPE = 1			# 種類
+	TYPE = 0			# 種類
+	POS = -200.0 0.0 7000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 2			# 種類
+	POS = 200.0 0.0 8000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
 	POS = 0.0 0.0 8000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 1			# 種類
+	POS = -200.0 0.0 9000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 3			# 種類
+	POS = 200.0 0.0 9000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 1			# 種類
-	POS = 0.0 0.0 9000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
+	POS = 200.0 0.0 10000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
-	TYPE = 1			# 種類
-	POS = 0.0 0.0 10000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
-END_OBSTACLES
-
-OBSTACLES
-	TYPE = 1			# 種類
+	TYPE = 2			# 種類
 	POS = 0.0 0.0 11000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
-	TYPE = 1			# 種類
-	POS = 0.0 0.0 12000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
+	TYPE = 0			# 種類
+	POS = -200.0 0.0 11000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 2			# 種類
+	POS = 200.0 0.0 11000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 1			# 種類
+	POS = 200.0 0.0 12500.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 1			# 種類
+	POS = 200.0 0.0 12000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 2			# 種類
 	POS = 0.0 0.0 13000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
+	POS = 0.0 0.0 13500.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
@@ -105,27 +164,75 @@ OBSTACLES
 END_OBSTACLES
 
 OBSTACLES
+	TYPE = 0			# 種類
+	POS = -200.0 0.0 14000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
 	TYPE = 1			# 種類
-	POS = 0.0 0.0 15000.0	# 位置
+	POS = -200.0 0.0 14500.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 1			# 種類
+	POS = 200.0 0.0 15000.0	# 位置
+	ROT = 0.0 90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
+	POS = -200.0 0.0 15000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
+	POS = 200.0 0.0 15000.0	# 位置
+	ROT = 0.0 90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
+	POS = 200.0 0.0 16000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 1			# 種類
+	POS = -200.0 0.0 16000.0	# 位置
+	ROT = 0.0 90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
+	POS = 0.0 0.0 16500.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
+	POS = 200.0 0.0 17000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 1			# 種類
-	POS = 0.0 0.0 16000.0	# 位置
+	POS = 200.0 0.0 17500.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
-	TYPE = 1			# 種類
-	POS = 0.0 0.0 17000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
-END_OBSTACLES
-
-OBSTACLES
-	TYPE = 1			# 種類
+	TYPE = 0			# 種類
 	POS = 0.0 0.0 18000.0	# 位置
-	ROT = 0.0 90.0 0.0	# 向き
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 0			# 種類
+	POS = 200.0 0.0 18000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES

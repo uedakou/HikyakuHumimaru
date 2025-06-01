@@ -73,16 +73,16 @@ namespace Scene {
 				switch (static_cast<TUTORIAL>(nCnt))
 				{
 				case TUTORIAL::Tutorial_000:
-					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Tutorial_000.png");
 					break;
 				case TUTORIAL::Tutorial_001:
-					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Tutorial_001.png");
 					break;
 				case TUTORIAL::Tutorial_002:
-					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Tutorial_002.png");
 					break;
 				case TUTORIAL::Tutorial_003:
-					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+					m_pTutorealPopup[nCnt]->SetTexture("data/TEXTURE/Tutorial_003.png");
 					break;
 				default:
 					Beep(1000, 300);
@@ -147,8 +147,11 @@ namespace Scene {
 			CPlayer* pPlayer = m_gameData->GetPlayer();
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
+			;
+			bool bGoal = (dynamic_cast<CStage_Base::Stage_Goal_Strategy*>(CStage_Base::m_pStrategy));
 
-			if (m_bPose == false)
+			if (m_bPose == false &&
+				bGoal != true)
 			{
 				// チュートリアルイベント発動
 				if (playerPos.z > s_fGool &&
@@ -282,7 +285,8 @@ namespace Scene {
 					}
 				}
 			}
-			return CStage_Base::Update();;
+
+			return CStage_Base::Update();
 		}
 		void CStage_000::Draw() const
 		{
