@@ -42,6 +42,10 @@ namespace Scene {
 			{
 				delete m_pStageController;
 			}
+			if (m_gameData != nullptr)
+			{
+				delete m_gameData;
+			}
 		}
 
 		//============================================
@@ -75,12 +79,17 @@ namespace Scene {
 				{
 					delete m_pStageController;
 
-					if (true)
+					auto p2 = dynamic_cast<CBase*>(p);
+					if (p2 != nullptr)
 					{
-
+						m_pStageController = p2;
+						return this;
 					}
-					m_pStageController = p;
-					return this;
+					else
+					{
+						m_pStageController = nullptr;
+						return p;
+					}
 				}
 			}
 			return this;

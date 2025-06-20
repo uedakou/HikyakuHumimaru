@@ -187,7 +187,7 @@
     <ClCompile Include="code\scene\scene_title.cpp" />
     <ClCompile Include="code\object\obstacles_tall.cpp" />
     <ClCompile Include="code\object\scroll.cpp" />
-    <ClCompile Include="stage_002.cpp" />
+    <ClCompile Include="code\scene\game\stage\stage_002.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\base\calculation.h" />
@@ -236,9 +236,10 @@
     <ClInclude Include="code\scene\scene_title.h" />
     <ClInclude Include="code\object\obstacles_tall.h" />
     <ClInclude Include="code\object\scroll.h" />
-    <ClInclude Include="stage_002.h" />
+    <ClInclude Include="code\scene\game\stage\stage_002.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="data\SaveData\StageEvaluation.txt" />
     <Text Include="data\STAGE\Stage_000.txt" />
     <Text Include="data\STAGE\Stage_001.txt" />
     <Text Include="data\STAGE\Stage_002.txt" />
@@ -259,6 +260,7 @@
     <Image Include="data\TEXTURE\StageSelect_001.png" />
     <Image Include="data\TEXTURE\StageSelect_002.png" />
     <Image Include="data\TEXTURE\START.png" />
+    <Image Include="data\TEXTURE\Stor_000.png" />
     <Image Include="data\TEXTURE\Title000.png" />
     <Image Include="data\TEXTURE\Title_001.png" />
     <Image Include="data\TEXTURE\tree000.png" />

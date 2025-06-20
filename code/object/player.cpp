@@ -18,6 +18,8 @@ const float CPlayer::s_fSpeed = 20.0f;	// プレイヤー速度
 const bool CPlayer::s_bMove = true;		// プレイヤーが自動で動くかどうか
 const float CPlayer::s_fLane = 200.0f;	// ラインの幅
 const X CPlayer::s_Collision = { { 0.0f, 0.0f, 0.0f }, { 0.0f ,0.0f, 0.0f },{ 10.0f, 10.0f, 70.0f } };	// コリジョン大きさ
+const float CPlayer::s_fGravity = 1.0f;	// 重力
+const float CPlayer::s_fJanp = 15.0f;	// ジャンプ力
 
 //============================================
 // コンスト
@@ -80,7 +82,7 @@ void CPlayer::Update()
 
 
 	// 重力
-	AddMovePosY(-2.5f);
+	AddMovePosY(-s_fGravity);
 	D3DXVECTOR3 pos = GetPos();
 	// 下限設定
 	if (pos.y <= 0.0f)
@@ -97,15 +99,17 @@ void CPlayer::Update()
 		AddPosZ(m_fSpeed);
 	}
 
-	// 左に入力したら
+	// 上に入力したら
 	if (pKey->GetTrigger(DIK_W) ||
-		pKey->GetTrigger(DIK_UP))
+		pKey->GetTrigger(DIK_UP) ||
+		pKey->GetTrigger(DIK_SPACE))
 	{
 		m_pActivityStrategy->InputUP();
 	}
-	// 右に入力したら
+	// 下に入力したら
 	else if (pKey->GetTrigger(DIK_S) ||
-		pKey->GetTrigger(DIK_DOWN))
+		pKey->GetTrigger(DIK_DOWN) ||
+		pKey->GetTrigger(DIK_LSHIFT))
 	{
 		m_pActivityStrategy->InputDown();
 	}
@@ -146,11 +150,6 @@ void CPlayer::Draw()
 void CPlayer::Hit(int nDamage)
 {
 	CCharacter::Hit(nDamage);
-	if (GetLife() <= 0)
-	{
-		
-		
-	}
 }
 void CPlayer::Hit(int nCntInvincible, int nDamage)
 {
@@ -377,7 +376,7 @@ CPlayer::PlayerJanpActivity::PlayerJanpActivity(CPlayer* player) :
 	m_pPrimary->SetMotion(static_cast<int>(Motion::ACTIVITY_JANP));	// モーション設定
 	m_pPrimary->m_bJanp = true;	// ジャンプ中かどうか設定
 	m_type = Type::Ran;			// 次を走りに
-	m_pPrimary->AddMovePosY(20.0f);
+	m_pPrimary->AddMovePosY(s_fJanp);
 }
 /// <summary>
 /// ジャンプ時デストラクタ

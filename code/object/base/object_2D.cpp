@@ -262,6 +262,21 @@ void CObject2D::SetSclZ(const float z)
 	}
 	SetVtxPos();
 }
+void CObject2D::SetUV(float nUp, float nLeft, float nDown, float nRight)
+{
+	VERTEX_2D* pVtx;		// 頂点情報へのポインタ
+	// 頂点バッファをロック
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	// テクスチャ座標の設定
+	pVtx[0].tex = D3DXVECTOR2(nLeft, nUp);
+	pVtx[1].tex = D3DXVECTOR2(nRight, nUp);
+	pVtx[2].tex = D3DXVECTOR2(nLeft, nDown);
+	pVtx[3].tex = D3DXVECTOR2(nRight, nDown);
+
+	// 頂点バッファをロック
+	m_pVtxBuff->Unlock();
+}
 //============================================
 // カラー設定
 //============================================

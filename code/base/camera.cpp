@@ -70,9 +70,10 @@ CCamera::~CCamera()
 //============================================
 HRESULT CCamera::Init(void)
 {
+#if _DEBUG
 	m_pText = CText::creat();
 	m_pText->SetReleaseScene(false);
-
+#endif //! _DEBUG
 	return S_OK;
 }
 //============================================
@@ -127,9 +128,12 @@ void CCamera::Update(void)
 	}
 	CameraSetR();
 	// カメラ情報テキスト表示
+#if _DEBUG
+
 #if s_bCumeraDataDraw
 	DrawCamera();
 #endif // s_bCumeraDataDraw
+#endif // _DEBUG
 }
 //============================================
 // 描画処理
@@ -188,8 +192,10 @@ void CCamera::DrawCamera()
 {
 	char aStr[MAX_TXT];
 	sprintf_s(aStr, sizeof(aStr), "CameraV Pos:X%f Y%f Z%f\nCameraR Pos:X%f Y%f Z%f\nCamera Rot:X%f Y%f Z%f\n", m_posV.x, m_posV.y, m_posV.z, m_posR.x, m_posR.y, m_posR.z, m_rot.x, m_rot.y, m_rot.z);
-
-	m_pText->SetText(aStr);
+	if (m_pText != nullptr)
+	{
+		m_pText->SetText(aStr);
+	}
 }
 //============================================
 // 操作

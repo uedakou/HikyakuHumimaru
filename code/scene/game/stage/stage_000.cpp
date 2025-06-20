@@ -45,7 +45,6 @@ namespace Scene {
 		CStage_000::CStage_000(CBase* scene, CGameData* gameData) :
 			CStage_Base(scene, gameData)
 		{
-			CObject::ReleaseScene();	// シーンリリース
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
@@ -168,6 +167,8 @@ namespace Scene {
 						pPlayer->SetMotionMove(false);	// モーションの動きを設定
 						pPlActiv->SetInLeft(true);		// 左入力設定
 						pPlActiv->SetInRight(true);	// 右入力設定
+						pPlActiv->SetInUP(false);		// 左入力設定
+						pPlActiv->SetInDown(false);	// 右入力設定
 
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetPoseDraw(true);		// ポップアップを表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_000)]->SetNormalDraw(true);	// ポップアップを表示
@@ -182,7 +183,10 @@ namespace Scene {
 					{
 						pPlayer->SetMove(false);	// 動きを止める
 						pPlayer->SetMotionMove(false);	// モーションの動きを設定
-						pPlActiv->SetInUP(true);		// 上入力設定
+						pPlActiv->SetInLeft(false);		// 左入力設定
+						pPlActiv->SetInRight(false);	// 右入力設定
+						pPlActiv->SetInUP(true);		// 左入力設定
+						pPlActiv->SetInDown(false);	// 右入力設定
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetPoseDraw(true);		// ポップアップを表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_001)]->SetNormalDraw(true);	// ポップアップを表示
 						m_bCanShownTutorial_001 = true;		// フラグを立てる
@@ -195,7 +199,11 @@ namespace Scene {
 					{
 						pPlayer->SetMove(false);	// 動きを止める
 						pPlayer->SetMotionMove(false);	// モーションの動きを設定
-						pPlActiv->SetInDown(true);		// 下入力設定
+						pPlActiv->SetInLeft(false);		// 左入力設定
+						pPlActiv->SetInRight(false);	// 右入力設定
+						pPlActiv->SetInUP(false);		// 左入力設定
+						pPlActiv->SetInDown(true);	// 右入力設定
+
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetPoseDraw(true);		// ポップアップを表示
 						m_pTutorealPopup[static_cast<int>(TUTORIAL::Tutorial_002)]->SetNormalDraw(true);	// ポップアップを表示
 						m_bCanShownTutorial_002 = true;
@@ -246,7 +254,8 @@ namespace Scene {
 				{
 					// 左に入力したら
 					if (pKey->GetTrigger(DIK_W) ||
-						pKey->GetTrigger(DIK_UP))
+						pKey->GetTrigger(DIK_UP) ||
+						pKey->GetTrigger(DIK_SPACE))
 					{
 						m_bHasShownTutorial_001 = true;
 						pPlayer->SetMove(true);			// 動かす
@@ -261,7 +270,8 @@ namespace Scene {
 				{
 					// 右に入力したら
 					if (pKey->GetTrigger(DIK_S) ||
-						pKey->GetTrigger(DIK_DOWN))
+						pKey->GetTrigger(DIK_DOWN) ||
+						pKey->GetTrigger(DIK_LSHIFT))
 					{
 						m_bHasShownTutorial_002 = true;
 						pPlayer->SetMove(true);			// 動かす

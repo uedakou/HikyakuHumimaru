@@ -7,17 +7,19 @@
 #ifndef _SCENE_GAME_H_
 #define _SCENE_GAME_H_
 #include "../scene_base.h"
+#include "game_data.h"
 namespace Scene {
     namespace Game {
         namespace nsPrev = Scene;
-        class CGameData;
         class CBase : public nsPrev::CBase
         {
         protected:
             CBase(nsPrev::CBase* scene, CGameData* const gameData) :
                 nsPrev::CBase(*scene),
-                    m_gameData(gameData)
-            {}
+                m_gameData(gameData)
+            {
+                CObject::ReleaseScene();
+            }	// シーンリリース}
             CBase(const CBase&) = default;
 
         public:

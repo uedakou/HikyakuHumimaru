@@ -186,7 +186,7 @@
     <ClCompile Include="code\object\scroll.cpp">
       <Filter>ソース ファイル\object</Filter>
     </ClCompile>
-    <ClCompile Include="stage_002.cpp">
+    <ClCompile Include="code\scene\game\stage\stage_002.cpp">
       <Filter>ソース ファイル\scene\game\stage</Filter>
     </ClCompile>
   </ItemGroup>
@@ -329,7 +329,7 @@
     <ClInclude Include="code\object\scroll.h">
       <Filter>ソース ファイル\object</Filter>
     </ClInclude>
-    <ClInclude Include="stage_002.h">
+    <ClInclude Include="code\scene\game\stage\stage_002.h">
       <Filter>ヘッダー ファイル\scene\game\stage</Filter>
     </ClInclude>
   </ItemGroup>
@@ -337,6 +337,7 @@
     <Text Include="data\STAGE\Stage_001.txt" />
     <Text Include="data\STAGE\Stage_000.txt" />
     <Text Include="data\STAGE\Stage_002.txt" />
+    <Text Include="data\SaveData\StageEvaluation.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\MODEL\Obstacles\Obstacles_High\000\Obstacles_High_000.x" />
@@ -392,6 +393,9 @@
       <Filter>リソース ファイル</Filter>
     </Image>
     <Image Include="data\TEXTURE\Tutorial_002.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Stor_000.png">
       <Filter>リソース ファイル</Filter>
     </Image>
   </ItemGroup>

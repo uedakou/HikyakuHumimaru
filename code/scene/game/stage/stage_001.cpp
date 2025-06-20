@@ -1,6 +1,6 @@
 //===========================================
 // 
-// ステージ000[stage_001.cpp]
+// ステージ001[stage_001.cpp]
 // Auther:UedaKou
 // 
 //===========================================
@@ -34,7 +34,6 @@ namespace Scene {
 		CStage_001::CStage_001(CBase* scene, CGameData* gameData) :
 			CStage_Base(scene, gameData)
 		{
-			CObject::ReleaseScene();	// シーンリリース
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 
 			// メンバ変数設定

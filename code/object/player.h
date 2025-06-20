@@ -22,6 +22,7 @@ public:
 		ACTIVITY_MOVE,		// 動き
 		ACTIVITY_SLIDING,	// スライディング
 		ACTIVITY_JANP,		// ジャンプ
+		ACTIVITY_DEATH,		// 死亡
 		ACTIVITY_MAX,
 	};
 
@@ -142,7 +143,7 @@ public:
 		void InputLeft()	override;	// 左入力
 		void InputRight()	override;	// 右入力
 		int m_nCnt;					// 移動カウント
-		static const int s_nCnt = 5;	// カウント最大
+		static const int s_nCnt = 10;	// レーン移動カウント
 	};
 	// ジャンプ状態
 	class PlayerJanpActivity :public ActivityStrategy
@@ -194,6 +195,8 @@ private:
 	static const bool s_bMove;		// 自動移動するかどうか
 	static const float s_fLane;		// 基本の1レーンの幅
 	static const X s_Collision;	// 当たり判定初期値
+	static const float s_fGravity;	// 当たり判定初期値
+	static const float s_fJanp;	// 当たり判定初期値
 };
 
 #endif // !_PLAYER_H_

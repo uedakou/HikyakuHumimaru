@@ -41,6 +41,7 @@ public:
 	virtual void SetSizX(const float x) { m_siz.x = x; };	// ‘å‚«‚³İ’è
 	virtual void SetSizY(const float y) { m_siz.y = y; };	// ‘å‚«‚³İ’è
 	virtual void SetSizZ(const float z) { m_siz.z = z; };	// ‘å‚«‚³İ’è
+	virtual void SetUV(float nUp, float nLeft, float nDown, float nRight);	// UVİ’è
 
 
 	void SetColor(D3DXCOLOR col);	// Fİ’è

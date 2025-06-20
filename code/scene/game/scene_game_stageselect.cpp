@@ -11,18 +11,20 @@
 #include "../../base/input.h"				// 入力
 #include "../../object/player.h"			// プレイヤー
 #include "game_data.h"						//　ゲームデータ
+#include "../scene_title.h"		// タイトル
 
 namespace Scene {
+	class CTitle;
 	namespace Game {
 		// 他クラス
 		class CSceneDebug;				// デバッグ
 		class CStage_000;				// ステージ000
 		class CStage_001;				// ステージ001
+		class CStage_002;				// ステージ001
 
 		// 定数定義
-		const int CScen_Game_StageSelect::s_nPressHoldLimit = 10;	// 入力開始カウント
-		const D3DXVECTOR3 CScen_Game_StageSelect::s_SelectSiz = { 200.0f, 200.0f, 0.0f };	// 入力開始カウント
-		const D3DXVECTOR3 CScen_Game_StageSelect::s_NotSelectSiz = { 100.0f, 100.0f, 0.0f };	// 入力開始カウント
+		const D3DXVECTOR3 CScen_Game_StageSelect::s_SelectSiz = { 100.0f, 100.0f, 0.0f };	// 入力開始カウント
+		const D3DXVECTOR3 CScen_Game_StageSelect::s_SelectEvaluationSiz = { 300.0f, 100.0f, 0.0f };	// 入力開始カウント
 
 		CScen_Game_StageSelect::CScen_Game_StageSelect(CBase* scene, CGameData* gameData) :
 			CBase(scene, gameData)
@@ -35,10 +37,11 @@ namespace Scene {
 			m_nSetlect = 0;	// 現選択
 			m_nCntPressHold = 0;	// 長押しカウント
 			m_bNext = false;	// 次選択済みかどうか
-			// ステージ選択のオブジェクト
+			// ステージ数繰り返す
 			for (int nCnt = 0; nCnt < static_cast<int>(Select::MAX); nCnt++ )
 			{
-				m_pStage[nCnt] = CObject2D::creat(D3DXVECTOR3(SCREEN_W * 0.5f + 200.0f * nCnt, SCREEN_H * 0.5f, 0.0f), s_NotSelectSiz);
+				// ステージセレクト作成
+				m_pStage[nCnt] = CObject2D::creat(D3DXVECTOR3(SCREEN_W * 0.5f + 200.0f * nCnt, SCREEN_H * 0.5f, 0.0f), s_SelectSiz);
 				switch (static_cast<Select>(nCnt))
 				{
 				case Select::STAGE_000:
@@ -57,6 +60,11 @@ namespace Scene {
 			// 一つ目のサイズを選択済みにする
 			m_pStage[0]->SetScl(D3DXVECTOR3(2.0f, 2.0f, 0.0f));
 
+			// ステージ評価作成
+			m_pStageEvaluation = CObject2D::creat(6, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5 + 200.0f, 0.0f), s_SelectEvaluationSiz);
+			m_pStageEvaluation->SetTexture("data/TEXTURE/Stor_000.png");	// テクスチャ
+			m_pStageEvaluation->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[0],0.0f, 0.25f + 0.25f * m_gameData->m_nScore[0], 1.0f);
 
 			// 背景
 			CObject2D* pBG = nullptr;
@@ -91,11 +99,8 @@ namespace Scene {
 			{
 				m_bPose = !m_bPose;
 			}
-
 			if (m_bPose == false)
 			{
-
-
 				int nSetlectOld = m_nSetlect;	// 旧位置を記憶
 				// 左入力したら
 				if (pInKey->GetTrigger(DIK_A) ||
@@ -187,6 +192,36 @@ namespace Scene {
 				{
 					m_bNext = true;
 				}
+				// 決定を入力したら
+				if (pInKey->GetTrigger(DIK_Q))
+				{
+					return nsPrev::CBase::makeScene<CTitle>();
+				}
+
+#ifdef _DEBUG
+				if (pInKey->GetTrigger(DIK_W))
+				{
+					m_gameData->m_nScore[m_nSetlect]++;
+					if (m_gameData->m_nScore[m_nSetlect] > 3)
+					{
+						m_gameData->m_nScore[m_nSetlect] = 3;
+					}
+					m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f);
+				}
+				if (pInKey->GetTrigger(DIK_S))
+				{
+					m_gameData->m_nScore[m_nSetlect]--;
+					if (m_gameData->m_nScore[m_nSetlect] < 0)
+					{
+						m_gameData->m_nScore[m_nSetlect] = 0;
+					}
+					m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f);
+				}
+
+#endif // !_DEBUG
+
+
+
 
 				//旧選択と現選択が違ったら
 				if (m_nSetlect != nSetlectOld)
@@ -214,7 +249,8 @@ namespace Scene {
 							m_pStage[nCnt]->AddPosX(-200.0f);
 						}
 					}
-
+					// 評価UV設定
+					m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f);
 				}
 
 				if (m_bNext == true)
@@ -229,7 +265,7 @@ namespace Scene {
 						return makeScene<CStage_001>(m_gameData);
 						break;
 					case Select::STAGE_002:
-						return makeScene<CSceneDebug>(m_gameData);
+						return makeScene<CStage_002>(m_gameData);
 						break;
 					default:
 						break;

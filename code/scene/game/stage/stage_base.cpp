@@ -30,15 +30,26 @@ namespace Scene {
 		class CScen_Game_StageSelect;
 
 		const float CStage_Base::s_fCameraRot = 2.6f;	// 初期プレイヤーからのカメラの角度
+		const D3DXVECTOR3 CStage_Base::NumScrollPos = { 100.0f, 100.0f, 0.0f };	// 初期プレイヤーからのカメラの角度
+		const D3DXVECTOR3 CStage_Base::NumScrollSiz = { 100.0f, 100.0f, 0.0f };	// 初期プレイヤーからのカメラの角度
 		//============================================
 		// コンスト
 		//============================================
 		CStage_Base::CStage_Base(CBase* scene, CGameData* gameData) :
 			CBase(scene, gameData),
-			m_nScroll(0), m_bPose(false) , m_bCameraFollowPlayer(true) , m_fGool(0)
+			m_nNumScroll(0), m_nNumScrollOld(0), m_bPose(false) , m_bCameraFollowPlayer(true) , m_fGool(0)
 		{
 			m_fCameraRot = s_fCameraRot;
 			m_pStrategy = new Stage_Play_Strategy(this);
+			// 巻物取得数表示
+
+			for (int nCnt = 0; nCnt < static_cast<int>(CGameData::Stage::MAX); nCnt++)
+			{
+				// 巻物の大きさずつずらして並べる
+				m_pNumScroll[nCnt] = CObject2D::creat(10, D3DXVECTOR3(NumScrollPos.x + NumScrollSiz.y * nCnt, NumScrollPos.y, NumScrollPos.z), NumScrollSiz);
+				m_pNumScroll[nCnt]->SetTexture("data/TEXTURE/Scroll_000.png");
+				m_pNumScroll[nCnt]->SetColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
+			}
 		}
 		//============================================
 		// デストラクタ
@@ -58,7 +69,7 @@ namespace Scene {
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
 
 			nsPrev::CBase* result = this;
-
+			// ストラテジーが有ったら更新する
 			if (m_pStrategy != nullptr)
 			{
 				auto p = m_pStrategy->update(result);
@@ -67,6 +78,11 @@ namespace Scene {
 					delete m_pStrategy;
 					m_pStrategy = p;
 				}
+			}
+			if (m_nNumScroll != m_nNumScrollOld)
+			{
+				m_nNumScrollOld = m_nNumScroll;
+				m_pNumScroll[m_nNumScrollOld]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 
 			return result;
@@ -157,7 +173,7 @@ namespace Scene {
 							PLpos.x + PLcol.x * 0.5f > pos.x - coll.x * 0.5f &&
 							PLpos.x - PLcol.x * 0.5f < pos.x + coll.x * 0.5f)
 						{
-							m_pPrimary->m_nScroll++;
+							m_pPrimary->m_nNumScroll++;
 							pScroll->Release();
 						}
 					}
@@ -167,7 +183,7 @@ namespace Scene {
 			// プレイヤーの体力が０以下なら
 			if (pPlayer->GetLife() <= 0)
 			{
-				owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+				return new Stage_Death_Strategy(m_pPrimary);
 			}
 #ifdef _DEBUG
 			// デバッグ時ステージ移行
@@ -209,9 +225,9 @@ namespace Scene {
 
 
 			// スクロール数が前より多ければ足す
-			if (m_pPrimary->m_gameData->m_nScore[nStage] < m_pPrimary->m_nScroll)
+			if (m_pPrimary->m_gameData->m_nScore[nStage] < m_pPrimary->m_nNumScroll)
 			{
-				m_pPrimary->m_gameData->m_nScore[nStage] = m_pPrimary->m_nScroll;
+				m_pPrimary->m_gameData->m_nScore[nStage] = m_pPrimary->m_nNumScroll;
 			}
 			// 選択初期化
 			m_nSelect = 0;
@@ -341,6 +357,161 @@ namespace Scene {
 			}
 			return this;
 		}
+
+		// 死亡時ストラテジー定数
+		const int CStage_Base::Stage_Death_Strategy::s_nPLMotionCnt = 30;
+		const D3DXVECTOR3 CStage_Base::Stage_Death_Strategy::s_SelectPos{ SCREEN_W * 0.5f, SCREEN_H * 0.5f + 100.0f, 0.0f };
+		const D3DXVECTOR3 CStage_Base::Stage_Death_Strategy::s_SelectSiz{ 100.0f, 100.0f, 0.0f };
+		const D3DXVECTOR3 CStage_Base::Stage_Death_Strategy::s_PopupPos{ SCREEN_W * 0.5f, 200.0f, 0.0f };
+		const D3DXVECTOR3 CStage_Base::Stage_Death_Strategy::s_PopupSiz{ 100.0f, 100.0f, 0.0f };
+		/// <summary>
+		/// 死亡ストラテジーコンスト
+		/// </summary>
+		/// <param name="pPrimary">親</param>
+		CStage_Base::Stage_Death_Strategy::Stage_Death_Strategy(CStage_Base* pPrimary) :
+			Stage_Strategy(pPrimary)
+		{
+
+			CPlayer* pPlayer = m_pPrimary->m_gameData->GetPlayer();	// プレイヤー取得
+			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
+
+						// プレイヤー設定
+			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_DEATH));	// モーション設定
+			pPlayer->SetMove(false);	// 動きを設定
+
+			pPlActiv->SetInUP(false);		// 上入力設定
+			pPlActiv->SetInDown(false);		// 下入力設定
+			pPlActiv->SetInLeft(false);		// 左入力設定
+			pPlActiv->SetInRight(false);	// 右入力設定
+
+			// スクロール数を保存
+			int nStage = 0;// ステージ
+			if (dynamic_cast<CStage_000*>(this))nStage = 0;
+			else if (dynamic_cast<CStage_001*>(this))nStage = 1;
+			//else if(dynamic_cast<CStage_002*>(this))nStage = 1;
+
+
+
+			// スクロール数が前より多ければ足す
+			if (m_pPrimary->m_gameData->m_nScore[nStage] < m_pPrimary->m_nNumScroll)
+			{
+				m_pPrimary->m_gameData->m_nScore[nStage] = m_pPrimary->m_nNumScroll;
+			}
+			// 選択初期化
+			m_nSelect = 0;
+			m_nSelectOld = 0;
+
+			// 選択肢生成
+			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
+			{
+				m_pSelect[nCnt] = CObject2D::creat(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
+				switch (static_cast<SelectGoal>(nCnt))
+				{
+				case SelectGoal::StageSelect:	// ステージセレクトに戻る
+					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Select_StageSelect_000.png");
+					break;
+				case SelectGoal::ReTry:	// リトライ
+					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Retry_000.png");
+					break;
+				default:
+					break;
+				}
+			}
+			// 選択物カーソル
+			m_pSelectBG = CObject2D::creat(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
+
+			// ポップアップ
+			m_GoalPopup = CObject2D::creat(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
+			m_GoalPopup->SetTexture("data/TEXTURE/StageClear_001.png");
+
+			// 背景
+			m_BG = CObject2D::creat(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+			m_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
+		}
+		/// <summary>
+		/// 死亡ストラテジ
+		/// </summary>
+		CStage_Base::Stage_Death_Strategy::~Stage_Death_Strategy()
+		{
+		}
+		/// <summary>
+		/// ストラテジー更新
+		/// </summary>
+		/// <param name="owner"></param>
+		/// <returns></returns>
+		CStage_Base::Stage_Strategy* CStage_Base::Stage_Death_Strategy::update(nsPrev::CBase*& owner)
+		{
+			CManager* pManager = CManager::GetInstance();	// マネージャー取得
+			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
+
+			m_nSelectOld = m_nSelect;	//旧位置保存
+
+			// 上選択
+			if (pKey->GetTrigger(DIK_W) ||
+				pKey->GetTrigger(DIK_UP))
+			{
+				m_nSelect--;
+				if (m_nSelect < 0)
+				{
+					m_nSelect = static_cast<int>(SelectGoal::MAX) - 1;
+				}
+			}
+			// 下選択
+			else if (pKey->GetTrigger(DIK_S) ||
+				pKey->GetTrigger(DIK_DOWN))
+			{
+				m_nSelect++;
+				if (m_nSelect >= static_cast<int>(SelectGoal::MAX))
+				{
+					m_nSelect = 0;
+				}
+			}
+			// 選択が変更していたら
+			if (m_nSelect != m_nSelectOld)
+			{
+				// 位置を変える
+				m_pSelectBG->SetPos(m_pSelect[m_nSelect]->GetPos());
+			}
+
+			if (pKey->GetTrigger(DIK_RETURN) ||
+				pKey->GetTrigger(DIK_SPACE))
+			{
+				switch (static_cast<SelectGoal>(m_nSelect))
+				{
+				case SelectGoal::ReTry:	// リトライ
+					m_pPrimary;
+					if (dynamic_cast<CStage_000*>(m_pPrimary))
+					{
+						owner = m_pPrimary->makeScene<CStage_000>(m_pPrimary->m_gameData);
+					}
+					else if (dynamic_cast<CStage_001*>(m_pPrimary))
+					{
+						owner = m_pPrimary->makeScene<CStage_001>(m_pPrimary->m_gameData);
+					}
+					else if (dynamic_cast<CSceneDebug*>(m_pPrimary))
+					{
+						owner = m_pPrimary->makeScene<CSceneDebug>(m_pPrimary->m_gameData);
+					}
+					break;
+				case SelectGoal::StageSelect:	// ステージセレクト
+					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+					break;
+				default:
+					break;
+				}
+			}
+
+			if (m_nPLMotionCnt <= s_nPLMotionCnt)
+			{
+				m_nPLMotionCnt++;
+				if (m_nPLMotionCnt == s_nPLMotionCnt)
+				{
+					CPlayer* pPlayer = m_pPrimary->m_gameData->GetPlayer();	// プレイヤー取得
+					pPlayer->SetMotionMove(false);
+				}
+			}
+			return this;
+		}
 		/// <summary>
 		/// ステージ読み込み
 		/// </summary>
@@ -368,7 +539,6 @@ namespace Scene {
 					int nType = 0;	// 種類
 					D3DXVECTOR3 pos = {};	// 位置
 					D3DXVECTOR3 rot = {};	// 向き
-
 
 					while (file >> str1 &&
 						str1.compare("END_OBSTACLES") != 0)

@@ -34,10 +34,10 @@ namespace Scene {
 			int m_nSetlect;	// 現在選択中の次シーン
 			int m_nCntPressHold;	// 長押し時間
 			CObject2D* m_pStage[static_cast<int>(Select::MAX)];	// 選択肢オブジェクト
+			CObject2D* m_pStageEvaluation;	// ステージ評価
 
-			static const int s_nPressHoldLimit;	// 入力開始カウント
-			static const D3DXVECTOR3 s_SelectSiz;	// 入力開始カウント
-			static const D3DXVECTOR3 s_NotSelectSiz;	// 入力開始カウント
+			static const D3DXVECTOR3 s_SelectSiz;	// 選択肢大きさ
+			static const D3DXVECTOR3 s_SelectEvaluationSiz;	// 選択評価大きさ
 		};
 	}
 }
