@@ -17,9 +17,10 @@ CScroll::~CScroll()
 /// <summary>
 /// ‰Šú‰»
 /// </summary>
-void CScroll::Init()
+bool CScroll::Init()
 {
 	CObjectX::Init();
+	return true;
 }
 /// <summary>
 /// I—¹

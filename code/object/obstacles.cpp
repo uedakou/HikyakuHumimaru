@@ -28,9 +28,10 @@ CObstacles::~CObstacles()
 /// <summary>
 /// ‰Šú‰»ˆ—
 /// </summary>
-void CObstacles::Init()
+bool CObstacles::Init()
 {
 	CObjectX::Init();
+	return true;
 }
 /// <summary>
 /// I—¹ˆ—

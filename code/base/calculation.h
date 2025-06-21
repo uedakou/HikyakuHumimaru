@@ -9,14 +9,14 @@
 //********************************************
 // インクルード
 //********************************************
-
-
 #include "manager.h"
 //***************************************
 // 計算用定義
 //***************************************
 
 #define TAU (D3DX_PI * 2)	// τ
+
+// トランスフォーム
 typedef struct {
 	D3DXVECTOR3 pos;	// 位置
 	D3DXVECTOR3 rot;	// 向き
@@ -33,7 +33,6 @@ public:
 		rot = Vec3rot;
 		scl = Vec3siz;
 	}
-
 	X& operator+= (const X& transform)
 	{
 		pos.x += transform.pos.x;
@@ -98,7 +97,7 @@ public:
 //***************************************
 // 計算
 //***************************************
-float RadianToAngle(float fRad);	// 3.14->360
-float AngleToRadian(float fAngle);	// 360->3.14
+float RadianToAngle(float radian);	// ラジアンからアングルへの変換
+float AngleToRadian(float fAngle);	// アングルからラジアンへの変換
 
 #endif // !_CALCULATION_H_

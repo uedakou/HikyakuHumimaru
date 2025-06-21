@@ -54,16 +54,16 @@ CPlayer::~CPlayer()
 //============================================
 // ‰Šú‰»
 //============================================
-void CPlayer::Init()
+bool CPlayer::Init()
 {
-	//m_obje[0] = CObjectX::creat(pos, rot, siz, CObjectX::TYPE_X_PLAYER);
+	//m_obje[0] = CObjectX::create(pos, rot, siz, CObjectX::TYPE_X_PLAYER);
 	CObjectMotion::Load(PLAYER_MOTIONFILE_A);
 	CCharacter::Init();
 	CCharacter::SetCollisionX(s_Collision);
 	CObjectMotion::SetRot(D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 	//SetMotion(1);
 	SetLife(s_nLife);
-	
+	return true;
 }
 //============================================
 // I—¹
@@ -160,7 +160,7 @@ void CPlayer::Hit(D3DXVECTOR3 ShockRot, int nCntInvincible, int nDamage)
 //============================================
 // ¶¬
 //============================================
-CPlayer* CPlayer::creat()
+CPlayer* CPlayer::create()
 {
 	CPlayer* pPlayer = new CPlayer;
 	pPlayer->Init();

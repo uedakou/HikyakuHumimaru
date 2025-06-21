@@ -17,7 +17,7 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CEffectParticle* creat(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR cor, string tex, int nLife);
+	static CEffectParticle* create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXCOLOR cor, string tex, int nLife);
 private:
 	// Šî–{î•ñ
 	D3DXVECTOR3 m_move;	// “®‚«

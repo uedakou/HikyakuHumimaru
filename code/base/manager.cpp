@@ -6,6 +6,8 @@
 //===========================================
 #include "manager.h"	// マネージャー
 #include "../object/base/object.h"
+#include "../object/base/text.h"	// テキスト
+
 
 bool CManager::m_bEnd = false;
 //============================================
@@ -13,7 +15,19 @@ bool CManager::m_bEnd = false;
 //============================================
 CManager::CManager()
 {
+	m_pRenderer = nullptr;			// レンダラー
+	m_pLight = nullptr;				// ライト
+	m_pCamera = nullptr;			// カメラ
+	m_pFog = nullptr;				// フォグ
+	m_pSound = nullptr;				// サウンド
 
+	m_pInkey = nullptr;				// キーボード
+	m_pInMouse = nullptr;			// マウス
+	m_pJoiKey = nullptr;			// ジョイパッド
+
+	m_pSceneManager = nullptr;		// シーンマネージャー
+
+	m_pDebugText = nullptr;			// デバッグ用テキスト
 }
 //============================================
 // デストラクタ
@@ -47,7 +61,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND nWnd, BOOL bWindow)
 	// フォグ
 	if (m_pFog == nullptr)
 	{
-		m_pFog = CFog::creat();
+		m_pFog = CFog::create();
 	}
 	// サウンド
 	if (m_pSound == nullptr)
@@ -80,6 +94,11 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND nWnd, BOOL bWindow)
 	{
 		m_pSceneManager = new Scene::CSceneManager;
 	}
+	// デバッグテキスト
+	if (m_pDebugText == nullptr)
+	{
+		m_pDebugText = CText::create();
+	}
 
 	return S_OK;
 }
@@ -88,6 +107,12 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND nWnd, BOOL bWindow)
 //============================================
 void CManager::Uninit()
 {
+	// デバッグテキスト
+	if (m_pDebugText != nullptr)
+	{
+		m_pDebugText->Release();
+		m_pLight = nullptr;
+	}
 	// ライト
 	if (m_pLight != nullptr)
 	{
@@ -135,6 +160,11 @@ void CManager::Uninit()
 //============================================
 void CManager::Update()
 {
+	// デバッグテキスト
+	if (m_pDebugText != nullptr)
+	{
+		m_pDebugText->ClearText();
+	}
 	// レンダラー
 	if (m_pRenderer != nullptr)
 	{

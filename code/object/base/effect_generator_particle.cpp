@@ -32,9 +32,10 @@ CEffectGeneratorPaeticle::~CEffectGeneratorPaeticle()
 //============================================
 // èâä˙âª
 //============================================
-void CEffectGeneratorPaeticle::Init()
+bool CEffectGeneratorPaeticle::Init()
 {
 	CEffectGeneratorBase::Init();
+	return true;
 }
 //============================================
 // èIóπ
@@ -66,7 +67,7 @@ void CEffectGeneratorPaeticle::Update()
 			D3DXVec3Normalize(&RandRotA, &RandRotA);
 
 			D3DXVECTOR3 move = RandRotA * m_fLength;
-			CEffectParticle::creat(GetPos(), move, m_pCor, m_aTexture, m_nLifeParticle);
+			CEffectParticle::create(GetPos(), move, m_pCor, m_aTexture, m_nLifeParticle);
 		}
 	}
 }
@@ -107,7 +108,7 @@ void CEffectGeneratorPaeticle::TimeController()
 //============================================
 // ê∂ê¨
 //============================================
-CEffectGeneratorPaeticle* CEffectGeneratorPaeticle::creat(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan)
+CEffectGeneratorPaeticle* CEffectGeneratorPaeticle::create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan)
 {
 	CEffectGeneratorPaeticle* p = new CEffectGeneratorPaeticle();
 
@@ -124,7 +125,7 @@ CEffectGeneratorPaeticle* CEffectGeneratorPaeticle::creat(D3DXVECTOR3 rot, float
 
 	return p;
 }
-CEffectGeneratorPaeticle* CEffectGeneratorPaeticle::creat(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan, int nLife)
+CEffectGeneratorPaeticle* CEffectGeneratorPaeticle::create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan, int nLife)
 {
 	CEffectGeneratorPaeticle* p = new CEffectGeneratorPaeticle();
 

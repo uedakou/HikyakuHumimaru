@@ -50,7 +50,7 @@ public:
 
 	CPartsData* GetPartsData(int nParts) { return m_pParts[nParts]; }
 	int GetFrame() { return m_nFrame; }
-	CPartsData* creatPartsData();
+	CPartsData* createPartsData();
 
 private:
 	CPartsData* m_pParts[MAX_PARTS];	// パーツ
@@ -65,7 +65,7 @@ public:
 	virtual ~CMotion();
 	void SetNumKye(int nNumKye) { m_nNumKye = nNumKye; }
 	void SetLoop(bool bLoop) { m_bLoop = bLoop; }
-	void creatKye();
+	void createKye();
 
 	CKye* GetKye(int nKye) { return m_pKye[nKye]; }
 	int GetNumKye() { return m_nNumKye; }
@@ -110,7 +110,7 @@ public:
 	CParts();
 	CParts(int nPriority);
 	virtual ~CParts()					override;
-	virtual void Init()		override; // 初期化
+	virtual bool Init()		override; // 初期化
 	virtual void Uninit()	override; // 終了
 	virtual void Update()	override; // 更新
 	virtual void Draw()		override; // 描画
@@ -201,7 +201,7 @@ class CObjectMotion : public CObject
 public:
 	CObjectMotion();
 	virtual ~CObjectMotion()		override;
-	virtual void Init()		override;
+	virtual bool Init()		override;
 	virtual void Uninit()	override;
 	virtual void Update()	override;
 	virtual void Draw()		override;
@@ -219,15 +219,15 @@ public:
 	int GetMotion() { return m_nNowMotion; }	// 現在モーション
 	int GetNumParts() { return m_nParts; }
 	CParts* GetParts(int nNum) { return m_pParts[nNum]; }	// パーツ取得
-	static CObjectMotion* creat(const char* FileName);
-	static CObjectMotion* creat(string FileName);
+	static CObjectMotion* create(const char* FileName);
+	static CObjectMotion* create(string FileName);
 
 protected:
 	bool Load(const char* aFileName);	// モーション読み込み
 
 	virtual int GetNextMotion() { return 0; };	// 次取得
 private:
-	void creatMotion();// モーション生成
+	void createMotion();// モーション生成
 private:
 	int m_nModel;							// モデル数
 

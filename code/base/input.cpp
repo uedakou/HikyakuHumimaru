@@ -4,26 +4,29 @@
 // Author:Uedakou
 // 
 //============================================
-#include "input.h"
+#include "input.h"	// 入力処理
 
 // 静的メンバ
 LPDIRECTINPUT8 CInput::m_pInput = nullptr;
 
-//============================================
-// コンスト（基底）
-//============================================
+/// <summary>
+/// コンストラクタ（基底）
+/// </summary>
 CInput::CInput(): m_pDevice(nullptr)
 {
 }
-//============================================
-// デストラ（基底）
-//============================================
+/// <summary>
+/// デストラクタ（基底）
+/// </summary>
 CInput::~CInput()
 {
 }
-//============================================
-// 初期化（基底）
-//============================================
+/// <summary>
+/// 初期化（基底）
+/// </summary>
+/// <param name="hInstance">アプリケーションインスタンスハンドル</param>
+/// <param name="hWnd">ウィンドウハンドル</param>
+/// <returns>S_OK：成功、E_FAIL：失敗</returns>
 HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	if (m_pInput == nullptr)
@@ -38,9 +41,9 @@ HRESULT CInput::Init(HINSTANCE hInstance, HWND hWnd)
 	}
 	return S_OK;
 }
-//============================================
-// 終了（基底）
-//============================================
+/// <summary>
+/// 終了処理（基底）
+/// </summary>
 void CInput::Uninit()
 {
 	// 入力デバイスの破棄
@@ -57,9 +60,9 @@ void CInput::Uninit()
 		m_pInput = nullptr;
 	}
 }
-//============================================
-// 更新（基底）
-//============================================
+/// <summary>
+/// 更新（基底）
+/// </summary>
 void CInput::Update()
 {
 

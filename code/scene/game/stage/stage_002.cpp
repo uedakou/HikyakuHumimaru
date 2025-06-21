@@ -57,7 +57,7 @@ namespace Scene {
 
 			//フィールド生成
 			CObject3D* pField = nullptr;
-			pField = CObject3D::creat(
+			pField = CObject3D::create(
 				D3DXVECTOR3(0.0f, 0.0f, s_fGool * 0.5f),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));

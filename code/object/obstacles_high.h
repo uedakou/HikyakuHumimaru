@@ -12,7 +12,7 @@ class CObstaclesHigh : public CObstacles
 {
 public:
 	virtual ~CObstaclesHigh();
-	virtual void Init() override;	// ‰Šú‰»
+	virtual bool Init() override;	// ‰Šú‰»
 	virtual void Uninit() override;	// I—¹
 	virtual void Update() override;	// XV
 	virtual void Draw() override;	// •`‰æ

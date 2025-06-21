@@ -36,7 +36,7 @@ CObjectBillbord::~CObjectBillbord()
 //============================================
 // 初期化
 //============================================
-void CObjectBillbord::Init()
+bool CObjectBillbord::Init()
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();// デバイスへのポインタ
 
@@ -76,6 +76,7 @@ void CObjectBillbord::Init()
 
 	// 頂点ロックをアンロック
 	m_pVtxBuff->Unlock();
+	return true;
 }
 //============================================
 // 終了処理
@@ -255,7 +256,7 @@ void CObjectBillbord::AddTexUV(D3DXVECTOR2 tex0, D3DXVECTOR2 tex1)
 //============================================
 // 生成
 //============================================
-CObjectBillbord* CObjectBillbord::creat(D3DXVECTOR3 pos, D3DXVECTOR3 siz)
+CObjectBillbord* CObjectBillbord::create(D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 {
 	CObjectBillbord* pBillbord = new CObjectBillbord();
 
@@ -268,7 +269,7 @@ CObjectBillbord* CObjectBillbord::creat(D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 
 	return pBillbord;
 }
-CObjectBillbord* CObjectBillbord::creat(int nPriorith, D3DXVECTOR3 pos, D3DXVECTOR3 siz)
+CObjectBillbord* CObjectBillbord::create(int nPriorith, D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 {
 	CObjectBillbord* pBillbord = new CObjectBillbord(nPriorith);
 

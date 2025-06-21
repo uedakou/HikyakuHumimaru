@@ -33,9 +33,10 @@ CFade::~CFade()
 //============================================
 // ‰Šú‰»
 //============================================
-void CFade::Init()
+bool CFade::Init()
 {
 	CObject2D::Init();
+	return true;
 }
 //============================================
 // I—¹
@@ -84,7 +85,7 @@ void CFade::Draw()
 //============================================
 // •`‰æ
 //============================================
-CFade* CFade::creat(TYPE type, int nCnt)
+CFade* CFade::create(TYPE type, int nCnt)
 {
 	CFade* pFade = new CFade;
 	pFade->m_nCnt = 0;
@@ -111,7 +112,7 @@ CFade* CFade::creat(TYPE type, int nCnt)
 	return pFade;
 }
 
-CFade* CFade::creat(int nPriority, TYPE type, int nCnt)
+CFade* CFade::create(int nPriority, TYPE type, int nCnt)
 {
 	CFade* pFade = new CFade;
 	pFade->m_nCnt = 0;

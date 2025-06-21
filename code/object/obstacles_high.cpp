@@ -15,9 +15,10 @@ CObstaclesHigh::~CObstaclesHigh()
 /// <summary>
 /// ‰Šú‰»
 /// </summary>
-void CObstaclesHigh::Init()
+bool CObstaclesHigh::Init()
 {
 	CObstacles::Init();
+	return true;
 }
 /// <summary>
 /// I—¹

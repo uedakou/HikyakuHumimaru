@@ -7,7 +7,7 @@
 #ifndef _TEXT_H_
 #define _TEXT_H_
 #include "object.h"
-#include "../../base/pch.h"
+#include "../../base/pch.h"	// プリコンパイル
 
 class CText :public CObject
 {
@@ -19,10 +19,11 @@ public:
 	CText();
 	CText(int nPriorithi);
 	virtual ~CText()		override;
-	virtual void Init()		override;
+	virtual bool Init()		override;
 	virtual void Uninit()	override;
 	virtual void Update()	override;
 	virtual void Draw()		override;		// テキストを固定表示
+
 
 	// 表示設定
 	void SetData();	// 設定反映
@@ -43,11 +44,15 @@ public:
 	void SetText(const char* text);	// テキスト設定
 	void SetText(string text);		// テキスト設定
 
+	void PrintText(string text) { m_aText += text; }	// 与えられた文字列を内部テキストに追加
+
 	LPD3DXFONT GetFont();	// フォント取得
+
+	void ClearText() { m_aText = ""; }	// テキストクリア
 	// 生成
-	static CText* creat();
-	static CText* creat(int nHyde, UINT nWide, UINT nBold, UINT nMip, bool bItalic);
-	static CText* creat(int nHyde, UINT nWide, UINT nBold, UINT nMip, bool bItalic, DWORD nFont, DWORD nSize, DWORD nPitch, Type type);
+	static CText* create();
+	static CText* create(int nHyde, UINT nWide, UINT nBold, UINT nMip, bool bItalic);
+	static CText* create(int nHyde, UINT nWide, UINT nBold, UINT nMip, bool bItalic, DWORD nFont, DWORD nSize, DWORD nPitch, Type type);
 protected:
 	static string m_aFontList[Max];	// フォント名
 

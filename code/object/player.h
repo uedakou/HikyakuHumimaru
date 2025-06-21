@@ -33,7 +33,7 @@ public:
 	virtual ~CPlayer()		override;
 
 	// 基本処理
-	void Init()		override;	// 初期化
+	bool Init()		override;	// 初期化
 	void Uninit()	override;	// 終了
 	void Update()	override;	// 更新
 	void Draw()		override;	// 描画
@@ -63,7 +63,7 @@ public:
 	void Hit(D3DXVECTOR3 ShockRot,int nCntInvincible, int nDamage)override;
 
 	// 生成
-	static CPlayer* creat();
+	static CPlayer* create();
 
 	// ストラテジー
 	// プロテクテッドストラテジー

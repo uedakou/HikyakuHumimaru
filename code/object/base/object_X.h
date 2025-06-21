@@ -51,7 +51,7 @@ public:
 	CObjectX();
 	CObjectX(int nPriority);
 	virtual ~CObjectX()		override;
-	virtual void Init()		override;	// ‰Šú‰»
+	virtual bool Init()		override;	// ‰Šú‰»
 	virtual void Uninit()	override;	// I—¹
 	virtual void Update()	override;	// XV
 	virtual void Draw()		override;	// •`‰æ
@@ -68,8 +68,8 @@ public:
 
 
 
-	static CObjectX* creat(const char* aFileName);	// ¶¬
-	static CObjectX* creat(string aFileName);	// ¶¬
+	static CObjectX* create(const char* aFileName);	// ¶¬
+	static CObjectX* create(string aFileName);	// ¶¬
 protected:
 private:
 	TYPE m_type;	// í—Ş

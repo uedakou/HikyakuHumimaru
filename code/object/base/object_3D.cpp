@@ -36,7 +36,7 @@ CObject3D::~CObject3D()
 //============================================
 // 初期化
 //============================================
-void CObject3D::Init()
+bool CObject3D::Init()
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();// デバイスへのポインタ
 	X x = GetX();
@@ -78,6 +78,7 @@ void CObject3D::Init()
 
 	// 頂点ロックをアンロック
 	m_pVtxBuff->Unlock();
+	return true;
 }
 //============================================
 // 終了
@@ -234,7 +235,7 @@ void CObject3D::AddTexUV(D3DXVECTOR2 tex0, D3DXVECTOR2 tex1)
 //============================================
 // 生成
 //============================================
-CObject3D* CObject3D::creat(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 siz)
+CObject3D* CObject3D::create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 siz)
 {
 	CObject3D* pObject3D = new CObject3D;
 

@@ -184,8 +184,9 @@ CObjectX::~CObjectX()
 //============================================
 // èâä˙âª
 //============================================
-void CObjectX::Init()
+bool CObjectX::Init()
 {
+	return true;
 }
 //============================================
 // èIóπ
@@ -254,7 +255,7 @@ void CObjectX::Draw()
 //============================================
 // ê∂ê¨
 //============================================
-CObjectX* CObjectX::creat(const char* aFileName)
+CObjectX* CObjectX::create(const char* aFileName)
 {
 	int nID = 0;
 	nID = CModelX::Load(aFileName);
@@ -268,7 +269,7 @@ CObjectX* CObjectX::creat(const char* aFileName)
 
 	return pObjectX;
 }
-CObjectX* CObjectX::creat(string aFileName)
+CObjectX* CObjectX::create(string aFileName)
 {
 	int nID = 0;
 	nID = CModelX::Load(aFileName.c_str());

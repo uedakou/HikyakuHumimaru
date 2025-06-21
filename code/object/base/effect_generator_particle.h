@@ -13,7 +13,7 @@ class CEffectGeneratorPaeticle : public CEffectGeneratorBase
 public:
 	CEffectGeneratorPaeticle();
 	virtual ~CEffectGeneratorPaeticle();
-	void Init()		override;
+	bool Init()		override;
 	void Uninit()	override;
 	void Update()	override;
 	void Draw()		override;
@@ -25,8 +25,8 @@ public:
 	void SetTexture(const char* aFileName);
 	void TimeController();
 
-	static CEffectGeneratorPaeticle* creat(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan);	// 生成(向き,動き, 拡散角度,色,パーティクル生存時間, 間隔)
-	static CEffectGeneratorPaeticle* creat(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan, int nLife);	// 生成(向き,動き, 拡散角度,色,パーティクル生存時間, 間隔,ジェネレーター生存時間)
+	static CEffectGeneratorPaeticle* create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan);	// 生成(向き,動き, 拡散角度,色,パーティクル生存時間, 間隔)
+	static CEffectGeneratorPaeticle* create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan, int nLife);	// 生成(向き,動き, 拡散角度,色,パーティクル生存時間, 間隔,ジェネレーター生存時間)
 private:
 	// 生成情報
 	D3DXVECTOR3 m_rot;	// 向き

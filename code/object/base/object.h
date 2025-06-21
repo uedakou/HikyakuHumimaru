@@ -21,7 +21,7 @@ public:
 	CObject();
 	CObject(const int nPriority);
 	virtual ~CObject();
-	virtual void Init() = 0;	// ‰Šú‰»
+	virtual bool Init() = 0;	// ‰Šú‰»
 	virtual void Uninit() = 0;	// I—¹
 	virtual void Update() = 0;	// XV
 	virtual void Draw() = 0;	// •`‰æ

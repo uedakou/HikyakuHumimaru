@@ -14,7 +14,7 @@ public:
 	CObjectBillbord();
 	CObjectBillbord(const int nPriority);
 	virtual ~CObjectBillbord();
-	virtual void Init()		override;
+	virtual bool Init()		override;
 	virtual void Uninit()	override;
 	virtual void Update()	override;
 	virtual void Draw()		override;
@@ -34,8 +34,8 @@ public:
 	D3DXCOLOR GetColor() { return m_col; }	// 色取得
 
 	void AddTexUV(D3DXVECTOR2 tex0, D3DXVECTOR2 tex1);// テクスチャUV設定(左上右下)
-	static CObjectBillbord* creat(D3DXVECTOR3 pos, D3DXVECTOR3 siz);
-	static CObjectBillbord* creat(int nPriorith, D3DXVECTOR3 pos, D3DXVECTOR3 siz);
+	static CObjectBillbord* create(D3DXVECTOR3 pos, D3DXVECTOR3 siz);
+	static CObjectBillbord* create(int nPriorith, D3DXVECTOR3 pos, D3DXVECTOR3 siz);
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// バーテックスバッファ
 	LPDIRECT3DTEXTURE9 m_pTexture;	// テクスチャ

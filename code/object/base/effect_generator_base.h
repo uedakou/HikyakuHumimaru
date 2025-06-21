@@ -12,7 +12,7 @@ class CEffectGeneratorBase : public CObject
 public:
 	CEffectGeneratorBase();
 	virtual ~CEffectGeneratorBase();
-	void Init()		override;
+	bool Init()		override;
 	void Uninit()	override;
 	void Update()	override;
 	void Draw()		override;

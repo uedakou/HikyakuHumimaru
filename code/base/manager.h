@@ -50,6 +50,9 @@ public:
 	CInputJoypad* GetJoyKey() { return m_pJoiKey; }	// マウス取得
 
 	Scene::CBase* GetSceneManager() { return m_pSceneManager; }					// シーンマネージャー
+
+	CText* GetDebugText() { return m_pDebugText; }	// デバッグテキスト取得
+
 	//CCollisionManager* GetCollisionManager() { return m_pCollisionManager; }	// コリジョンマネージャー
 
 	static void SetEnd(bool bEnd) { m_bEnd = bEnd; }
@@ -66,6 +69,9 @@ private:
 	CInputJoypad* m_pJoiKey;				// ジョイパッド
 
 	Scene::CBase* m_pSceneManager;			// シーンマネージャー
+
+	CText* m_pDebugText;				// デバッグ用テキスト
+
 	//CCollisionManager* m_pCollisionManager;	// コリジョンマネージャー
 
 	static bool m_bEnd;	// 終了

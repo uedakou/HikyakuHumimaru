@@ -21,7 +21,7 @@ public:
 	void SetFogLinear(float fStart, float fEnd);
 	void SetFogDensity(float fDensity);
 
-	static CFog* creat();
+	static CFog* create();
 
 private:
 	FogType m_type;

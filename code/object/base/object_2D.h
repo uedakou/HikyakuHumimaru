@@ -17,7 +17,7 @@ public:
 	CObject2D();
 	CObject2D(int nPriority);
 	virtual ~CObject2D()	override;
-	virtual void Init()		override;	// 初期化
+	virtual bool Init()		override;	// 初期化
 	virtual void Uninit()	override;	// 終了
 	virtual void Update()	override;	// 更新
 	virtual void Draw()		override;	// 描画
@@ -74,8 +74,8 @@ public:
 
 
 
-	static CObject2D* creat(D3DXVECTOR3 pos, D3DXVECTOR3 siz);					// 生成
-	static CObject2D* creat(int nPriority, D3DXVECTOR3 pos, D3DXVECTOR3 siz);	// 生成
+	static CObject2D* create(D3DXVECTOR3 pos, D3DXVECTOR3 siz);					// 生成
+	static CObject2D* create(int nPriority, D3DXVECTOR3 pos, D3DXVECTOR3 siz);	// 生成
 private:
 	// プライベート関数
 	void SetVtxPos();	// バーテックスの位置を設定

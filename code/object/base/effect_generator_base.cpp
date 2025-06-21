@@ -25,8 +25,9 @@ CEffectGeneratorBase::~CEffectGeneratorBase()
 //============================================
 // ‰Šú‰»
 //============================================
-void CEffectGeneratorBase::Init()
+bool CEffectGeneratorBase::Init()
 {
+	return true;
 }
 //============================================
 // I—¹

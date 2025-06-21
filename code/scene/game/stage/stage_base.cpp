@@ -46,7 +46,7 @@ namespace Scene {
 			for (int nCnt = 0; nCnt < static_cast<int>(CGameData::Stage::MAX); nCnt++)
 			{
 				// 巻物の大きさずつずらして並べる
-				m_pNumScroll[nCnt] = CObject2D::creat(10, D3DXVECTOR3(NumScrollPos.x + NumScrollSiz.y * nCnt, NumScrollPos.y, NumScrollPos.z), NumScrollSiz);
+				m_pNumScroll[nCnt] = CObject2D::create(10, D3DXVECTOR3(NumScrollPos.x + NumScrollSiz.y * nCnt, NumScrollPos.y, NumScrollPos.z), NumScrollSiz);
 				m_pNumScroll[nCnt]->SetTexture("data/TEXTURE/Scroll_000.png");
 				m_pNumScroll[nCnt]->SetColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
 			}
@@ -236,7 +236,7 @@ namespace Scene {
 			// 選択肢生成
 			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
 			{
-				m_pSelect[nCnt] = CObject2D::creat(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
+				m_pSelect[nCnt] = CObject2D::create(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
 				switch (static_cast<SelectGoal>(nCnt))
 				{
 				case SelectGoal::StageSelect:	// ステージセレクトに戻る
@@ -250,14 +250,14 @@ namespace Scene {
 				}
 			}
 			// 選択物カーソル
-			m_pSelectBG = CObject2D::creat(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
+			m_pSelectBG = CObject2D::create(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
 
 			// ポップアップ
-			m_GoalPopup = CObject2D::creat(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
+			m_GoalPopup = CObject2D::create(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
 			m_GoalPopup->SetTexture("data/TEXTURE/StageClear_000.png");
 
 			// 背景
-			m_BG = CObject2D::creat(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+			m_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
 			m_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 		}
 
@@ -404,7 +404,7 @@ namespace Scene {
 			// 選択肢生成
 			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
 			{
-				m_pSelect[nCnt] = CObject2D::creat(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
+				m_pSelect[nCnt] = CObject2D::create(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
 				switch (static_cast<SelectGoal>(nCnt))
 				{
 				case SelectGoal::StageSelect:	// ステージセレクトに戻る
@@ -418,14 +418,14 @@ namespace Scene {
 				}
 			}
 			// 選択物カーソル
-			m_pSelectBG = CObject2D::creat(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
+			m_pSelectBG = CObject2D::create(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
 
 			// ポップアップ
-			m_GoalPopup = CObject2D::creat(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
+			m_GoalPopup = CObject2D::create(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
 			m_GoalPopup->SetTexture("data/TEXTURE/StageClear_001.png");
 
 			// 背景
-			m_BG = CObject2D::creat(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+			m_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
 			m_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 		}
 		/// <summary>
@@ -651,11 +651,11 @@ namespace Scene {
 					// 種類別生成
 					if (nType == 0)
 					{
-						pObject = CObjectX::creat("data/MODEL/Building/Building_000.x");
+						pObject = CObjectX::create("data/MODEL/Building/Building_000.x");
 					}
 					else if (nType == 1)
 					{
-						pObject = CObjectX::creat("data/MODEL/Building/Building_001.x");
+						pObject = CObjectX::create("data/MODEL/Building/Building_001.x");
 					}
 					else
 					{

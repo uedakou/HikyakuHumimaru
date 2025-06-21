@@ -9,9 +9,9 @@
 #include "manager.h"
 #include <strsafe.h>
 
-
-// ƒOƒ[ƒoƒ‹•Ï”éŒ¾
-
+/// <summary>
+/// 
+/// </summary>
 CLight::CLight()
 {
 }

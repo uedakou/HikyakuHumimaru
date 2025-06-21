@@ -22,12 +22,12 @@ public:
 	CFade();
 	CFade(int nPriority);	// 優先度付き
 	virtual ~CFade()override;
-	void Init()		override;	// 初期化
+	bool Init()		override;	// 初期化
 	void Uninit()	override;	// 終了
 	void Update()	override;	// 更新
 	void Draw()		override;	// 描画
-	static CFade* creat(TYPE type, int nCnt);
-	static CFade* creat(int nPriority, TYPE type, int nCnt);
+	static CFade* create(TYPE type, int nCnt);
+	static CFade* create(int nPriority, TYPE type, int nCnt);
 private:
 	int m_nCnt;
 	int m_nCntMax;

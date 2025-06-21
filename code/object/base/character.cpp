@@ -23,10 +23,11 @@ CCharacter::~CCharacter()
 {
 }
 
-void CCharacter::Init()
+bool CCharacter::Init()
 {
 
 	CObjectMotion::Init();
+	return true;
 }
 void CCharacter::Uninit()
 {

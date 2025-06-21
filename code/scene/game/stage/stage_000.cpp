@@ -66,7 +66,7 @@ namespace Scene {
 
 			for (int nCnt = 0; nCnt < static_cast<int>(TUTORIAL::MAX); nCnt++)
 			{
-				m_pTutorealPopup[nCnt] = CObject2D::creat(D3DXVECTOR3(s_TutorialPopupPos), D3DXVECTOR3(s_TutorialPopupSiz));// 生成
+				m_pTutorealPopup[nCnt] = CObject2D::create(D3DXVECTOR3(s_TutorialPopupPos), D3DXVECTOR3(s_TutorialPopupSiz));// 生成
 				m_pTutorealPopup[nCnt]->SetPoseDraw(false);
 				m_pTutorealPopup[nCnt]->SetNormalDraw(false);
 				switch (static_cast<TUTORIAL>(nCnt))
@@ -106,7 +106,7 @@ namespace Scene {
 
 			//フィールド生成
 			CObject3D* pField = nullptr;
-			pField = CObject3D::creat(
+			pField = CObject3D::create(
 				D3DXVECTOR3(0.0f, 0.0f, s_fGool * 0.5f),
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));

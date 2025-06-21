@@ -4,8 +4,11 @@
 // Auther:UedaKou
 // 
 //===========================================
-#include "fog.h"
-#include "manager.h"
+#include "fog.h"		// フォグ処理
+#include "manager.h"	// ゲーム全体を管理するクラス
+/// <summary>
+/// コンストラクタ
+/// </summary>
 CFog::CFog()
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -29,12 +32,17 @@ CFog::CFog()
 	m_m_fFogDensity = 0.0002f;
 	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&m_m_fFogDensity));
 }
-
+/// <summary>
+/// デストラクタ
+/// </summary>
 CFog::~CFog()
 {
 
 }
-
+/// <summary>
+/// フォグ設定
+/// </summary>
+/// <param name="type">フォグの種類</param>
 void CFog::SetFogType(FogType type)
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -43,7 +51,7 @@ void CFog::SetFogType(FogType type)
 	m_type = type;
 	switch (type)
 	{
-	case EXP:
+	case EXP:	
 		pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_EXP);
 		break;
 	case LINEAR:
@@ -53,6 +61,11 @@ void CFog::SetFogType(FogType type)
 		break;
 	}
 }
+/// <summary>
+/// 線形フォグの開始距離と終了距離を設定します。
+/// </summary>
+/// <param name="fStart">フォグが始まる距離</param>
+/// <param name="fEnd">フォグが完全にかかる距離</param>
 void CFog::SetFogLinear(float fStart, float fEnd)
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -64,6 +77,11 @@ void CFog::SetFogLinear(float fStart, float fEnd)
 	pDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_fFogEndPos));
 
 }
+/// <summary>
+/// 指数フォグの密度を設定します。
+/// フォグがどれだけ急激に濃くなるかを制御します。
+/// </summary>
+/// <param name="fDensity">フォグの密度（通常は0.0～1.0）</param>
 void CFog::SetFogDensity(float fDensity)
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();
@@ -72,8 +90,11 @@ void CFog::SetFogDensity(float fDensity)
 	m_m_fFogDensity = fDensity;
 	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&m_m_fFogDensity));
 }
-
-CFog* CFog::creat()
+/// <summary>
+/// フォグの生成
+/// </summary>
+/// <returns>生成したポインター</returns>
+CFog* CFog::create()
 {
 	return new CFog;
 }

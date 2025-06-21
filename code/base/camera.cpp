@@ -10,37 +10,25 @@
 #include "../object/Base/object.h"	// オブジェクト
 #include "../object/base/text.h"
 
-// 透視投影
-const float CCamera::ProjectionPerspectiveStrategy::PERSPECTIVE_FOV = 45.0f;
-const float CCamera::ProjectionPerspectiveStrategy::PERSPECTIVE_NEAR = 50.0f;
-const float CCamera::ProjectionPerspectiveStrategy::PERSPECTIVE_FAR = 10000.0f;
-
-// 並行投影
-const float CCamera::ProjectionOrthographicStrategy::PERSPECTIVE_NEAR = 50.0f;
-const float CCamera::ProjectionOrthographicStrategy::PERSPECTIVE_FAR = 10000.0f;
-
-
 // カメラ定数
-const float CCamera::POS_CAMERA = 100.0f;	// 視点と注視点の距離
-const CCamera::ProjectionType CCamera::CAMERA_TYPE = CCamera::ProjectionType::Perspective;	// 投影方式
-const bool CCamera::CAMERA_CONTROLLER = false;	// カメラでコントローラーをするか
-const D3DXVECTOR3 CCamera::CAMERA_V = D3DXVECTOR3(0.0f, 40.0f, -POS_CAMERA);	// カメラ位置取得
-const D3DXVECTOR3 CCamera::CAMERA_ROT = D3DXVECTOR3(1.5f, 0.0f, 0.0f);	// カメラ向き取得
-const D3DXVECTOR3 CCamera::CAMERA_U = D3DXVECTOR3(0.0f, 1.0f, 0.0f);			// 上方向
-const float CCamera::MOVE_SPEED = 10.0f;	// 移動速度
-const float CCamera::MOVE_SPEED_FAST = 50.0f;// シフト移動速度
+//const CCamera::ProjectionType CCamera::CAMERA_TYPE = CCamera::ProjectionType::Perspective;	// 投影方式
+//const bool CCamera::CAMERA_CONTROLLER = false;	// カメラでコントローラーをするか
+const D3DXVECTOR3 CCamera::CAMERA_V = { 0.0f, 40.0f, -POS_CAMERA };	// カメラ位置取得
+const D3DXVECTOR3 CCamera::CAMERA_ROT = { 1.5f, 0.0f, 0.0f };	// カメラ向き取得
+const D3DXVECTOR3 CCamera::CAMERA_U = { 0.0f, 1.0f, 0.0f };			// 上方向
 
-//============================================
-// コンスト
-//============================================
+
+/// <summary>
+/// コンストラクタ
+/// </summary>
 CCamera::CCamera()
 {
-	m_CameraType = CAMERA_TYPE;				// カメラ遠近投影
-	m_bCumeraController = CAMERA_CONTROLLER;			// プレイヤー追従
+	m_CameraType = CAMERA_TYPE;					// カメラ遠近投影
+	m_bCumeraController = CAMERA_CONTROLLER;	// プレイヤー追従
 
-	m_posV = CAMERA_V;	// 視点
-	m_vecU = CAMERA_U;	// 上方向
-	m_rot = CAMERA_ROT;	// 向き
+	m_posV = CAMERA_V;		// 視点
+	m_vecU = CAMERA_U;		// 上方向
+	m_rot = CAMERA_ROT;		// 向き
 	m_fLeng = POS_CAMERA;	// 視点と注視点の距離
 
 	m_posR.x = cos(m_rot.x) + sin(m_rot.y) * m_fLeng;	// 注視点
@@ -51,42 +39,52 @@ CCamera::CCamera()
 	m_rotTarget = D3DXVECTOR3(0.0f, 0.0f, 0.0f);		// 向き(目標)
 	m_bRotTarget = false;						// 補正回転中可動か
 
-	m_fMoveSpeed = MOVE_SPEED;
-	m_fMoveFastSpeed = MOVE_SPEED_FAST;
+	m_fMoveSpeed = MOVE_SPEED;			// 通常時カメラ速度
+	m_fMoveFastSpeed = MOVE_SPEED_FAST;	// 高速時カメラ速度
 
-	m_pText = nullptr;
-
-	m_pCameraStrategy = new ProjectionPerspectiveStrategy();
+	m_pCameraStrategy = nullptr;	// 描画ストラテジー
 }
-//============================================
-// デストラ
-//============================================
+/// <summary>
+/// デストラクタ
+/// </summary>
 CCamera::~CCamera()
 {
-
+	Uninit();
 }
-//============================================
-// 初期化処理
-//============================================
-HRESULT CCamera::Init(void)
+/// <summary>
+/// 初期化
+/// </summary>
+/// <returns>初期化成功状況を返す</returns>
+HRESULT CCamera::Init()
 {
-#if _DEBUG
-	m_pText = CText::creat();
-	m_pText->SetReleaseScene(false);
-#endif //! _DEBUG
+	// m_pCameraStrategyがnullpreならストラテジーを生成
+	if (!m_pCameraStrategy)
+	{
+		m_pCameraStrategy = new ProjectionPerspectiveStrategy();	// 描画ストラテジー
+	}
+
 	return S_OK;
 }
 //============================================
 // 終了処理
 //============================================
-void CCamera::Uninit(void)
-{}
+void CCamera::Uninit()
+{
+	// m_pCameraStrategyがnullpreでなければストラテジーを解放
+	if (m_pCameraStrategy)
+	{
+		delete m_pCameraStrategy ;	// 描画ストラテジー
+		m_pCameraStrategy = nullptr;	// 描画ストラテジー
+	}
+
+}
 //============================================
 // 更新処理
 //============================================
-void CCamera::Update(void)
+void CCamera::Update()
 {
-	CInputKeyboard* pKey = CManager::GetInstance()->GetInKey();	// キーボード入力
+	CManager* pManager = CManager::GetInstance();
+	CInputKeyboard* pKey = pManager->GetInKey();	// キーボード入力
 	if (pKey->GetTrigger(DIK_F2))
 	{
 		m_bCumeraController = m_bCumeraController ? false : true;
@@ -119,9 +117,10 @@ void CCamera::Update(void)
 				m_rot.y += TAU;
 			}
 			// 回転が完了したら
-			if (m_rot.y - m_rotTarget.y <= 0.005f &&
-				m_rot.y - m_rotTarget.y >= 0.005f)
+			if (m_rot.y - m_rotTarget.y <= ROT_ERRER &&
+				m_rot.y - m_rotTarget.y >= ROT_ERRER)
 			{
+				m_rot.y = m_rotTarget.y;
 				m_bRotTarget = false;
 			}
 		}
@@ -129,22 +128,24 @@ void CCamera::Update(void)
 	CameraSetR();
 	// カメラ情報テキスト表示
 #if _DEBUG
-
 #if s_bCumeraDataDraw
-	DrawCamera();
+	CText* pDebugText = pManager->GetDebugText();
+	char aStr[MAX_TXT];
+	sprintf_s(aStr, sizeof(aStr), "CameraV Pos:X%f Y%f Z%f\nCameraR Pos:X%f Y%f Z%f\nCamera Rot:X%f Y%f Z%f\n", m_posV.x, m_posV.y, m_posV.z, m_posR.x, m_posR.y, m_posR.z, m_rot.x, m_rot.y, m_rot.z);
+	pDebugText->PrintText(aStr);
 #endif // s_bCumeraDataDraw
 #endif // _DEBUG
 }
 //============================================
 // 描画処理
 //============================================
-void CCamera::SetCamera(void)
+void CCamera::SetCamera()
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();// デバイスへのポインタ
 
 	// プロジェクションマトリクスの初期化
 	D3DXMatrixIdentity(&m_mtxProjection);
-#if 1
+#if 0
 	// プロジェクションマトリクスを作成
 	D3DXMatrixPerspectiveFovLH(&m_mtxProjection,
 		D3DXToRadian(45.0f),	// 視野角（FOV）
@@ -184,18 +185,6 @@ void CCamera::SetCamera(void)
 		&m_vecU);
 	// ビューマトリクスの設定
 	pDevice->SetTransform(D3DTS_VIEW, &m_mtxView);
-}
-//============================================
-// カメラ情報描画
-//============================================
-void CCamera::DrawCamera()
-{
-	char aStr[MAX_TXT];
-	sprintf_s(aStr, sizeof(aStr), "CameraV Pos:X%f Y%f Z%f\nCameraR Pos:X%f Y%f Z%f\nCamera Rot:X%f Y%f Z%f\n", m_posV.x, m_posV.y, m_posV.z, m_posR.x, m_posR.y, m_posR.z, m_rot.x, m_rot.y, m_rot.z);
-	if (m_pText != nullptr)
-	{
-		m_pText->SetText(aStr);
-	}
 }
 //============================================
 // 操作
@@ -467,7 +456,9 @@ void CCamera::ProjectionPerspectiveStrategy::Projection(D3DXMATRIX* mtx)
 		m_fNear,		// 近クリップ面
 		m_fFar);	// 遠クリップ面
 }
-
+//============================================
+// 並行投影
+//============================================
 CCamera::ProjectionOrthographicStrategy::ProjectionOrthographicStrategy()
 {
 	m_fNear = PERSPECTIVE_NEAR;

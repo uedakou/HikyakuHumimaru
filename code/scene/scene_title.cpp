@@ -42,18 +42,18 @@ namespace Scene {
 		m_nCnt = 0;
 
 		// 背景
-		m_pBG = CObject2D::creat(D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0));	// 生成
+		m_pBG = CObject2D::create(D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0));	// 生成
 		m_pBG->SetTexture("data/TEXTURE/Provisional/BG_000.png");	// テクスチャ
 
 		// タイトル
-		m_pTitle = CObject2D::creat(4, D3DXVECTOR3(300.0f, 150.0f, 0.0f), D3DXVECTOR3(500.0f, 200.0f, 0));	// 生成
+		m_pTitle = CObject2D::create(4, D3DXVECTOR3(300.0f, 150.0f, 0.0f), D3DXVECTOR3(500.0f, 200.0f, 0));	// 生成
 		m_pTitle->SetTexture("data/TEXTURE/Title_001.png");	// テクスチャ
 
 		// セレクト
 		m_nSelect = 0;	// 現在の選択
 		for (int nCnt = 0; nCnt < static_cast<int>(SELECT_TYPE::MAX); nCnt++)
 		{
-			m_pOptions[nCnt] = CObject2D::creat(5,
+			m_pOptions[nCnt] = CObject2D::create(5,
 				D3DXVECTOR3(SCREEN_W * 0.5f, 500.0f + (nCnt * 100.0f), 0),
 				D3DXVECTOR3(200.0f, 90.0f, 0));
 			switch (static_cast<SELECT_TYPE>(nCnt))
@@ -70,13 +70,13 @@ namespace Scene {
 
 		}
 
-		m_pSelectedOption = CObject2D::creat(4, D3DXVECTOR3(SCREEN_W * 0.5f, 500.0f , 0),D3DXVECTOR3(210.0f, 100.0f, 0));
+		m_pSelectedOption = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, 500.0f , 0),D3DXVECTOR3(210.0f, 100.0f, 0));
 		m_pSelectedOption->SetColor(m_Selected);	// 選択中の色設定
 		//m_pSelectedOption->SetTexture("d+ata/TEXTURE/Provisional/End_000.png");
 
 		m_bNext = false;
 
-		CFade::creat(CFade::TYPE::WHITE_IN, m_nCntMax);
+		CFade::create(CFade::TYPE::WHITE_IN, m_nCntMax);
 
 	}
 	//============================================
@@ -164,7 +164,7 @@ namespace Scene {
 			if (m_nCnt == 0)
 			{
 				// フェード開始
-				CFade::creat(10, CFade::TYPE::WHITE_OUT, m_nCntMax);
+				CFade::create(10, CFade::TYPE::WHITE_OUT, m_nCntMax);
 			}
 			// カウントが最大まで進んだら
 			if (m_nCnt >= m_nCntMax)

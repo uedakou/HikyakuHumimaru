@@ -16,9 +16,10 @@ CObstaclesToll::~CObstaclesToll()
 /// <summary>
 /// ‰Šú‰»
 /// </summary>
-void CObstaclesToll::Init()
+bool CObstaclesToll::Init()
 {
 	CObstacles::Init();
+	return true;
 }
 /// <summary>
 /// I—¹

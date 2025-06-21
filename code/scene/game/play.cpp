@@ -17,7 +17,7 @@ namespace Scene {
 		Play::Play(CBase* scene, CGameData* gameData) :
 			CBase(scene, gameData)
 		{
-			CPlayer* pPlayer = CPlayer::creat();
+			CPlayer* pPlayer = CPlayer::create();
 			pPlayer->SetReleaseScene(false);
 			//pPlayer->SetNormalDraw(false);
 			//pPlayer->SetPoseDraw(false);

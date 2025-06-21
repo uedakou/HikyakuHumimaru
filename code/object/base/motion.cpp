@@ -50,7 +50,7 @@ CKye::~CKye()
 //============================================
 // 生成
 //============================================
-CPartsData* CKye::creatPartsData()
+CPartsData* CKye::createPartsData()
 {
 	for (int nCnt = 0; nCnt < MAX_PARTS; nCnt++)
 	{
@@ -91,7 +91,7 @@ CMotion::~CMotion()
 //============================================
 // キーフレーム生成
 //============================================
-void CMotion::creatKye()
+void CMotion::createKye()
 {
 	for (int nCntKye = 0; nCntKye < m_nNumKye; nCntKye++)
 	{
@@ -181,13 +181,14 @@ CParts::~CParts()
 //============================================
 // 初期化(パーツ)
 //============================================
-void CParts::Init()
+bool CParts::Init()
 {
 	SetNormalUpdate(false);	// 通常時更新設定
 	SetPoseUpdate(false);	// 通常時更新設定
 	SetNormalDraw(false);	// 通常時描画設定
 	SetPoseDraw(false);		// ポーズ時描画設定
 	CObjectX::Init();
+	return true;
 }
 //============================================
 // 終了(パーツ)
@@ -389,7 +390,7 @@ CObjectMotion::~CObjectMotion()
 //============================================
 // 初期化
 //============================================
-void CObjectMotion::Init()
+bool CObjectMotion::Init()
 {
 	for (int nCnt = 0; nCnt < m_nNumMotion; nCnt++)
 	{
@@ -406,6 +407,7 @@ void CObjectMotion::Init()
 			TargetMotion->GetSclTarget(),
 			m_pMotion[GetNextMotion()]->GetKye(0)->GetFrame());	// 大きさ
 	}
+	return true;
 }
 //============================================
 // 終了処理
@@ -508,7 +510,7 @@ void CObjectMotion::SetReleaseScene(bool bRelease)
 	CObject::SetReleaseScene(bRelease);
 }
 
-CObjectMotion* CObjectMotion::creat(const char* FileName)
+CObjectMotion* CObjectMotion::create(const char* FileName)
 {
 	CObjectMotion* p = new CObjectMotion();
 
@@ -518,9 +520,9 @@ CObjectMotion* CObjectMotion::creat(const char* FileName)
 	return p;
 }
 
-CObjectMotion* CObjectMotion::creat(string FileName)
+CObjectMotion* CObjectMotion::create(string FileName)
 {
-	CObjectMotion* p = creat(FileName.c_str());
+	CObjectMotion* p = create(FileName.c_str());
 	return p;
 }
 
@@ -694,7 +696,7 @@ bool CObjectMotion::Load(const char* aFileName)
 		{
 			if (nCntMotion < MAX_MOTION)
 			{
-				creatMotion();
+				createMotion();
 				while (file >> str1 &&
 					str1.compare("END_MOTIONSET") != 0)
 				{
@@ -722,7 +724,7 @@ bool CObjectMotion::Load(const char* aFileName)
 					}
 					else if (str1.compare("KEYSET") == 0)
 					{
-						m_pMotion[nCntMotion]->creatKye();
+						m_pMotion[nCntMotion]->createKye();
 						while (file >> str2 &&
 							str2.compare("END_KEYSET") != 0)
 						{
@@ -740,7 +742,7 @@ bool CObjectMotion::Load(const char* aFileName)
 							}
 							else if (str2.compare("KEY") == 0)
 							{
-								m_pMotion[nCntMotion]->GetKye(nCntKye)->creatPartsData();
+								m_pMotion[nCntMotion]->GetKye(nCntKye)->createPartsData();
 								while (file >> str3 &&
 									str3.compare("END_KEY") != 0)
 								{
@@ -888,7 +890,7 @@ void CObjectMotion::SetPartsPoseDraw(bool bDraw)
 //============================================
 // モーション生成
 //============================================
-void CObjectMotion::creatMotion()
+void CObjectMotion::createMotion()
 {
 	for (int nCntMotion = 0; nCntMotion < MAX_KYE; nCntMotion++)
 	{

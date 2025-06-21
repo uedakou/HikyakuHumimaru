@@ -34,7 +34,7 @@ CObject2D::~CObject2D()
 //============================================
 // 初期化
 //============================================
-void CObject2D::Init()
+bool CObject2D::Init()
 {
 	
 
@@ -81,6 +81,8 @@ void CObject2D::Init()
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Unlock();
+	return true;
+
 }
 //============================================
 // 終了
@@ -472,7 +474,7 @@ void CObject2D::AddSclZ(const float z)
 //============================================
 // 生成
 //============================================
-CObject2D* CObject2D::creat(D3DXVECTOR3 pos, D3DXVECTOR3 siz)
+CObject2D* CObject2D::create(D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 {
 	CObject2D* pObject = new CObject2D;
 
@@ -482,7 +484,7 @@ CObject2D* CObject2D::creat(D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 
 	return pObject;
 }
-CObject2D* CObject2D::creat(int nPriority, D3DXVECTOR3 pos, D3DXVECTOR3 siz)
+CObject2D* CObject2D::create(int nPriority, D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 {
 	CObject2D* pObject = new CObject2D(nPriority);
 

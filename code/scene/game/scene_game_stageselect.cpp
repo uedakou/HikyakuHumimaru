@@ -41,7 +41,7 @@ namespace Scene {
 			for (int nCnt = 0; nCnt < static_cast<int>(Select::MAX); nCnt++ )
 			{
 				// ステージセレクト作成
-				m_pStage[nCnt] = CObject2D::creat(D3DXVECTOR3(SCREEN_W * 0.5f + 200.0f * nCnt, SCREEN_H * 0.5f, 0.0f), s_SelectSiz);
+				m_pStage[nCnt] = CObject2D::create(D3DXVECTOR3(SCREEN_W * 0.5f + 200.0f * nCnt, SCREEN_H * 0.5f, 0.0f), s_SelectSiz);
 				switch (static_cast<Select>(nCnt))
 				{
 				case Select::STAGE_000:
@@ -61,14 +61,14 @@ namespace Scene {
 			m_pStage[0]->SetScl(D3DXVECTOR3(2.0f, 2.0f, 0.0f));
 
 			// ステージ評価作成
-			m_pStageEvaluation = CObject2D::creat(6, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5 + 200.0f, 0.0f), s_SelectEvaluationSiz);
+			m_pStageEvaluation = CObject2D::create(6, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5 + 200.0f, 0.0f), s_SelectEvaluationSiz);
 			m_pStageEvaluation->SetTexture("data/TEXTURE/Stor_000.png");	// テクスチャ
 			m_pStageEvaluation->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[0],0.0f, 0.25f + 0.25f * m_gameData->m_nScore[0], 1.0f);
 
 			// 背景
 			CObject2D* pBG = nullptr;
-			pBG = CObject2D::creat(2, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0));	// 生成
+			pBG = CObject2D::create(2, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0));	// 生成
 			pBG->SetTexture("data/TEXTURE/Provisional/BG_000.png");	// テクスチャ
 
 			pCamera->SetPosV(D3DXVECTOR3(0.0f, 100.0f, -400.0f));
