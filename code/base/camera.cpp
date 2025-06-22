@@ -143,11 +143,8 @@ void CCamera::Update()
 	// デバッグテキスト描画用オブジェクトを取得
 	CText* pDebugText = pManager->GetDebugText();
 
-	// 表示用の文字列バッファ
-	string aStr;
-
-	// テキスト保持
-	wsprintf(&aStr[0],
+	char aStr[MAX_TXT];
+	sprintf_s(aStr, sizeof(aStr), 
 		"CameraV Pos:X%f Y%f Z%f\n"
 		"CameraR Pos:X%f Y%f Z%f\n"
 		"Camera Rot:X%f Y%f Z%f\n",
