@@ -6,26 +6,29 @@
 //===========================================
 #ifndef _MAIN_H_	// このマクロ定義されてないなら
 #define _MAIN_H_	// 二重インクルード防止のマクロ
-#include "pch.h"	// プリコンパイル
+#include "pch.h"	// プリコンパイル済みヘッダ
 
-// 頂点情報[2D]の構造体を定義
-typedef struct
-{
-	D3DXVECTOR3 pos;	// 頂点座標
-	float rhw;			// 座標変更用係数（1.0fで固定）
-	D3DCOLOR col;		// 頂点カラー
-	D3DXVECTOR2 tex;	// テクスチャ座標
-}VERTEX_2D;
-// 頂点情報[3D]の構造体を定義
-typedef struct
-{
-	D3DXVECTOR3 pos;	// 頂点座標
-	D3DXVECTOR3 nor;	// 法線
-	D3DCOLOR col;		// 頂点カラー
-	D3DXVECTOR2 tex;	// テクスチャ座標
-}VERTEX_3D;
 
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-int GetFPS();
+class CApplication
+{
+public:
+	CApplication();
+	~CApplication();
+
+	bool Init(HINSTANCE hInstance, int nCmdShow); // 初期化処理
+	void Uninit();	// 解放処理
+	void Run();		// メインループ
+	void OnKeyDown(WPARAM key);	// キーボード入力に対する処理
+
+private:
+	HWND m_hWnd;				// アプリケーションのウィンドウハンドル
+	WNDCLASSEX m_wcex;			// ウィンドウクラス情報構造体
+	MSG m_msg;					// メッセージ構造体
+	DWORD m_dwExecLastTime;		// 最後に処理を行った時間（ms）
+	DWORD m_dwFPSLostTime;		// 最後にFPSを計測した時間（ms）
+	DWORD m_dwFrameCount;		// フレーム数カウント（FPS計測用）
+};
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	// ウィンドウプロシージャ
+int GetFPS();	// FPS取得
 
 #endif // _MAIN_H_

@@ -19,10 +19,10 @@ public:
 	CText();
 	CText(int nPriorithi);
 	virtual ~CText()		override;
-	virtual bool Init()		override;
-	virtual void Uninit()	override;
-	virtual void Update()	override;
-	virtual void Draw()		override;		// テキストを固定表示
+	virtual bool Init()		override;	// 初期化処理
+	virtual void Uninit()	override;	// 終了処理
+	virtual void Update()	override;	// 更新処理
+	virtual void Draw()		override;	// テキストを固定表示
 
 
 	// 表示設定

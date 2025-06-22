@@ -6,19 +6,19 @@
 //============================================
 #ifndef _LIGHT_H_
 #define _LIGHT_H_
-#include "main.h"
+#include "main.h"	
 
-#define MAX_LIGHT (3)
+#define MAX_LIGHT (3)	// ŒõŒ¹¶¬”
 class CLight
 {
 public:
 	CLight();
 	~CLight();
-	HRESULT Init();
-	void Uninit();
-	void Update();
+	HRESULT Init();	// ‰Šú‰»
+	void Uninit();	// I—¹
+	void Update();	// XV
 private:
-	D3DLIGHT9 m_light[MAX_LIGHT];
+	D3DLIGHT9 m_light[MAX_LIGHT];	// ŒõŒ¹
 };
 
 

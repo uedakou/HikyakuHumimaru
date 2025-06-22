@@ -4,7 +4,7 @@
 // Author:Uedakou
 // 
 //============================================
-#include "camera.h"	// カメラ
+#include "camera.h"		// カメラクラス
 #include "manager.h"	// マネージャー
 #include <strsafe.h>	// StringCbPrintfを使用するにのに必要
 #include "../object/Base/object.h"	// オブジェクト
@@ -65,9 +65,9 @@ HRESULT CCamera::Init()
 
 	return S_OK;
 }
-//============================================
-// 終了処理
-//============================================
+/// <summary>
+/// 終了処理
+/// </summary>
 void CCamera::Uninit()
 {
 	// m_pCameraStrategyがnullpreでなければストラテジーを解放
@@ -78,36 +78,44 @@ void CCamera::Uninit()
 	}
 
 }
-//============================================
-// 更新処理
-//============================================
+/// <summary>
+/// 更新処理
+/// </summary>
 void CCamera::Update()
 {
-	CManager* pManager = CManager::GetInstance();
-	CInputKeyboard* pKey = pManager->GetInKey();	// キーボード入力
+	CManager* pManager = CManager::GetInstance();	// 全体マネージャー取得
+	CInputKeyboard* pKey = pManager->GetInKey();	// キーボード入力取得
+#if _DEBUG
 	if (pKey->GetTrigger(DIK_F2))
 	{
 		m_bCumeraController = m_bCumeraController ? false : true;
 	}
+#endif // _Debug
 	if (m_bCumeraController)
 	{
+		// 入力処理
 		Controller();
-		// 四方補正回転
+
+		// 四方補正回転処理
 		if (m_bRotTarget == true)
 		{
-			// 四方補正回転適応
-			float fRotY = (m_rotTarget.y - m_rot.y);
+			// 現在の回転角と目標の回転角の差分を計算
+			float fRotY = (m_rotTarget.y - m_rot.y);	// 目標との差分
+
+			// 差分が ±π（180度）を超える場合、TAU（360度）補正で最短回転に調整
 			if (fRotY >= D3DX_PI)
 			{
-				fRotY -= TAU;
+				fRotY -= TAU; // -360度して逆回転
 			}
 			else if (fRotY <= -D3DX_PI)
 			{
-				fRotY += TAU;
+				fRotY += TAU; // +360度して逆回転
 			}
 
+			// 差分の10%だけ回転（イージングのような緩やかな補正）
 			m_rot.y += fRotY * 0.1f;
 
+			// 回転角を -π ～ π の範囲に収める（オーバーフロー対策）
 			if (m_rot.y >= D3DX_PI)
 			{
 				m_rot.y -= TAU;
@@ -116,29 +124,45 @@ void CCamera::Update()
 			{
 				m_rot.y += TAU;
 			}
-			// 回転が完了したら
+
+			// 回転完了の判定（差分が一定以下なら完了とみなす）
 			if (m_rot.y - m_rotTarget.y <= ROT_ERRER &&
 				m_rot.y - m_rotTarget.y >= ROT_ERRER)
 			{
-				m_rot.y = m_rotTarget.y;
-				m_bRotTarget = false;
+				m_rot.y = m_rotTarget.y;	// 目標角にピタリと合わせる
+				m_bRotTarget = false;		// 補正終了
 			}
 		}
 	}
 	CameraSetR();
-	// カメラ情報テキスト表示
+
+	// デバッグビルド時のみ有効
 #if _DEBUG
-#if s_bCumeraDataDraw
+	// カメラ情報を表示するフラグが有効な場合
+#if s_bCameraDataDraw
+	// デバッグテキスト描画用オブジェクトを取得
 	CText* pDebugText = pManager->GetDebugText();
-	char aStr[MAX_TXT];
-	sprintf_s(aStr, sizeof(aStr), "CameraV Pos:X%f Y%f Z%f\nCameraR Pos:X%f Y%f Z%f\nCamera Rot:X%f Y%f Z%f\n", m_posV.x, m_posV.y, m_posV.z, m_posR.x, m_posR.y, m_posR.z, m_rot.x, m_rot.y, m_rot.z);
+
+	// 表示用の文字列バッファ
+	string aStr;
+
+	// テキスト保持
+	wsprintf(&aStr[0],
+		"CameraV Pos:X%f Y%f Z%f\n"
+		"CameraR Pos:X%f Y%f Z%f\n"
+		"Camera Rot:X%f Y%f Z%f\n",
+		m_posV.x, m_posV.y, m_posV.z, 
+		m_posR.x, m_posR.y, m_posR.z, 
+		m_rot.x, m_rot.y, m_rot.z);
+
+	// 整形した文字列をデバッグテキストに表示
 	pDebugText->PrintText(aStr);
-#endif // s_bCumeraDataDraw
+#endif // s_bCameraDataDraw
 #endif // _DEBUG
 }
-//============================================
-// 描画処理
-//============================================
+/// <summary>
+/// 描画処理
+/// </summary>
 void CCamera::SetCamera()
 {
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();// デバイスへのポインタ
@@ -186,18 +210,27 @@ void CCamera::SetCamera()
 	// ビューマトリクスの設定
 	pDevice->SetTransform(D3DTS_VIEW, &m_mtxView);
 }
-//============================================
-// 操作
-//============================================
+/// <summary>
+/// カメラコントローラー
+/// </summary>
 void CCamera::Controller()
 {
-	CInputKeyboard* pKey = CManager::GetInstance()->GetInKey();
-	// 回転
+	// 全体マネージャー取得
+	CManager* pManager = CManager::GetInstance();
+	//キーボード入力取得
+	CInputKeyboard* pKey = pManager->GetInKey();
+
+	//----------------------------------------------
+	// 左回転キー（Q）入力
+	//----------------------------------------------
 	if (pKey->GetTrigger(DIK_Q))
 	{
+		// SHIFT 同時押しなら「四方補正回転」
 		if (pKey->GetRepeat(DIK_LSHIFT))
 		{
-			m_bRotTarget = true;
+			m_bRotTarget = true;	// 四方補正モード有効化
+
+			// 現在の角度に基づいて90度単位の補正角を決定
 			if (m_rot.y <= 0.0f + 0.005f &&
 				m_rot.y > -(D3DX_PI * 0.5f) + 0.005f)
 			{
@@ -219,9 +252,10 @@ void CCamera::Controller()
 				m_rotTarget.y = 0.0f;
 			}
 		}
+		// 通常の左回転（トリガー）
 		else
 		{
-			m_bRotTarget = false;
+			m_bRotTarget = false;	// 四方補正モード無効化
 			m_rot.y -= 0.05f;
 			if (m_rot.y <= -D3DX_PI)
 			{
@@ -229,6 +263,7 @@ void CCamera::Controller()
 			}
 		}
 	}
+	// 左回転の継続（ホールド）
 	else if (pKey->GetRepeat(DIK_Q) &&
 		m_bRotTarget == false)
 	{
@@ -238,11 +273,17 @@ void CCamera::Controller()
 			m_rot.y += TAU;
 		}
 	}
+	//----------------------------------------------
+	// 右回転キー（E）入力
+	//----------------------------------------------
 	else if (pKey->GetTrigger(DIK_E))
 	{
+		// SHIFT 同時押しなら「四方補正回転」
 		if (pKey->GetRepeat(DIK_LSHIFT))
 		{
-			m_bRotTarget = true;
+			m_bRotTarget = true;	// 四方補正回転モードON
+
+				// 現在の角度に基づいて90度単位の補正角を決定
 			if (m_rot.y >= 0.0f - 0.005f &&
 				m_rot.y < (D3DX_PI * 0.5f) - 0.005f)
 			{
@@ -264,6 +305,7 @@ void CCamera::Controller()
 				m_rotTarget.y = 0.0f;
 			}
 		}
+		// 通常の右回転（トリガー）
 		else
 		{
 			m_bRotTarget = false;
@@ -274,6 +316,7 @@ void CCamera::Controller()
 			}
 		}
 	}
+	// 右回転の継続（ホールド）
 	else if (pKey->GetRepeat(DIK_E) &&
 		m_bRotTarget == false)
 	{
@@ -283,170 +326,165 @@ void CCamera::Controller()
 			m_rot.y -= TAU;
 		}
 	}
+	//----------------------------------------------
+	// 上回転キー（R）ホールドで上に傾ける
+	//----------------------------------------------
 	if (pKey->GetRepeat(DIK_R))
 	{
+		// 上限制限（真上以上に向かない）
 		if (m_rot.x < D3DX_PI)
 		{
 			m_rot.x -= 0.05f;
 		}
 	}
+	//----------------------------------------------
+	// 下回転キー（F）ホールドで下に傾ける
+	//----------------------------------------------
 	else if (pKey->GetRepeat(DIK_F))
 	{
+		// 下限制限（真下以下に向かない）
 		if (m_rot.x > 0)
 		{
 			m_rot.x += 0.05f;
 		}
 	}
-	// 移動
-	if (pKey->GetRepeat(DIK_LSHIFT))
-	{
-		if (pKey->GetRepeat(DIK_W))
-		{// 前方移動
-			if (pKey->GetRepeat(DIK_A))
-			{// 左後移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (-D3DX_PI * 0.25f)) * m_fMoveFastSpeed, 0.0f,
-					cosf(m_rot.y + (-D3DX_PI * 0.25f)) * m_fMoveFastSpeed);
-			}
-			else if (pKey->GetRepeat(DIK_D))
-			{// 右後移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 0.25f)) * m_fMoveFastSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 0.25f)) * m_fMoveFastSpeed);
-			}
-			else
-			{// 後移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 0.0f)) * m_fMoveFastSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 0.0f)) * m_fMoveFastSpeed);
-			}
-		}
-		else if (pKey->GetRepeat(DIK_S))
-		{// 後方移動
-			if (pKey->GetRepeat(DIK_A))
-			{// 左前移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (-D3DX_PI * 0.75f)) * m_fMoveFastSpeed, 0.0f,
-					cosf(m_rot.y + (-D3DX_PI * 0.75f)) * m_fMoveFastSpeed);
-			}
-			else if (pKey->GetRepeat(DIK_D))
-			{// 右前移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 0.75f)) * m_fMoveFastSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 0.75f)) * m_fMoveFastSpeed);
-			}
-			else
-			{// 前移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 1.0f)) * m_fMoveFastSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 1.0f)) * m_fMoveFastSpeed);
-			}
-		}
-		else if (pKey->GetRepeat(DIK_A))
-		{// 左移動
-			m_posV += D3DXVECTOR3(
-				sinf(m_rot.y + (-D3DX_PI * 0.5f)) * m_fMoveFastSpeed, 0.0f,
-				cosf(m_rot.y + (-D3DX_PI * 0.5f)) * m_fMoveFastSpeed);
-		}
-		else if (pKey->GetRepeat(DIK_D))
-		{// 右移動
-			m_posV += D3DXVECTOR3(
-				sinf(m_rot.y + (D3DX_PI * 0.5f)) * m_fMoveFastSpeed, 0.0f,
-				cosf(m_rot.y + (D3DX_PI * 0.5f)) * m_fMoveFastSpeed);
-		}
-		// 上下
-		if (pKey->GetRepeat(DIK_SPACE))
-		{// 上昇
-			m_posV.y += m_fMoveFastSpeed;
-		}
-		else if (pKey->GetRepeat(DIK_LCONTROL))
-		{// 下降
-			m_posV.y -= m_fMoveFastSpeed;
-		}
+
+	// 移動速度（通常 or 高速）
+	float speed = (pKey->GetRepeat(DIK_LSHIFT)) ? m_fMoveFastSpeed : m_fMoveSpeed;
+
+	// 移動方向ベクトルの初期化
+	D3DXVECTOR3 moveVec(0, 0, 0);
+
+	// 方向フラグ
+	bool w = pKey->GetRepeat(DIK_W);
+	bool s = pKey->GetRepeat(DIK_S);
+	bool a = pKey->GetRepeat(DIK_A);
+	bool d = pKey->GetRepeat(DIK_D);
+
+	//----------------------------------------------
+	// 8方向移動処理（視点回転に応じて方向を変換）
+	//----------------------------------------------
+	if (w && a)
+	{   // 左前（-45度）
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y - D3DX_PI * 0.25f) * speed,
+			0.0f,
+			cosf(m_rot.y - D3DX_PI * 0.25f) * speed
+		);
 	}
-	else
-	{
-		if (pKey->GetRepeat(DIK_W))
-		{// 前方移動
-			if (pKey->GetRepeat(DIK_A))
-			{// 左後移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (-D3DX_PI * 0.25f)) * m_fMoveSpeed, 0.0f,
-					cosf(m_rot.y + (-D3DX_PI * 0.25f)) * m_fMoveSpeed);
-			}
-			else if (pKey->GetRepeat(DIK_D))
-			{// 右後移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 0.25f)) * m_fMoveSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 0.25f)) * m_fMoveSpeed);
-			}
-			else
-			{// 後移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 0.0f)) * m_fMoveSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 0.0f)) * m_fMoveSpeed);
-			}
-		}
-		else if (pKey->GetRepeat(DIK_S))
-		{// 後方移動
-			if (pKey->GetRepeat(DIK_A))
-			{// 左前移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (-D3DX_PI * 0.75f)) * m_fMoveSpeed, 0.0f,
-					cosf(m_rot.y + (-D3DX_PI * 0.75f)) * m_fMoveSpeed);
-			}
-			else if (pKey->GetRepeat(DIK_D))
-			{// 右前移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 0.75f)) * m_fMoveSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 0.75f)) * m_fMoveSpeed);
-			}
-			else
-			{// 前移動
-				m_posV += D3DXVECTOR3(
-					sinf(m_rot.y + (D3DX_PI * 1.0f)) * m_fMoveSpeed, 0.0f,
-					cosf(m_rot.y + (D3DX_PI * 1.0f)) * m_fMoveSpeed);
-			}
-		}
-		else if (pKey->GetRepeat(DIK_A))
-		{// 左移動
-			m_posV += D3DXVECTOR3(
-				sinf(m_rot.y + (-D3DX_PI * 0.5f)) * m_fMoveSpeed, 0.0f,
-				cosf(m_rot.y + (-D3DX_PI * 0.5f)) * m_fMoveSpeed);
-		}
-		else if (pKey->GetRepeat(DIK_D))
-		{// 右移動
-			m_posV += D3DXVECTOR3(
-				sinf(m_rot.y + (D3DX_PI * 0.5f)) * m_fMoveSpeed, 0.0f,
-				cosf(m_rot.y + (D3DX_PI * 0.5f)) * m_fMoveSpeed);
-		}
+	else if (w && d)
+	{   // 右前（+45度）
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y + D3DX_PI * 0.25f) * speed,
+			0.0f,
+			cosf(m_rot.y + D3DX_PI * 0.25f) * speed
+		);
+	}
+	else if (w)
+	{   // 前
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y) * speed,
+			0.0f,
+			cosf(m_rot.y) * speed
+		);
+	}
+	else if (s && a)
+	{   // 左後（-135度）
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y - D3DX_PI * 0.75f) * speed,
+			0.0f,
+			cosf(m_rot.y - D3DX_PI * 0.75f) * speed
+		);
+	}
+	else if (s && d)
+	{   // 右後（+135度）
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y + D3DX_PI * 0.75f) * speed,
+			0.0f,
+			cosf(m_rot.y + D3DX_PI * 0.75f) * speed
+		);
+	}
+	else if (s)
+	{   // 後
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y + D3DX_PI) * speed,
+			0.0f,
+			cosf(m_rot.y + D3DX_PI) * speed
+		);
+	}
+	else if (a)
+	{   // 左（-90度）
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y - D3DX_PI * 0.5f) * speed,
+			0.0f,
+			cosf(m_rot.y - D3DX_PI * 0.5f) * speed
+		);
+	}
+	else if (d)
+	{   // 右（+90度）
+		moveVec += D3DXVECTOR3(
+			sinf(m_rot.y + D3DX_PI * 0.5f) * speed,
+			0.0f,
+			cosf(m_rot.y + D3DX_PI * 0.5f) * speed
+		);
 	}
 
-	// 上下
+	// 移動を適用
+	m_posV += moveVec;
+
+	//----------------------------------------------
+	// 上下移動（Shiftの有無で速度変更）
+	//----------------------------------------------
+	float verticalSpeed = (pKey->GetRepeat(DIK_LSHIFT)) ? speed : 10.0f;
+
 	if (pKey->GetRepeat(DIK_SPACE))
-	{// 上昇
-		m_posV.y += 10.0f;
+	{   // 上昇
+		m_posV.y += verticalSpeed;
 	}
 	else if (pKey->GetRepeat(DIK_LCONTROL))
-	{// 下降
-		m_posV.y -= 10.0f;
+	{   // 下降
+		m_posV.y -= verticalSpeed;
 	}
 }
+/// <summary>
+/// カメラの注視点（m_posR）を、カメラの位置（m_posV）と回転角（m_rot）から算出して設定する。
+/// 回転角はxが縦（上下の傾き）、yが横（左右の回転）方向を表す。
+/// </summary>
 void CCamera::CameraSetR()
 {
-	m_posR.x = m_posV.x + cosf(m_rot.x - (D3DX_PI * 0.5f)) * sinf(m_rot.y) * POS_CAMERA;
-	m_posR.y = m_posV.y + sinf(m_rot.x - (D3DX_PI * 0.5f)) * POS_CAMERA;
-	m_posR.z = m_posV.z + cosf(m_rot.x - (D3DX_PI * 0.5f)) * cosf(m_rot.y) * POS_CAMERA;
+	// カメラの向いている方向（回転角）から注視点の相対座標を計算
+	// 角度は上方向を基準としたため、X軸に90度（PI/2）を引いている
+
+	// 注視点のX座標
+	m_posR.x = m_posV.x
+		+ cosf(m_rot.x - (D3DX_PI * 0.5f))  // 上下の傾きによる水平方向成分（X方向）を係数に
+		* sinf(m_rot.y)                    // 左右の角度でX成分
+		* POS_CAMERA;                      // 視点距離
+	// 注視点のY座標
+	m_posR.y = m_posV.y
+		+ sinf(m_rot.x - (D3DX_PI * 0.5f))  // 上下の傾きで高さ成分
+		* POS_CAMERA;
+
+	// 注視点のZ座標
+	m_posR.z = m_posV.z
+		+ cosf(m_rot.x - (D3DX_PI * 0.5f))  // 上下の傾きによる水平方向成分（Z方向）を係数に
+		* cosf(m_rot.y)                    // 左右の角度でZ成分
+		* POS_CAMERA;
 }
-//============================================
-// 投資投影
-//============================================
+/// <summary>
+/// 透視投影コンストラクタ
+/// </summary>
 CCamera::ProjectionPerspectiveStrategy::ProjectionPerspectiveStrategy()
 {
-	m_fFov = PERSPECTIVE_FOV;
-	m_fNear = PERSPECTIVE_NEAR;
-	m_fFar = PERSPECTIVE_FAR;
+	// デフォルトの視野角（FOV）・近クリップ面・遠クリップ面の初期値を設定
+	m_fFov = PERSPECTIVE_FOV;	// 視野角（例：60度など）
+	m_fNear = PERSPECTIVE_NEAR;	// 近くの描画範囲（例：1.0f）
+	m_fFar = PERSPECTIVE_FAR;	// 遠くの描画範囲（例：1000.0f）
 }
+/// <summary>
+/// 透視投影描画
+/// </summary>
+/// <param name="mtx"></param>
 void CCamera::ProjectionPerspectiveStrategy::Projection(D3DXMATRIX* mtx)
 {
 	// プロジェクションマトリクスを作成
@@ -456,15 +494,18 @@ void CCamera::ProjectionPerspectiveStrategy::Projection(D3DXMATRIX* mtx)
 		m_fNear,		// 近クリップ面
 		m_fFar);	// 遠クリップ面
 }
-//============================================
-// 並行投影
-//============================================
+/// <summary>
+/// 並行投影コンストラクタ
+/// </summary>
 CCamera::ProjectionOrthographicStrategy::ProjectionOrthographicStrategy()
 {
 	m_fNear = PERSPECTIVE_NEAR;
 	m_fFar = PERSPECTIVE_FAR;
 }
-
+/// <summary>
+/// 並行投影描画
+/// </summary>
+/// <param name="mtx"></param>
 void CCamera::ProjectionOrthographicStrategy::Projection(D3DXMATRIX* mtx)
 {
 	D3DXMatrixOrthoLH(

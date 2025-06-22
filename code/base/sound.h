@@ -21,7 +21,6 @@ public:
 		SOUND_TITLE000,		// タイトル音楽
 		SOUND_REZULT000,	// リザルト
 		SOUND_STAGE000,		// ステージ000
-		SOUND_BOUST000,		// ステージ000
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
 	//*****************************************************************************
@@ -34,8 +33,8 @@ public:
 	} SOUNDINFO;
 	CSound();
 	~CSound();
-	HRESULT InitSound(HWND hWnd);
-	void UninitSound(void);
+	HRESULT InitSound(HWND hWnd);		// 初期化処理
+	void UninitSound(void);				// 終了処理
 	HRESULT PlaySound(SOUND_LABEL label);	// 再生
 	void StopSound(SOUND_LABEL label);		// 停止
 	void StopSound(void);					// 停止(全て)

@@ -4,6 +4,8 @@
 // Author:Uedakou
 // 
 //============================================
+#ifndef _PCH_H_
+#define _PCH_H_
 
 // インクルード
 #include <Windows.h>
@@ -11,8 +13,6 @@
 
 #include "dinput.h"
 #include "Xinput.h"
-
-// 
 
 // ライブラリのリンク
 #pragma comment(lib,"d3d9.lib")		// 描画に必要
@@ -44,3 +44,21 @@ using namespace std;
 #define CLASS_NAME "CatasrtopheMobile"		// ウィンドウクラス名前
 #define WINDOW_NAME "CatasrtopheMobile"		// ウィンドウの名前
 
+// 頂点情報[2D]の構造体を定義
+typedef struct
+{
+	D3DXVECTOR3 pos;	// 頂点座標
+	float rhw;			// 座標変更用係数（1.0fで固定）
+	D3DCOLOR col;		// 頂点カラー
+	D3DXVECTOR2 tex;	// テクスチャ座標
+}VERTEX_2D;
+// 頂点情報[3D]の構造体を定義
+typedef struct
+{
+	D3DXVECTOR3 pos;	// 頂点座標
+	D3DXVECTOR3 nor;	// 法線
+	D3DCOLOR col;		// 頂点カラー
+	D3DXVECTOR2 tex;	// テクスチャ座標
+}VERTEX_3D;
+
+#endif // !_PCH_H_

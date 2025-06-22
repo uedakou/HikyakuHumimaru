@@ -6,14 +6,9 @@
 //============================================
 #ifndef _CUMERA_H_
 #define _CUMERA_H_
-#include "main.h"
+#include "pch.h"
 
-
-#define s_bCumeraDataDraw (true)
-
-
-
-
+#define s_bCameraDataDraw (true)	// ƒJƒƒ‰î•ñ‚ğ•\¦‚·‚é‚©‚Ç‚¤‚©
 
 class CText;
 class CCamera
@@ -25,8 +20,6 @@ public:	// ’è”
 		Orthographic,		// •Às“Š‰e
 		MAX
 	};
-
-
 
 public:	// ŠÖ”
 	CCamera();

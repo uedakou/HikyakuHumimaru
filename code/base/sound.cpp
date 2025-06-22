@@ -6,22 +6,29 @@
 //===========================================================================
 #include "sound.h"
 
+/// <summary>
+/// コンストラクタ
+/// </summary>
 CSound::CSound()
 {
-	g_aSoundInfo[SOUND_BEEP] =	{ "data\\SE\\bleep000.wav", 0 };		// タイトル
-	g_aSoundInfo[SOUND_TITLE000] =	{ "data\\BGM\\Rezult000.wav", -1 };		// タイトル
-	g_aSoundInfo[SOUND_REZULT000] =	{ "data\\BGM\\Title000.wav", -1 };		// リザルト
-	g_aSoundInfo[SOUND_STAGE000] =	{ "data\\BGM\\Stage000.wav", -1 };		// ステージ000
-	g_aSoundInfo[SOUND_BOUST000] =	{ "data\\SE\\boust000.wav", 0 };	// ブースト
+	// サウンドファイル情報を初期化（ファイルパスとループ設定）
+	g_aSoundInfo[SOUND_BEEP] =	{ "data\\SE\\bleep000.wav", 0 };			// 効果音：ビープ
+	g_aSoundInfo[SOUND_TITLE000] =	{ "data\\BGM\\Rezult000.wav", -1 };		// BGM : タイトル
+	g_aSoundInfo[SOUND_REZULT000] =	{ "data\\BGM\\Title000.wav", -1 };		// BGM : リザルト
+	g_aSoundInfo[SOUND_STAGE000] =	{ "data\\BGM\\Stage000.wav", -1 };		// BGM : ステージ000
 }
-
+/// <summary>
+/// デストラクタ
+/// </summary>
 CSound::~CSound()
 {
 }
 
-//=============================================================================
-// 初期化処理
-//=============================================================================
+/// <summary>
+/// 初期化処理
+/// </summary>
+/// <param name="hWnd">ウィンドウのハンドル（エラーメッセージ表示用）</param>
+/// <returns>初期化結果（成功: S_OK / 失敗: E_FAIL）</returns>
 HRESULT CSound::InitSound(HWND hWnd)
 {
 	HRESULT hr;
@@ -159,13 +166,13 @@ HRESULT CSound::InitSound(HWND hWnd)
 
 	return S_OK;
 }
-
-//=============================================================================
-// 終了処理
-//=============================================================================
-void CSound::UninitSound(void)
+/// <summary>
+/// 終了処理
+/// </summary>
+void CSound::UninitSound()
 {
-	// 一時停止
+	// サウンドバッファおよびXAudio2の全リソースを開放
+
 	for(int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)
 	{
 		if(m_apSourceVoice[nCntSound] != NULL)
@@ -199,10 +206,11 @@ void CSound::UninitSound(void)
 	// COMライブラリの終了処理
 	CoUninitialize();
 }
-
-//=============================================================================
-// セグメント再生(再生中なら停止)
-//=============================================================================
+/// <summary>
+/// サウンド再生（再生中なら一時停止）
+/// </summary>
+/// <param name="label">再生したいサウンドのラベル</param>
+/// <returns>再生結果（成功: S_OK / 失敗: E_FAIL）</returns>
 HRESULT CSound::PlaySound(SOUND_LABEL label)
 {
 	XAUDIO2_VOICE_STATE xa2state;
@@ -234,10 +242,10 @@ HRESULT CSound::PlaySound(SOUND_LABEL label)
 
 	return S_OK;
 }
-
-//=============================================================================
-// セグメント停止(ラベル指定)
-//=============================================================================
+/// <summary>
+/// サウンド停止（指定ラベル）
+/// </summary>
+/// <param name="label">停止したいハンドル</param>
 void CSound::StopSound(SOUND_LABEL label)
 {
 	XAUDIO2_VOICE_STATE xa2state;
@@ -253,11 +261,10 @@ void CSound::StopSound(SOUND_LABEL label)
 		m_apSourceVoice[label]->FlushSourceBuffers();
 	}
 }
-
-//=============================================================================
-// セグメント停止(全て)
-//=============================================================================
-void CSound::StopSound(void)
+/// <summary>
+/// サウンド停止（全て）
+/// </summary>
+void CSound::StopSound()
 {
 	// 一時停止
 	for(int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)
@@ -269,10 +276,11 @@ void CSound::StopSound(void)
 		}
 	}
 }
-
-//=============================================================================
-// セグメントが再生中かどうか
-//=============================================================================
+/// <summary>
+/// サウンドが再生中かどうかを取得
+/// </summary>
+/// <param name="label">対象のサウンドラベル</param>
+/// <returns>true:再生中 / false:再生していない</returns>
 bool CSound::IsPlaySound(SOUND_LABEL label)
 {
 	XAUDIO2_VOICE_STATE xa2state;
@@ -284,12 +292,18 @@ bool CSound::IsPlaySound(SOUND_LABEL label)
 	}
 	return false;
 }
-
-//=============================================================================
-// チャンクのチェック
-//=============================================================================
+/// <summary>
+/// WAVファイルのチャンク構造を解析し、指定フォーマットのチャンク位置とサイズを取得
+/// </summary>
+/// <param name="hFile">ファイルハンドル</param>
+/// <param name="format">探したいチャンク（例：'fmt 'や'data'）</param>
+/// <param name="pChunkSize">チャンクサイズ格納用ポインタ</param>
+/// <param name="pChunkDataPosition">チャンクデータ開始位置格納ポインタ</param>
+/// <returns>成功：S_OK、失敗：HRESULT</returns>
 HRESULT CSound::CheckChunk(HANDLE hFile, DWORD format, DWORD *pChunkSize, DWORD *pChunkDataPosition)
 {
+	// ファイル内をチャンク単位で探索し、目的のチャンクが見つかれば
+	// そのサイズとデータ位置を返す
 	HRESULT hr = S_OK;
 	DWORD dwRead;
 	DWORD dwChunkType;
@@ -353,9 +367,14 @@ HRESULT CSound::CheckChunk(HANDLE hFile, DWORD format, DWORD *pChunkSize, DWORD 
 	return S_OK;
 }
 
-//=============================================================================
-// チャンクデータの読み込み
-//=============================================================================
+//// <summary>
+/// ファイルから特定のチャンク位置にあるデータを読み込む
+/// </summary>
+/// <param name="hFile">ファイルハンドル</param>
+/// <param name="pBuffer">読み込み先のバッファ</param>
+/// <param name="dwBuffersize">バッファサイズ</param>
+/// <param name="dwBufferoffset">チャンクデータのオフセット位置</param>
+/// <returns>成功：S_OK、失敗：HRESULT</returns>
 HRESULT CSound::ReadChunkData(HANDLE hFile, void *pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset)
 {
 	DWORD dwRead;

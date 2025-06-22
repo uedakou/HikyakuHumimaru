@@ -4,20 +4,141 @@
 // Auther:UedaKou
 // 
 //===========================================
-#include "main.h"		// [main.h]読み込み]
-#include "manager.h"	// マネージャー
+#include "main.h"		// メインヘッダ
+#include "manager.h"	// 全体管理マネージャー
 
 // グローバル宣言
-int g_nCountFPS = 0;
+int g_nCountFPS = 0;// FPSカウント用のグローバル変数
 
-//============================================
-// メイン関数
-//============================================
+// アプリケーションクラスへのグローバルアクセス用ポインタ
+// WindowProc など、非メンバ関数から CApplication にアクセスするために必要
+static CApplication* g_pApp = nullptr;
+
+//// <summary>
+/// アプリケーションのエントリーポイント（メイン関数）
+/// Windows APIにおける WinMain 関数
+/// </summary>
+/// <param name="hInstance">現在のアプリケーションインスタンスのハンドル</param>
+/// <param name="hInstancePrev">以前のインスタンス（常に NULL）</param>
+/// <param name="lpCmdLine">コマンドライン引数文字列</param>
+/// <param name="nCmdShow">ウィンドウの表示状態</param>
+/// <returns>アプリケーションの終了コード（0で正常終了）</returns>
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hindtscePrev, _In_ LPSTR LpCmdline, _In_ int nCmdShow)
 {
-	CManager* instance = CManager::GetInstance();// マネージャーインスタンス
+	CApplication app;	// アプリケーション本体のインスタンス（ローカル）
 
-	WNDCLASSEX wcex =
+	g_pApp = &app;		// グローバルポインタに登録（WindowProc などから参照するため）
+
+	// 初期化処理（ウィンドウ生成、DirectX初期化など）
+	if (!app.Init(hInstance, nCmdShow))
+	{
+		return -1;
+	}
+
+	app.Run();	// メインループ（更新・描画処理）
+
+	app.Uninit();	// リソース解放など終了処理
+
+	return 0;	// 終了コード（正常終了）
+}
+/// <summary>
+/// ウィンドウプロシージャ（メッセージ処理関数）
+/// Windows OSから送られてくる各種メッセージを処理する
+/// </summary>
+/// <param name="hWnd">ウィンドウのハンドル</param>
+/// <param name="uMsg">メッセージの種類（例：WM_DESTROY、WM_KEYDOWNなど）</param>
+/// <param name="wParam">追加の情報（キーコードやマウスボタン情報など）</param>
+/// <param name="lParam">追加の情報（位置座標や拡張情報など）</param>
+/// <returns>処理結果（OSへ返す値）</returns>
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	int nID;
+	CManager* instance = CManager::GetInstance();// マネージャーインスタンス取得
+
+
+	switch (uMsg)
+	{
+	case WM_CREATE:  // ウィンドウが作成されたときのメッセージ
+		// ウィンドウ生成直後に送られるメッセージ（ここでは何もしない）
+		break;
+
+	case WM_DESTROY:
+		// ウィンドウ破棄時：アプリケーション終了メッセージを送る
+		PostQuitMessage(0);
+		break;
+
+	case WM_KEYDOWN:
+		// キー入力があった場合 → アプリケーションクラスの処理に委譲
+		if (g_pApp)
+		{
+			g_pApp->OnKeyDown(wParam);
+		}
+		break;
+
+	case WM_COMMAND: // ボタンなどのコマンドが発生したとき
+		// メニューやボタンの操作など（今回は未使用）
+		break;
+
+	case WM_CLOSE:
+		// ウィンドウ右上の「×」ボタン押下時の処理
+		nID = MessageBox(hWnd, "終了しますか？", "終了メッセージ", MB_YESNO);
+		if (nID == IDYES)
+		{
+			instance->Uninit();		// 終了処理を実行
+			DestroyWindow(hWnd);	// ウィンドウを破棄する
+		}
+		else
+		{
+			// ユーザーがキャンセルした場合は終了中断
+			return 0;//0を返さないと終了してしまう
+		}
+		break;
+
+	case WM_LBUTTONDOWN:	// マウス左クリックのメッセージ
+		// ウィンドウにフォーカスを合わせる
+		SetFocus(hWnd);
+		break;
+	}
+
+	// 既定のメッセージ処理を呼び出す
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+/// <summary>
+/// 現在のFPSを取得する
+/// </summary>
+/// <returns>FPS値</returns>
+int GetFPS()
+{
+	return g_nCountFPS;
+}
+
+/// <summary>
+/// コンストラクタ
+/// </summary>
+CApplication::CApplication()
+	: m_hWnd(NULL), m_dwExecLastTime(0), m_dwFPSLostTime(0), m_dwFrameCount(0)
+{
+	ZeroMemory(&m_wcex, sizeof(WNDCLASSEX));
+	ZeroMemory(&m_msg, sizeof(MSG));
+}
+/// <summary>
+/// デストラクタ
+/// </summary>
+CApplication::~CApplication()
+{
+}
+/// <summary>
+/// ウィンドウ生成とDirectX初期化
+/// </summary>
+/// <param name="hInstance">アプリケーションのインスタンスハンドル</param>
+/// <param name="nCmdShow">ウィンドウの表示状態</param>
+/// <returns>初期化結果（成功: true / 失敗: false）true<</returns>
+bool CApplication::Init(HINSTANCE hInstance, int nCmdShow)
+{
+	CManager* instance = CManager::GetInstance();// マネージャーインスタンス取得
+
+	// ウィンドウクラスの設定
+	m_wcex =
 	{
 		sizeof(WNDCLASSEX),					// WNDCLASSEXのメモリサイズ
 		CS_CLASSDC,							// ウィンドウのスタイル
@@ -32,19 +153,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hindtscePrev, _I
 		CLASS_NAME,							// ウィンドウクラスの名前
 		LoadIcon(NULL, IDI_APPLICATION)		// ファイルのアイコン
 	};
-	HWND hWnd;
-	MSG msg;
-
-	RECT rect = { 0,0,SCREEN_W,SCREEN_H };
 
 	// ウィンドウクラスの登録
-	RegisterClassEx(&wcex);
+	RegisterClassEx(&m_wcex);
+
+	// ウィンドウのクライアント領域サイズの指定
+	RECT rect = { 0,0,SCREEN_W,SCREEN_H };
 
 	// クライアント領域を指定のサイズに調整
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	//	ウィンドウを生成
-	hWnd = CreateWindowEx(0,	// 拡張ウィンドウスタイル
+	m_hWnd = CreateWindowEx(0,	// 拡張ウィンドウスタイル
 		CLASS_NAME,				// ウィンドウクラスの名前
 		WINDOW_NAME,			// ウィンドウの名前
 		WS_OVERLAPPEDWINDOW,	// ウィンドウスタイル
@@ -57,140 +177,116 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hindtscePrev, _I
 		hInstance,
 		NULL);
 
-	// ウィンドウ表示
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
+	// ウィンドウの表示と更新
+	ShowWindow(m_hWnd, nCmdShow);
+	UpdateWindow(m_hWnd);
 
-	DWORD dwCuppentTime;	// 現在時刻
-	DWORD dwExecLastTime;	// 最後に処理した時刻
-	DWORD dwFrameCount;		// フレームカウント
-	DWORD dwFPSLostTime;	// 最後にFPSを計測した時刻
-
-	if (FAILED(instance->Init(hInstance, hWnd, TRUE)))
-	{// 初期化処理
-		return -1;
+	// 初期化処理（DirectXやサブシステムなど）
+	if (FAILED(instance->Init(hInstance, m_hWnd, TRUE)))
+	{
+		return false; // 初期化失敗時は終了
 	}
 
-	timeBeginPeriod(1);	// 分解能を設定 
-	dwCuppentTime = 0;	// 初期化する
-	dwExecLastTime = timeGetTime();	// 現在時刻を取得
-	dwFrameCount = 0;
-	dwFPSLostTime = timeGetTime();
-	// メッセージループ
+	// タイマー分解能をミリ秒単位に（CPUに負荷はかかるが精度向上）
+	timeBeginPeriod(1);
+
+	// 各タイミング変数を初期化
+	m_dwExecLastTime = timeGetTime();	// 最後に処理した時刻を取得
+	m_dwFPSLostTime = timeGetTime();	// 最後にFPSを計測した時刻を初期化
+
+	return true;
+}
+/// <summary>
+/// 終了処理
+/// </summary>
+void CApplication::Uninit()
+{
+	CManager::GetInstance()->Uninit();
+	UnregisterClass(CLASS_NAME, m_wcex.hInstance);
+}
+/// <summary>
+/// メインry－プ処理
+/// </summary>
+void CApplication::Run()
+{
+	CManager* instance = CManager::GetInstance();
+	//----------------------------------------------
+	// メインループ
+	//----------------------------------------------
 	while (1)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) != 0)
-		{// WM_QUITメッセージを受け取ったらメッセージループを抜ける
-			if (msg.message == WM_QUIT)
+		// メッセージがあれば処理（非ブロッキング）
+		if (PeekMessage(&m_msg, NULL, 0, 0, PM_REMOVE) != 0)
+		{
+
+			if (m_msg.message == WM_QUIT)
 			{
-				break;
+				break;	// アプリケーション終了要求
 			}
 			else
 			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+				TranslateMessage(&m_msg);
+				DispatchMessage(&m_msg);
 			}
 		}
+		// DirectXの処理
 		else
-		{// DirectXの処理
-			dwCuppentTime = timeGetTime();	// 現在時刻を取得
+		{
+			// 時間取得（フレーム制御用）
+			DWORD dwCuppentTime = timeGetTime();
 
-			if ((dwCuppentTime - dwFPSLostTime) >= 500)
-			{// 0.5秒
+			// FPS計測（0.5秒おきに更新）
+			if ((dwCuppentTime - m_dwFPSLostTime) >= 500)
+			{
 				// FPSを計測
-				g_nCountFPS = (dwFrameCount * 1000) / (dwCuppentTime - dwFPSLostTime);
-				dwFPSLostTime = dwCuppentTime;
-				dwFrameCount = 0;
+				g_nCountFPS = (m_dwFrameCount * 1000) / (dwCuppentTime - m_dwFPSLostTime);
+				m_dwFPSLostTime = dwCuppentTime;
+				m_dwFrameCount = 0;
 
 			}
-			if ((dwCuppentTime - dwExecLastTime) >= (1000 / FPS))
-			{// 60文の1秒経過
-				//while ((dwCuppentTime - dwExecLastTime) >= (1000 / FPS)) // 16.66ms 経過していたら
-				//{
-				//	// 更新処理 (遅れていたら追いつくまで実行)
+			// 一定間隔（例：60FPSなら約16.66ms）で更新・描画処理
+			if ((dwCuppentTime - m_dwExecLastTime) >= (1000 / FPS))
+			{// 60分の1秒経過
+				// ==============================
+				// 遅延補正付きの更新処理ループ
+				// ==============================
+				while ((dwCuppentTime - m_dwExecLastTime) >= (1000 / FPS)) // 16.66ms 経過していたら
+				{
+					// 更新処理 (遅れていたら追いつくまで実行)
 					instance->Update();
 
-				//	// 次のフレーム時刻に補正
-				//	dwExecLastTime += (1000 / FPS);
+					// 次のフレーム実行時間に進める（16.66ms分進める）
+					m_dwExecLastTime += (1000 / FPS);
 
-				//	dwFrameCount++;
-				//}
+					// フレーム数カウント（FPS計測用）
+					m_dwFrameCount++;
+				}
 
 				// 描画処理 (1回だけ)
 				instance->Draw();
 			}
 
 		}
-		// メッセージの設定
+		// グローバルな終了要求フラグが立っていたらループを抜ける
 		if (CManager::GetEnd() == true)
 		{
 			break;
 		}
 	}
-
-	// ウィンドウクラスの登録を解除
-	UnregisterClass(CLASS_NAME, wcex.hInstance);
-
-	return(int)msg.wParam;
 }
-//============================================
-//　ウィンドウプロシャーシ
-//============================================
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+/// <summary>
+/// キーボード入力（キー押下）に対する処理
+/// </summary>
+/// <param name="key">押されたキーの仮想キーコード（WPARAM）</param>
+void CApplication::OnKeyDown(WPARAM key)
 {
-	int nID;
-	CManager* instance = CManager::GetInstance();// マネージャーインスタンス
-
-
-	switch (uMsg)
+	if (key == VK_ESCAPE)
 	{
-	case WM_CREATE: // ウィンドウハンドル
-		break;
-
-	case WM_DESTROY:
-		// WM_QUITメッセージを送る
-		PostQuitMessage(0);
-		break;
-
-	case WM_KEYDOWN:
-		switch (wParam)
+		int result = MessageBox(m_hWnd, "終了しますか？", "終了メッセージ", MB_YESNO);
+		if (result == IDYES)
 		{
-		case VK_ESCAPE:
-			nID = MessageBox(hWnd, "終了しますか？", "終了メッセージ", MB_YESNO);
-			if (nID == IDYES)
-			{
-				instance->Uninit();
-				// ウィンドウを破棄する
-				DestroyWindow(hWnd);
-			}
-			break;
+			CManager::GetInstance()->Uninit();
+			DestroyWindow(m_hWnd);
 		}
-		break;
-	case WM_COMMAND: // ボタンが押された
-
-		break;
-	case WM_CLOSE:
-		nID = MessageBox(hWnd, "終了しますか？", "終了メッセージ", MB_YESNO);
-		if (nID == IDYES)
-		{
-			instance->Uninit();
-			// ウィンドウを破棄する
-			DestroyWindow(hWnd);
-		}
-		else
-		{
-			return 0;//0を返さないと終了してしまう
-		}
-		break;
-
-	case WM_LBUTTONDOWN:	// マウス左クリックのメッセージ
-		// ウィンドウにフォーカスを合わせる
-		SetFocus(hWnd);
-		break;
 	}
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-int GetFPS()
-{
-	return g_nCountFPS;
 }

@@ -9,10 +9,12 @@
 #include "../object/base/text.h"	// テキスト
 
 
-bool CManager::m_bEnd = false;
-//============================================
-// コンストラクタ
-//============================================
+// グローバス変数
+bool CManager::m_bEnd = false;	// 終了フラグ
+
+/// <summary>
+/// コンストラクタ
+/// </summary>
 CManager::CManager()
 {
 	m_pRenderer = nullptr;			// レンダラー
@@ -29,15 +31,19 @@ CManager::CManager()
 
 	m_pDebugText = nullptr;			// デバッグ用テキスト
 }
-//============================================
-// デストラクタ
-//============================================
+/// <summary>
+/// デストラクタ
+/// </summary>
 CManager::~CManager()
 {
 }
-//============================================
-// 初期化
-//============================================
+/// <summary>
+/// 初期化
+/// </summary>
+/// <param name="hInstance">インスタンスハンドル</param>
+/// <param name="nWnd">ウィンドウハンドル</param>
+/// <param name="bWindow"></param>
+/// <returns>初期化成功 : S_OK</returns>
 HRESULT CManager::Init(HINSTANCE hInstance, HWND nWnd, BOOL bWindow)
 {
 	// レンダラー
@@ -98,13 +104,16 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND nWnd, BOOL bWindow)
 	if (m_pDebugText == nullptr)
 	{
 		m_pDebugText = CText::create();
+		m_pDebugText->SetReleaseScene(false);
+
+
 	}
 
 	return S_OK;
 }
-//============================================
-// 終了
-//============================================
+/// <summary>
+/// 終了処理
+/// </summary>
 void CManager::Uninit()
 {
 	// デバッグテキスト
@@ -155,9 +164,9 @@ void CManager::Uninit()
 		m_pRenderer = nullptr;
 	}
 }
-//============================================
-// 更新
-//============================================
+/// <summary>
+/// 更新
+/// </summary>
 void CManager::Update()
 {
 	// デバッグテキスト
@@ -203,9 +212,9 @@ void CManager::Update()
 
 	CObject::ReleaseDeathFlag();
 }
-//============================================
-// 描画
-//============================================
+/// <summary>
+/// 描画
+/// </summary>
 void CManager::Draw()
 {
 	// レンダラー

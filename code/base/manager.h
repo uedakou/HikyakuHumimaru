@@ -74,7 +74,7 @@ private:
 
 	//CCollisionManager* m_pCollisionManager;	// コリジョンマネージャー
 
-	static bool m_bEnd;	// 終了
+	static bool m_bEnd;	// 終了フラグ
 };
 
 
