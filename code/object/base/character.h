@@ -10,9 +10,6 @@
 #include "motion.h"
 #include "../../base/calculation.h"	// 計算用
 
-#define BASE_RESISTANCE 0.01f
-
-
 class CCharacter : public CObjectMotion
 {
 public:
@@ -106,7 +103,10 @@ private:
 
 	X m_Xcollision;	// 当たり判定位置
 	X m_xmove;		// 変化量(運動量,回転量,膨張量)
-	bool bJump;
+	bool bJump;		// ジャンプ中かどうか
+
+	static constexpr float s_fBase_Resistance = 0.01f;	// 移動減衰値
+	static constexpr float s_fBase_Gravity = 0.025f;	// 重力
 
 };
 

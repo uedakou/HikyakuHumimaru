@@ -64,7 +64,7 @@ namespace Scene {
 			m_pStageEvaluation = CObject2D::create(6, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5 + 200.0f, 0.0f), s_SelectEvaluationSiz);
 			m_pStageEvaluation->SetTexture("data/TEXTURE/Stor_000.png");	// ƒeƒNƒXƒ`ƒƒ
 			m_pStageEvaluation->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[0],0.0f, 0.25f + 0.25f * m_gameData->m_nScore[0], 1.0f);
+			m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[0],0.0f, 0.25f + 0.25f * m_gameData->m_nScore[0], 1.0f });
 
 			// ”wŒi
 			CObject2D* pBG = nullptr;
@@ -206,7 +206,7 @@ namespace Scene {
 					{
 						m_gameData->m_nScore[m_nSetlect] = 3;
 					}
-					m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f);
+					m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f });
 				}
 				if (pInKey->GetTrigger(DIK_S))
 				{
@@ -215,7 +215,7 @@ namespace Scene {
 					{
 						m_gameData->m_nScore[m_nSetlect] = 0;
 					}
-					m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f);
+					m_pStageEvaluation->SetUV({0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f});
 				}
 
 #endif // !_DEBUG
@@ -250,7 +250,7 @@ namespace Scene {
 						}
 					}
 					// •]‰¿UVÝ’è
-					m_pStageEvaluation->SetUV(0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f);
+					m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f });
 				}
 
 				if (m_bNext == true)

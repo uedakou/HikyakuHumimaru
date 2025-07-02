@@ -79,10 +79,11 @@ namespace Scene {
 					m_pStrategy = p;
 				}
 			}
+			// ƒXƒNƒ[ƒ‹‚ðŽæ“¾‚µ‚Ä‚¢‚½‚ç
 			if (m_nNumScroll != m_nNumScrollOld)
 			{
-				m_nNumScrollOld = m_nNumScroll;
 				m_pNumScroll[m_nNumScrollOld]->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+				m_nNumScrollOld = m_nNumScroll;
 			}
 
 			return result;

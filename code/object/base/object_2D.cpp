@@ -8,37 +8,51 @@
 #include "../../base/manager.h"	// マネージャー
 #include "../../base/main.h"	// メイン
 
+// 静的メンバ定数
+const D3DXCOLOR CObject2D::s_colDef = { 1.0f, 1.0f, 1.0f, 1.0f };	// 色初期設定
+const int CObject2D::s_nNumVertices = 4;
 
-//============================================
-// コンストラクタ
-//============================================
+/// <summary>
+/// コンストラクタ
+/// </summary>
 CObject2D::CObject2D()
 {
-	m_pVtxBuff = nullptr;
-	m_pTexture = nullptr;
-	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_pVtxBuff = nullptr;				// バーテックス初期化
+	m_pTexture = nullptr;				// テクスチャ初期化
+	m_col = s_colDef;					// 色初期化
+	m_nNumVertices = s_nNumVertices;	// 超点数
 }
+/// <summary>
+/// コンストラクタ(優先度付き)
+/// </summary>
+/// <param name="nPriority">優先度</param>
 CObject2D::CObject2D(int nPriority):
 	CObject(nPriority)
 {
-	m_pVtxBuff = nullptr;
-	m_pTexture = nullptr;
-	m_col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_pVtxBuff = nullptr;				// バーテックス初期化
+	m_pTexture = nullptr;				// テクスチャ初期化
+	m_col = s_colDef;					// 色初期化
+	m_nNumVertices = s_nNumVertices;	// 超点数
 }
 //============================================
 // デストラクト
 //============================================
 CObject2D::~CObject2D()
 {
+	// 初期化処理
+	Uninit();
 }
 //============================================
 // 初期化
 //============================================
 bool CObject2D::Init()
 {
-	
+	// 全体マネージャー取得
+	CManager* pManager = CManager::GetInstance();
+	// デバイス取得
+	LPDIRECT3DDEVICE9 pDevice = pManager->GetRenderer()->GetDevice();// デバイスへのポインタ
 
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();// デバイスへのポインタ
+	// トランスフォーム取得
 	X x = GetX();
 
 	// デバイスの取得
@@ -89,7 +103,10 @@ bool CObject2D::Init()
 //============================================
 void CObject2D::Uninit()
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();// デバイスへのポインタ
+	// 全体マネージャー
+	CManager* pManager = CManager::GetInstance();
+	// デバイスへのポインタ取得
+	LPDIRECT3DDEVICE9 pDevice = pManager->GetRenderer()->GetDevice();
 
 	// テクスチャの破棄
 	if (m_pTexture != nullptr)
@@ -116,7 +133,10 @@ void CObject2D::Update()
 //============================================
 void CObject2D::Draw()
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();// デバイスへのポインタ
+	// 全体マネージャー
+	CManager* pManager = CManager::GetInstance();
+	// デバイスへのポインタ
+	LPDIRECT3DDEVICE9 pDevice = pManager->GetRenderer()->GetDevice();
 
 	// 頂点バッファにデータをストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
@@ -129,42 +149,64 @@ void CObject2D::Draw()
 
 	pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 
-	// プレイヤーの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
 	pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 }
+/// <summary>
+/// トランスフォームを設定
+/// </summary>
+/// <param name="x">設定するトランスフォーム</param>
 void CObject2D::SetX(X x)
 {
+	// トランスフォーム設定
 	CObject::SetX(x);
 	if (m_pVtxBuff == nullptr)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
-void CObject2D::SetX(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const D3DXVECTOR3 siz)
+/// <summary>
+/// トランスフォームを設定
+/// </summary>
+/// <param name="pos">設定する位置</param>
+/// <param name="rot">設定する向き</param>
+/// <param name="siz">設定するスケール</param>
+void CObject2D::SetX(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const D3DXVECTOR3 scl)
 {
+	// トランスフォーム設定
 	CObject::SetPos(pos);
+	CObject::SetRot(rot);
+	CObject::SetScl(scl);
+
 	if (m_pVtxBuff == nullptr)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
 /// <summary>
-/// 座標を設定します
+/// 位置を設定します
 /// </summary>
 /// <param name="pos">設定する座標</param>
 void CObject2D::SetPos(D3DXVECTOR3 pos)
 {
+	// 位置設定
 	CObject::SetPos(pos);
 	if (m_pVtxBuff == nullptr)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 位置（x軸のみ）を設定
+/// </summary>
+/// <param name="x">設定する座標</param>
 void CObject2D::SetPosX(const float x)
 {
 	CObject::SetPosX(x);
@@ -172,8 +214,13 @@ void CObject2D::SetPosX(const float x)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 位置（y軸のみ）設定
+/// </summary>
+/// <param name="y">設定する座標</param>
 void CObject2D::SetPosY(const float y)
 {
 	CObject::SetPosY(y);
@@ -181,8 +228,13 @@ void CObject2D::SetPosY(const float y)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 位置（z軸のみ）を設定
+/// </summary>
+/// <param name="z">設定する座標</param>
 void CObject2D::SetPosZ(const float z)
 {
 	CObject::SetPosZ(z);
@@ -190,8 +242,13 @@ void CObject2D::SetPosZ(const float z)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 向きを設定する
+/// </summary>
+/// <param name="rot">設定したい角度</param>
 void CObject2D::SetRot(const D3DXVECTOR3 rot)
 {
 	CObject::SetRot(rot);
@@ -199,8 +256,13 @@ void CObject2D::SetRot(const D3DXVECTOR3 rot)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 向き（x軸のみ）を設定する
+/// </summary>
+/// <param name="x">設定したい角度</param>
 void CObject2D::SetRotX(const float x)
 {
 	CObject::SetRotX(x);
@@ -208,8 +270,13 @@ void CObject2D::SetRotX(const float x)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 向き（y軸のみ）を設定する
+/// </summary>
+/// <param name="y">設定したい角度</param>
 void CObject2D::SetRotY(const float y)
 {
 	CObject::SetRotY(y);
@@ -217,8 +284,13 @@ void CObject2D::SetRotY(const float y)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 向き（z軸のみ）を設定する
+/// </summary>
+/// <param name="z">設定したい角度</param>
 void CObject2D::SetRotZ(const float z)
 {
 	CObject::SetRotZ(z);
@@ -226,8 +298,13 @@ void CObject2D::SetRotZ(const float z)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 拡大率を設定
+/// </summary>
+/// <param name="siz">設定したい拡大率</param>
 void CObject2D::SetScl(const D3DXVECTOR3 siz)
 {
 	CObject::SetScl(siz);
@@ -235,8 +312,13 @@ void CObject2D::SetScl(const D3DXVECTOR3 siz)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 拡大率(x軸のみ)を設定
+/// </summary>
+/// <param name="x">設定したい拡大率</param>
 void CObject2D::SetSclX(const float x)
 {
 	CObject::SetSclX(x);
@@ -244,8 +326,13 @@ void CObject2D::SetSclX(const float x)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 拡大率(x軸のみ)を設定
+/// </summary>
+/// <param name="y">設定したい拡大率</param>
 void CObject2D::SetSclY(const float y)
 {
 	CObject::SetSclY(y);
@@ -253,38 +340,51 @@ void CObject2D::SetSclY(const float y)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
+/// <summary>
+/// 拡大率(x軸のみ)を設定
+/// </summary>
+/// <param name="z">設定したい拡大率</param>
 void CObject2D::SetSclZ(const float z)
 {
+	// 拡大率設定
 	CObject::SetSclZ(z);
 	if (m_pVtxBuff == nullptr)
 	{
 		return;
 	}
+	// 位置から頂点を設定
 	SetVtxPos();
 }
-void CObject2D::SetUV(float nUp, float nLeft, float nDown, float nRight)
+/// <summary>
+/// UV設定
+/// </summary>
+/// <param name="UV">設定したいUV（上下左右）</param>
+void CObject2D::SetUV(D3DXVECTOR4 UV)
 {
 	VERTEX_2D* pVtx;		// 頂点情報へのポインタ
 	// 頂点バッファをロック
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// テクスチャ座標の設定
-	pVtx[0].tex = D3DXVECTOR2(nLeft, nUp);
-	pVtx[1].tex = D3DXVECTOR2(nRight, nUp);
-	pVtx[2].tex = D3DXVECTOR2(nLeft, nDown);
-	pVtx[3].tex = D3DXVECTOR2(nRight, nDown);
+	pVtx[0].tex = D3DXVECTOR2(UV.z, UV.x);
+	pVtx[1].tex = D3DXVECTOR2(UV.z, UV.x);
+	pVtx[2].tex = D3DXVECTOR2(UV.w, UV.y);
+	pVtx[3].tex = D3DXVECTOR2(UV.w, UV.y);
 
 	// 頂点バッファをロック
 	m_pVtxBuff->Unlock();
 }
-//============================================
-// カラー設定
-//============================================
+/// <summary>
+/// 頂点カラー設定
+/// </summary>
+/// <param name="col">設定したい頂点カラー</param>
 void CObject2D::SetColor(D3DXCOLOR col)
 {
 	m_col = col;
+
 
 	VERTEX_2D* pVtx;		// 頂点情報へのポインタ
 	if (m_pVtxBuff != nullptr)
@@ -302,36 +402,60 @@ void CObject2D::SetColor(D3DXCOLOR col)
 		m_pVtxBuff->Unlock();
 	}
 }
-//============================================
-// テクスチャセット
-//============================================
+/// <summary>
+/// テクスチャを設定する
+/// 外部から取得したDirect3Dテクスチャを直接登録する
+/// </summary>
+/// <param name="ptex">Direct3Dテクスチャポインタ</param>
 void CObject2D::SetTexture(const LPDIRECT3DTEXTURE9 ptex)
 {
+	// テクスチャポインタを設定
 	m_pTexture = ptex;
 }
+/// <summary>
+/// テクスチャファイルを読み込んで設定する
+/// </summary>
+/// <param name="aName">テクスチャファイルパス</param>
 void CObject2D::SetTexture(const char aName[MAX_TXT])
 {
+	// Direct3Dデバイスを取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイス取得
+
 	LPDIRECT3DTEXTURE9 ptex;
+
+	// テクスチャファイルを読み込む
 	D3DXCreateTextureFromFile(
 		pDevice,
 		aName,
 		&ptex);
 
+	// 読み込んだテクスチャを設定
 	SetTexture(ptex);
 }
+/// <summary>
+/// テクスチャファイルを読み込んで設定する（std::string版）
+/// </summary>
+/// <param name="aName">テクスチャファイルパス</param>
 void CObject2D::SetTexture(std::string aName)
 {
+	// Direct3Dデバイスを取得
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetInstance()->GetRenderer()->GetDevice();	// デバイス取得
+
 	LPDIRECT3DTEXTURE9 ptex;
+
+	// テクスチャファイルを読み込む
 	D3DXCreateTextureFromFile(
 		pDevice,
 		aName.c_str(),
 		&ptex);
 
+	// 読み込んだテクスチャを設定
 	SetTexture(ptex);
 }
-
+/// <summary>
+/// トランスフォーム加算
+/// </summary>
+/// <param name="x">加算する座標・回転・スケールのセット</param>
 void CObject2D::AddX(X x)
 {
 	CObject::AddX(x);
@@ -341,7 +465,10 @@ void CObject2D::AddX(X x)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// トランスフォームに指定値を加算する
+/// </summary>
+/// <param name="x">加算する座標・回転・スケールのセット</param>
 void CObject2D::AddX(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const D3DXVECTOR3 siz)
 {
 	CObject::AddX(pos, rot, siz);
@@ -351,7 +478,10 @@ void CObject2D::AddX(const D3DXVECTOR3 pos, const D3DXVECTOR3 rot, const D3DXVEC
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// 座標加算
+/// </summary>
+/// <param name="pos">加算したい座標</param>
 void CObject2D::AddPos(const D3DXVECTOR3 pos)
 {
 	CObject::AddPos(pos);
@@ -361,7 +491,10 @@ void CObject2D::AddPos(const D3DXVECTOR3 pos)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// X座標を加算
+/// </summary>
+/// <param name="x">加算したい座標</param>
 void CObject2D::AddPosX(const float x)
 {
 	CObject::AddPosX(x);
@@ -371,7 +504,10 @@ void CObject2D::AddPosX(const float x)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// Y座標を加算
+/// </summary>
+/// <param name="y">加算したい座標</param>
 void CObject2D::AddPosY(const float y)
 {
 	CObject::AddPosY(y);
@@ -381,7 +517,10 @@ void CObject2D::AddPosY(const float y)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// Z座標を加算
+/// </summary>
+/// <param name="z">加算したい座標</param>
 void CObject2D::AddPosZ(const float z)
 {
 	CObject::AddPosZ(z);
@@ -391,7 +530,10 @@ void CObject2D::AddPosZ(const float z)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// 回転を加算（全軸）
+/// </summary>
+/// <param name="rot">加算したい回転（ラジアン単位）</param>
 void CObject2D::AddRot(const D3DXVECTOR3 rot)
 {
 	CObject::AddRot(rot);
@@ -401,7 +543,10 @@ void CObject2D::AddRot(const D3DXVECTOR3 rot)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// X軸回転を加算
+/// </summary>
+/// <param name="x">加算したいX軸回転（ラジアン単位）</param>
 void CObject2D::AddRotX(const float x)
 {
 	CObject::AddRotX(x);
@@ -411,7 +556,10 @@ void CObject2D::AddRotX(const float x)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// Y軸回転を加算
+/// </summary>
+/// <param name="y">加算したいY軸回転（ラジアン単位）</param>
 void CObject2D::AddRotY(const float y)
 {
 	CObject::AddRotY(y);
@@ -421,7 +569,10 @@ void CObject2D::AddRotY(const float y)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// Z軸回転を加算
+/// </summary>
+/// <param name="z">加算したいZ軸回転（ラジアン単位）</param>
 void CObject2D::AddRotZ(const float z)
 {
 	CObject::AddRotZ(z);
@@ -431,7 +582,10 @@ void CObject2D::AddRotZ(const float z)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// スケールを加算
+/// </summary>
+/// <param name="siz">加算したいスケール</param>
 void CObject2D::AddScl(const D3DXVECTOR3 siz)
 {
 	CObject::AddScl(siz);
@@ -441,7 +595,10 @@ void CObject2D::AddScl(const D3DXVECTOR3 siz)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// X軸スケールを加算
+/// </summary>
+/// <param name="x">加算したいX軸スケール</param>
 void CObject2D::AddSclX(const float x)
 {
 	CObject::AddSclX(x);
@@ -451,7 +608,10 @@ void CObject2D::AddSclX(const float x)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// Y軸スケールを加算
+/// </summary>
+/// <param name="y">加算したいX軸スケール</param>
 void CObject2D::AddSclY(const float y)
 {
 	CObject::AddSclY(y);
@@ -461,7 +621,10 @@ void CObject2D::AddSclY(const float y)
 	}
 	SetVtxPos();
 }
-
+/// <summary>
+/// Z軸スケールを加算
+/// </summary>
+/// <param name="z">加算したいX軸スケール</param>
 void CObject2D::AddSclZ(const float z)
 {
 	CObject::AddSclZ(z);
@@ -471,32 +634,64 @@ void CObject2D::AddSclZ(const float z)
 	}
 	SetVtxPos();
 }
-//============================================
-// 生成
-//============================================
+/// <summary>
+/// 生成
+/// </summary>
+/// <param name="pos">生成したい位置</param>
+/// <param name="siz">生成したい大きさ</param>
+/// <returns>生成したオブジェクト</returns>
 CObject2D* CObject2D::create(D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 {
+	// インスタンスを確保
 	CObject2D* pObject = new CObject2D;
+	// インスタンスを確保を失敗していたら
+	if (!pObject)
+	{
+		return nullptr;
+	}
 
-	pObject->SetPos(pos);
-	pObject->SetSiz(siz);
-	pObject->Init();
+	pObject->SetPos(pos);	// 位置を設定
+	pObject->SetSiz(siz);	// 大きさ設定
+	if (!pObject->Init())	// 初期化
+	{
+		delete pObject;
+		pObject = nullptr;
+		return nullptr;
+	}	
 
+	// インスタンスを返す
 	return pObject;
 }
+/// <summary>
+/// 生成優先度付き
+/// </summary>
+/// <param name="nPriority">優先度</param>
+/// <param name="pos">生成したい位置</param>
+/// <param name="siz">生成したい大きさ</param>
+/// <returns>生成したオブジェクト</returns>
 CObject2D* CObject2D::create(int nPriority, D3DXVECTOR3 pos, D3DXVECTOR3 siz)
 {
+	// インスタンスを確保
 	CObject2D* pObject = new CObject2D(nPriority);
 
-	pObject->SetPos(pos);
-	pObject->SetSiz(siz);
-	pObject->Init();
+	pObject->SetPos(pos);	// 位置を設定
+	pObject->SetSiz(siz);	// 大きさ設定
+	if (!pObject->Init())	// 初期化
+	{
+		delete pObject;
+		pObject = nullptr;
+		return nullptr;
+	}
 
+	// インスタンスを返す
 	return pObject;
 }
-
+/// <summary>
+/// 頂点情報を設定
+/// </summary>
 void CObject2D::SetVtxPos()
 {
+	//位置を設定
 	X x = GetX();
 
 	VERTEX_2D* pVtx;		// 頂点情報へのポインタ

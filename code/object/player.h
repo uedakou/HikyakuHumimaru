@@ -187,7 +187,7 @@ private:
 	bool m_bJanp;	// ジャンプしているかどうか
 
 	ActivityStrategy* m_pActivityStrategy;	// 行動ストラテジ
-	CEffectGeneratorPaeticle* m_pEffect;	// エフェクト
+	CEffectGeneratorParticle* m_pEffect;	// エフェクト
 
 	// 定数
 	static const int s_nLife = 1;		// 体力初期値

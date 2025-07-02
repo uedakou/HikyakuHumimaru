@@ -7,24 +7,26 @@
 #include "object.h"	// オブジェクト
 #include "object_billboard.h"	// ビルボード
 
-//============================================
-// コンストラクタ
-//============================================
+// 静的メンバ変数
 CObject* CObject::m_pTop[MAX_PRIORITY] = {};	// オブジェクトデータ
 CObject* CObject::m_pCur[MAX_PRIORITY] = {};	// オブジェクトデータ
 int CObject::m_nNumObject[MAX_PRIORITY] = {};	// 階層ごとオブジェクト数
+
+/// <summary>
+/// コンストラクタ
+/// </summary>
 CObject::CObject()
 {
 	m_pNext = nullptr;		// 次オブジェクト
 	m_pPrev = nullptr;		// 前オブジェクト
-	m_nNumObject[MAX_PRIORITY]++;	// オブジェクト数加算
-	m_ID = m_nNumObject[MAX_PRIORITY];	// IDを記録
+	m_nNumObject[s_nDefalut_Priority]++;	// オブジェクト数加算
+	m_ID = m_nNumObject[s_nDefalut_Priority];	// IDを記録
 
-	m_nPriority = MAX_PRIORITY;		// オブジェクトプライオリティ
+	m_nPriority = s_nDefalut_Priority;		// オブジェクトプライオリティ
 
-	// トランスフォーム
+	// トランスフォーム設定
 	m_x = X(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f));
-	m_fDistance = 0.0f;
+	m_fDistance = 0.0f;	// カメラからの距離
 
 	m_bAllUpdate = true;	// 全体で更新するか
 	m_bPoseUpdate = false;	// ポーズ中更新するか
@@ -35,30 +37,34 @@ CObject::CObject()
 	m_bDeath = false;		// デスフラグ
 
 	// 先頭がなかったら先頭設定
-	if (m_pTop[DEFALT_PRIORITY] != nullptr)
+	if (m_pTop[s_nDefalut_Priority] != nullptr)
 	{
-		m_pCur[DEFALT_PRIORITY]->m_pNext = this;
-		m_pPrev = m_pCur[DEFALT_PRIORITY];
-		m_pCur[DEFALT_PRIORITY] = this;
+		m_pCur[s_nDefalut_Priority]->m_pNext = this;
+		m_pPrev = m_pCur[s_nDefalut_Priority];
+		m_pCur[s_nDefalut_Priority] = this;
 	}
 	else
 	{
-		m_pTop[DEFALT_PRIORITY] = this;
-		m_pCur[DEFALT_PRIORITY] = this;
+		m_pTop[s_nDefalut_Priority] = this;
+		m_pCur[s_nDefalut_Priority] = this;
 	}
 }
+/// <summary>
+/// コンストラクタ
+/// </summary>
+/// <param name="nPriority">優先度</param>
 CObject::CObject(const int nPriority)
 {
 	m_pNext = nullptr;		// 次オブジェクト
 	m_pPrev = nullptr;		// 前オブジェクト
 	m_nNumObject[nPriority]++;	// オブジェクト数加算
-	m_ID = m_nNumObject[MAX_PRIORITY];	// IDを記録
+	m_ID = m_nNumObject[nPriority];	// IDを記録
 
 	m_nPriority = nPriority;	// オブジェクトプライオリティ
 
 	// トランスフォーム
 	m_x = X(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f));
-	m_fDistance = 0.0f;
+	m_fDistance = 0.0f;		// カメラからの距離
 
 	m_bAllUpdate = true;		// 全体で更新するか
 	m_bPoseUpdate = false;	// ポーズ中更新するか
@@ -68,30 +74,31 @@ CObject::CObject(const int nPriority)
 
 	m_bDeath = false;		// デスフラグ
 
-	// 先頭がなかったら先頭設定
+	// 先頭が有ったら末尾に追加
 	if (m_pTop[nPriority] != nullptr)
 	{
 		m_pCur[nPriority]->m_pNext = this;
 		m_pPrev = m_pCur[nPriority];
 		m_pCur[nPriority] = this;
 	}
+	// 先頭がなかったら先頭設定
 	else
 	{
 		m_pTop[nPriority] = this;
 		m_pCur[nPriority] = this;
 	}
 }
-//============================================
-// デストラクタ
-//============================================
+/// <summary>
+/// デストラクタ
+/// </summary>
 CObject::~CObject()
 {
-
+	// オブジェクト数を減らす設定
 	m_nNumObject[m_nPriority]--;
 }
-//============================================
-// オブジェクト解放
-//============================================
+/// <summary>
+/// 死亡フラグ
+/// </summary>
 void CObject::Release()
 {
 	m_bDeath = true;
@@ -101,74 +108,98 @@ void CObject::Release()
 /// </summary>
 void CObject::ReleaseScene()
 {
+	// 優先度分繰り返す
 	for (int nCntPriority = 0; nCntPriority < MAX_PRIORITY; nCntPriority++)
 	{
+		// トップをオブジェクトに入れる
 		CObject* pObjact = m_pTop[nCntPriority];
+		// オブジェクトが無くなるまで続ける
 		while (pObjact != nullptr)
-		{
+		{	
 			CObject* pNext = pObjact->GetNext();	//	次保管
+			// シーンリリースで解放するかどうか
 			if (pObjact->m_bReleaseScene)
 			{
 				CObject* pNext = pObjact->m_pNext;	// 次保管
 				CObject* pPrev = pObjact->m_pPrev;	// 前保管
+				// 次が有れば
 				if (pNext != nullptr)
 				{// 次に前を入れる
 					pNext->SetPrev(pPrev);
 				}
+				// 前が有れば
 				if (pPrev != nullptr)
 				{// 前に次を入れる
 					pPrev->SetNext(pNext);
 				}
 
+				// トップがこのオブジェクトなら
 				if (m_pTop[nCntPriority] == pObjact)
 				{
+					// 次を先頭に入れる
 					m_pTop[nCntPriority] = pNext;
 				}
+				// 末端がこのオブジェクトなら
 				if (m_pCur[nCntPriority] == pObjact)
 				{
+					// 前を末端に入れる
 					m_pCur[nCntPriority] = pPrev;
 				}
+				// オブジェクトの終了処理
 				pObjact->Uninit();
+
+				// 解放
 				delete pObjact;
 			}
-
+			// 次に移行
 			pObjact = pNext;
 
 		}
 	}
 }
-//============================================
-// 全オブジェクト解放
-//============================================
+/// <summary>
+/// 全オブジェクト解放
+/// </summary>
 void CObject::ReleaseAll()
 {
+	// 優先度分繰り返す
 	for (int nCntPriority = 0; nCntPriority < MAX_PRIORITY; nCntPriority++)
 	{
+		// トップをオブジェクトに入れる
 		CObject* pObjact = m_pTop[nCntPriority];
+		// オブジェクトが無くなるまで続ける
 		while (pObjact != nullptr)
 		{
 			CObject* pNext = pObjact->m_pNext;	// 次保管
 			CObject* pPrev = pObjact->m_pPrev;	// 前保管
+			// 次が有れば
 			if (pNext != nullptr)
 			{// 次に前を入れる
 				pNext->SetPrev(pPrev);
 			}
+			// 前が有れば
 			if (pPrev != nullptr)
 			{// 前に次を入れる
 				pPrev->SetNext(pNext);
 			}
 
+			// トップがこのオブジェクトなら
 			if (m_pTop[nCntPriority] == pObjact)
 			{
+				// 次を先頭に入れる
 				m_pTop[nCntPriority] = pNext;
 			}
+			// 末端がこのオブジェクトなら
 			if (m_pCur[nCntPriority] == pObjact)
 			{
+				// 前を末端に入れる
 				m_pCur[nCntPriority] = pPrev;
 			}
+			// オブジェクトの終了処理
 			pObjact->Uninit();
+			// 解放
 			delete pObjact;
-
+			// 次に移行
 			pObjact = pNext;
 		}
 	}
@@ -178,147 +209,147 @@ void CObject::ReleaseAll()
 /// </summary>
 void CObject::ReleaseDeathFlag()
 {
+	// 優先度分繰り返す
 	for (int nCntPriority = 0; nCntPriority < MAX_PRIORITY; nCntPriority++)
 	{
+		// トップをオブジェクトに入れる
 		CObject* pObjact = m_pTop[nCntPriority];
+		// オブジェクトが無くなるまで続ける
 		while (pObjact != nullptr)
 		{
 			CObject* pNext = pObjact->m_pNext;	//	次保管
+			CObject* pPrev = pObjact->m_pPrev;	// 前保管
+			// 死亡フラグが立っていたら
 			if (pObjact->m_bDeath == true)
-			{// 死亡フラグが立っていたら
-				CObject* pNext = pObjact->m_pNext;	// 次保管
-				CObject* pPrev = pObjact->m_pPrev;	// 前保管
+			{
+				// 次が有れば
 				if (pNext != nullptr)
 				{// 次に前を入れる
 					pNext->SetPrev(pPrev);
 				}
+				// 前が有れば
 				if (pPrev != nullptr)
 				{// 前に次を入れる
 					pPrev->SetNext(pNext);
 				}
 
+				// トップがこのオブジェクトなら
 				if (m_pTop[nCntPriority] == pObjact)
 				{
+					// 次を先頭に入れる
 					m_pTop[nCntPriority] = pNext;
 				}
+				// 末端がこのオブジェクトなら
 				if (m_pCur[nCntPriority] == pObjact)
 				{
+					// 前を末端に入れる
 					m_pCur[nCntPriority] = pPrev;
 				}
-
+				// オブジェクトの終了処理
 				pObjact->Uninit();
+				// 解放
 				delete pObjact;
 			}
+			// 次に移行
 			pObjact = pNext;
 		}
 	}
-
-	//for (int nCntPriority = 0; nCntPriority < MAX_PRIORITY; nCntPriority++)
-	//{
-	//	CObject* pObjact = m_pTop[nCntPriority];
-	//	while (pObjact != nullptr)
-	//	{
-	//		CObject* pNext = pObjact->m_pNext;	//	次保管
-	//		if (pObjact->m_bDeath == true)
-	//		{// 死亡フラグが立っていたら
-	//			pObjact->Release();
-	//		}
-	//		pObjact = pNext;
-	//	}
-	//}
 }
-//============================================
-// 全オブジェクト更新
-//============================================
+/// <summary>
+/// オブジェクト更新
+/// </summary>
 void CObject::UpdateAll()
 {
+	// ポーズ状態取得
 	const bool bPose = CManager::GetInstance()->GetSceneManager()->GetPose();
-	// 未更新フラグを立てる
+	// プライオリティ分繰り返す
 	for (int nCntPriority = MIN_PRIORITY; nCntPriority < MAX_PRIORITY; nCntPriority++)
-	{// プライオリティ分繰り返す
-		// 更新済みフラグを降ろす
+	{
+		// トップをオブジェクトに入れる
 		CObject* pObjact = m_pTop[nCntPriority];
+		// オブジェクトが無くなるまで続ける
 		while (pObjact != nullptr)
 		{
 			CObject* pNext = pObjact->m_pNext; //	次保管
-
-#if 1
+			// ポーズ状態なら
 			if (bPose)
 			{
+				// ポーズ中更新するなら
 				if (pObjact->IsPoseUpdate())
 				{
 					pObjact->Update();
 				}
 			}
+			// 通常時
 			else
 			{
+				// 通常時更新するなら
 				if (pObjact->IsAllUpdate())
 				{
 					pObjact->Update();
 				}
 			}
-
-#else
-			std::thread th_a(&CObject::Update, pObjact);
-			th_a.detach();
-#endif
+			// 次に移行
 			pObjact = pNext;
 		}
 	}
 	
 }
-//============================================
-// 全オブジェクト描画
-//============================================
+/// <summary>
+/// オブジェクト描画
+/// </summary>
 void CObject::DrawAll()
 {
+	// ポーズ状態取得
 	const bool bPose = CManager::GetInstance()->GetSceneManager()->GetPose();
+	// プライオリティ分繰り返す
 	for (int nCntPriority = MIN_PRIORITY; nCntPriority < MAX_PRIORITY; nCntPriority++)
 	{
+		// トップをオブジェクトに入れる
 		CObject* pObjact = m_pTop[nCntPriority];
+		// オブジェクトが無くなるまで続ける
 		while (pObjact != nullptr)
 		{
 			CObject* pNext = pObjact->m_pNext; //	次保管
+			// ポーズ状態なら
 			if (bPose)
 			{
+				// ポーズ中更新するなら
 				if (pObjact->IsPoseDraw())
 				{
 					pObjact->Draw();
 				}
 			}
+			// 通常時
 			else
 			{
+				// 通常時更新するなら
 				if (pObjact->IsAllDraw())
 				{
 					pObjact->Draw();
 				}
 			}
-
-
-
+			// 次に移行
 			pObjact = pNext;
 		}
 	}
 
 }
-//============================================
-// オブジェクト取得
-//============================================
+/// <summary>
+/// オブジェクト取得
+/// </summary>
+/// <param name="object">先頭を入れるオブジェクトリスト</param>
 void CObject::GetAllObject(CObject* object[MAX_PRIORITY])
 {
-#if 1
+
 	for (int nCnt = 0; nCnt < MAX_PRIORITY; nCnt++)
 	{
 		object[nCnt] = m_pTop[nCnt];
 	}
-#else
-	object = m_pTop;
-#endif // 0
-
 }
-//============================================
-// ソート
-//============================================
+/// <summary>
+/// カメラからの距離でソート
+/// </summary>
 void CObject::Sort()
 {
 	for (int nCnt = 0; nCnt < MAX_PRIORITY; nCnt++)
@@ -326,34 +357,46 @@ void CObject::Sort()
 		CObject* headUnsorted;	// 前
 		CObject* headSorted;	// 先頭
 		CObject* max;			// 次に大きい
-		CObject* prevMax;
-		CObject* prevComp;
+		CObject* prevMax;		// 前の最大
+		CObject* prevComp;		// 
 		//printf("リストを昇順ソートします\n");
-		headUnsorted = m_pTop[nCnt];    /* 未ソートリスト */
-		headSorted = NULL;      /* ソート済リスト */
-		while (headUnsorted != NULL) {
-			max = headUnsorted;         /* 最大値要素を初期化 */
-			prevMax = NULL;     /* 最大値要素の前の要素を初期化 */
-			prevComp = headUnsorted;
+		headUnsorted = m_pTop[nCnt];    // 未ソートリスト
+		headSorted = nullptr;			// ソート済リスト 
+
+		//------------------------------------------------------------
+		// 選択ソート
+		//------------------------------------------------------------
+		// 
+		while (headUnsorted != nullptr)
+		{
+			max = headUnsorted;				// 最大値要素を初期化 
+			prevMax = nullptr;			// 最大値要素の前の要素を初期化 
+			prevComp = headUnsorted;	// 
+			//------------------------------------------------------------
 			// 未ソートリストから条件を満たす最大値を探す
-			while (prevComp->m_pNext != NULL) {
+			//------------------------------------------------------------
+			// 次がからでなければ
+			while (prevComp->m_pNext != nullptr) {
 				// 条件を満たす場合のみ比較
+
+				// ビルボードなら
 				if (dynamic_cast<CObjectBillbord*>(prevComp->m_pNext)) {
 					// ソート条件
+					//
 					if ((prevComp->m_pNext)->m_fDistance < max->m_fDistance) {
-						max = prevComp->m_pNext;         // 最大値を更新
-						prevMax = prevComp;         // 最大値の前の要素を記録
+						max = prevComp->m_pNext;			// 最大値を更新
+						prevMax = prevComp;				// 最大値の前の要素を記録
 					}
 				}
-				prevComp = prevComp->m_pNext;   // 次の要素に進む
+				prevComp = prevComp->m_pNext;		// 次の要素に進む
 			}
 			// 最大値が見つからない場合、残りのリストはソート対象外
-			if (max == NULL) {//maxがNULLにならない
+			if (max == nullptr) {//maxがNULLにならない
 				break;
 			}
 
 			// 最大値を未ソートリストから削除
-			if (prevMax == NULL) {
+			if (prevMax == nullptr) {
 				// 最大値がリストの先頭の場合
 				headUnsorted = max->m_pNext;
 			}
@@ -382,6 +425,9 @@ void CObject::Sort()
 		m_pTop[nCnt] = headSorted;
 	}
 }
+/// <summary>
+/// カメラからの距離でソート
+/// </summary>
 void CObject::CalculateDistanceToCamera()
 {
 	CManager* instance = CManager::GetInstance();
@@ -401,8 +447,14 @@ void CObject::CalculateDistanceToCamera()
 		}
 	}
 }
+/// <summary>
+/// カメラからの距離を計算
+/// </summary>
+/// <param name="pos"></param>
 void CObject::CalculateDistance(D3DXVECTOR3 pos)
 {
+	// カメラとの差を計算（Vec3）
 	D3DXVECTOR3 diff = m_x.pos - pos;
+	// ベクターから距離(float)
 	m_fDistance = D3DXVec3LengthSq(&diff); // 距離の二乗を計算
 }

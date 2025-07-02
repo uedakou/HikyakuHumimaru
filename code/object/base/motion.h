@@ -6,7 +6,7 @@
 //===========================================
 #ifndef _MOTION_H_
 #define _MOTION_H_
-#include "object_X.h"
+#include "object_X.h"	// Xファイルオブジェクト
 
 #define MAX_MOTION (64)			// 最大モーション
 #define MAX_KYE (32)			// 最大キーフレーム数
@@ -19,25 +19,23 @@
 		キーフレーム
 	パーツ
 	現在モーション
-	
-
 */
+//パーツデータ
 class CPartsData
 {
 public:
 	CPartsData();
 	virtual ~CPartsData();
 
-	void SetPosTarget(D3DXVECTOR3 pos) { m_x.pos = pos; }
-	void SetRotTarget(D3DXVECTOR3 rot) { m_x.rot = rot; }
-	void SetSclTarget(D3DXVECTOR3 siz) { m_x.scl = siz; }
+	void SetPosTarget(D3DXVECTOR3 pos) { m_x.pos = pos; }	// 位置設定
+	void SetRotTarget(D3DXVECTOR3 rot) { m_x.rot = rot; }	// 向き設定
+	void SetSclTarget(D3DXVECTOR3 scl) { m_x.scl = scl; }	// スケール設定
 
-	D3DXVECTOR3 GetPosTarget() { return m_x.pos; }
-	D3DXVECTOR3 GetRotTarget() { return m_x.rot; }
-	D3DXVECTOR3 GetSclTarget() { return m_x.scl; }
+	D3DXVECTOR3 GetPosTarget() { return m_x.pos; }	// 位置取得
+	D3DXVECTOR3 GetRotTarget() { return m_x.rot; }	// 向き取得
+	D3DXVECTOR3 GetSclTarget() { return m_x.scl; }	// スケール取得
 private:
 	X m_x;	// トランスフォーム
-
 };
 
 // キーフレーム
@@ -46,15 +44,15 @@ class CKye
 public:
 	CKye();
 	virtual ~CKye();
-	void SetFrame(int nFrame) { m_nFrame = nFrame; }
+	void SetFrame(int nFrame) { m_nFrame = nFrame; }	// フレーム設定
 
-	CPartsData* GetPartsData(int nParts) { return m_pParts[nParts]; }
-	int GetFrame() { return m_nFrame; }
-	CPartsData* createPartsData();
+	CPartsData* GetPartsData(int nParts) { return m_pParts[nParts]; }	// パーツデータ取得
+	int GetFrame() { return m_nFrame; }	// フレーム数取得
+	CPartsData* createPartsData();	// パーツデータ生成
 
 private:
 	CPartsData* m_pParts[MAX_PARTS];	// パーツ
-	int m_nFrame;
+	int m_nFrame;	// フレーム数
 };
 
 // モーション
@@ -63,16 +61,16 @@ class CMotion
 public:
 	CMotion();
 	virtual ~CMotion();
-	void SetNumKye(int nNumKye) { m_nNumKye = nNumKye; }
-	void SetLoop(bool bLoop) { m_bLoop = bLoop; }
-	void createKye();
+	void SetNumKye(int nNumKye) { m_nNumKye = nNumKye; }	// キーフレム数
+	void SetLoop(bool bLoop) { m_bLoop = bLoop; }	// ループするか設定
+	void createKye();	// キーフレーム生成
 
-	CKye* GetKye(int nKye) { return m_pKye[nKye]; }
-	int GetNumKye() { return m_nNumKye; }
-	bool GetLoop() { return m_bLoop; }
+	CKye* GetKye(int nKye) { return m_pKye[nKye]; }	// キーフレーム取得
+	int GetNumKye() { return m_nNumKye; }	// キーフレーム数取得
+	bool GetLoop() { return m_bLoop; }	// ループ状態取得
 private:
 	CKye* m_pKye[MAX_KYE];	// キーフレーム
-	int m_nNumKye;	// キー数
+	int m_nNumKye;	// キーフレーム数
 	bool m_bLoop;	// このモーションをループするか
 };
 
@@ -116,7 +114,7 @@ public:
 	virtual void Draw()		override; // 描画
 
 
-	// 基本位置設定
+	// ベース位置設定
 	void SetBasicX(X x) {
 		m_xBasic.pos = x.pos;
 		m_xBasic.rot = x.rot;
@@ -127,9 +125,9 @@ public:
 		m_xBasic.rot = rot;
 		m_xBasic.scl = siz;
 	}
-	void SetBasicPos(D3DXVECTOR3 pos) { m_xBasic.pos = pos; }
-	void SetBasicRot(D3DXVECTOR3 rot) { m_xBasic.rot = rot; }
-	void SetBasicScl(D3DXVECTOR3 siz) { m_xBasic.scl = siz; }
+	void SetBasicPos(D3DXVECTOR3 pos) { m_xBasic.pos = pos; }	// ベース位置設定
+	void SetBasicRot(D3DXVECTOR3 rot) { m_xBasic.rot = rot; }	// ベース向き設定
+	void SetBasicScl(D3DXVECTOR3 scl) { m_xBasic.scl = scl; }	// ベーススケール設定
 
 	// 追加位置
 	void SetOffsetX(X x) {
@@ -142,34 +140,34 @@ public:
 		m_xOffset.rot = rot;
 		m_xOffset.scl = siz;
 	}
-	void SetOffsetPos(D3DXVECTOR3 pos) { m_xOffset.pos = pos; }
-	void SetOffsetRot(D3DXVECTOR3 rot) { m_xOffset.rot = rot; }
-	void SetOffsetScl(D3DXVECTOR3 siz) { m_xOffset.scl = siz; }
+	void SetOffsetPos(D3DXVECTOR3 pos) { m_xOffset.pos = pos; }	// オフセット位置設定
+	void SetOffsetRot(D3DXVECTOR3 rot) { m_xOffset.rot = rot; }	// オフセット向き設定
+	void SetOffsetScl(D3DXVECTOR3 siz) { m_xOffset.scl = siz; }	// オフセットスケール設定
 
 	// 動き設定
 	void SetMoveX(X x, int nFrame) { SetMoveX(x.pos, x.rot, x.scl, nFrame); };
-	void SetMoveX(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 siz, int nFrame); 
+	void SetMoveX(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 siz, int nFrame);
 
 	// データ設定
-	void SetParentID(int nParent) { m_nParent = nParent; }
-	void SetParentMtx(D3DXMATRIX pParent) { m_mtxParent = pParent; }
+	void SetParentID(int nParent) { m_nParent = nParent; }		// パーツID設定
+	void SetParentMtx(D3DXMATRIX pParent) { m_mtxParent = pParent; }	// パーツマトリクス設定
 	void SetDisplay(bool bDesplay) { m_bDisplay = bDesplay; }	// 表示するかどうか
 
-	void SetMotion(int nMotion);
+	void SetMotion(int nMotion);	// モーション設定
 
-	// 位置取得
+	// ベーストランスフォーム取得
 	X GetBasicX() {
 		return m_xBasic;
 	}
-	D3DXVECTOR3 GetBasicPos() { return m_xBasic.pos; }
-	D3DXVECTOR3 GetBasicRot() { return m_xBasic.rot; }
-	D3DXVECTOR3 GetBasicScl() { return m_xBasic.scl; }
+	D3DXVECTOR3 GetBasicPos() { return m_xBasic.pos; }	// ベース位置取得
+	D3DXVECTOR3 GetBasicRot() { return m_xBasic.rot; }	// ベース向き取得
+	D3DXVECTOR3 GetBasicScl() { return m_xBasic.scl; }	// ベーススケール取得
 
-	// 追加位置
+	// オフセットトランスフォーム取得
 	X GetOffsetX() { return m_xOffset; }
-	D3DXVECTOR3 GetOffsetPos() { return m_xOffset.pos; }
-	D3DXVECTOR3 GetOffsetRot() { return m_xOffset.rot; }
-	D3DXVECTOR3 GetOffsetScl() { return m_xOffset.scl; }
+	D3DXVECTOR3 GetOffsetPos() { return m_xOffset.pos; }	// オフセット位置取得
+	D3DXVECTOR3 GetOffsetRot() { return m_xOffset.rot; }	// オフセット向き取得
+	D3DXVECTOR3 GetOffsetScl() { return m_xOffset.scl; }	// オフセットスケール
 
 	// データ取得
 	int GetParentID() { return m_nParent; }				// 親ID取得
@@ -217,10 +215,10 @@ public:
 
 	CMotion* GetMotion(int nNum) { return m_pMotion[nNum]; }// モーションデータ取得
 	int GetMotion() { return m_nNowMotion; }	// 現在モーション
-	int GetNumParts() { return m_nParts; }
+	int GetNumParts() { return m_nParts; }	// パーツ数取得
 	CParts* GetParts(int nNum) { return m_pParts[nNum]; }	// パーツ取得
-	static CObjectMotion* create(const char* FileName);
-	static CObjectMotion* create(string FileName);
+	static CObjectMotion* create(const char* FileName);		// モーション生成
+	static CObjectMotion* create(string FileName);			// モーション生成
 
 protected:
 	bool Load(const char* aFileName);	// モーション読み込み
@@ -229,9 +227,9 @@ protected:
 private:
 	void createMotion();// モーション生成
 private:
-	int m_nModel;							// モデル数
+	int m_nModel;	// モデル数
 
-	int m_nNumMotion;						// モーション数
+	int m_nNumMotion;	// モーション数
 	CMotion* m_pMotion[MAX_MOTION];	// モーションデータ
 
 	int m_nParts;				// パーツ数

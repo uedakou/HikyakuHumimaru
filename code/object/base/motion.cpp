@@ -14,6 +14,7 @@
 //============================================
 CPartsData::CPartsData()
 {
+	// トランスフォーム初期化
 	m_x = X(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 //============================================
@@ -28,6 +29,7 @@ CPartsData::~CPartsData()
 //============================================
 CKye::CKye()
 {
+	// パーツインデックスをnullptrにする
 	for (int nCntParts = 0; nCntParts < MAX_PARTS; nCntParts++)
 	{
 		if (m_pParts[nCntParts] != nullptr)
@@ -35,6 +37,7 @@ CKye::CKye()
 			m_pParts[nCntParts] = nullptr;
 		}
 	}
+	// フレームを初期化
 	m_nFrame = 0;
 }
 //============================================
@@ -42,9 +45,11 @@ CKye::CKye()
 //============================================
 CKye::~CKye()
 {
+	// パーツ削除
 	for (int nCnt = 0; nCnt < MAX_PARTS; nCnt++)
 	{
 		delete m_pParts[nCnt];
+		m_pParts[nCnt] = nullptr;
 	}
 }
 //============================================
@@ -52,14 +57,19 @@ CKye::~CKye()
 //============================================
 CPartsData* CKye::createPartsData()
 {
+	// 空いているリストに入れる
 	for (int nCnt = 0; nCnt < MAX_PARTS; nCnt++)
 	{
+		// パーツデータリストが空いていたら
 		if (m_pParts[nCnt] == nullptr)
 		{
+			// パーツデータ生成
 			m_pParts[nCnt] = new CPartsData;
+			// インデックスを返す
 			return m_pParts[nCnt];
 		}
 	}
+	// リストが全て埋まっていたら0を返す
 	return 0;
 }
 
@@ -68,11 +78,15 @@ CPartsData* CKye::createPartsData()
 //============================================
 CMotion::CMotion()
 {
+	// Kyeを全てnulptrにする
 	for (int nCntkye = 0; nCntkye < MAX_KYE; nCntkye++)
 	{
 		m_pKye[nCntkye] = nullptr;
 	}
+	// キー数を初期化
 	m_nNumKye = 0;
+
+	// ループ初期化
 	m_bLoop = 0;
 }
 //============================================
@@ -80,11 +94,13 @@ CMotion::CMotion()
 //============================================
 CMotion::~CMotion()
 {
+	// キーを全て解放
 	for (int nCnt = 0; nCnt < MAX_KYE; nCnt++)
 	{
 		if (m_pKye[nCnt] != nullptr)
 		{
 			delete m_pKye[nCnt];
+			m_pKye[nCnt] = nullptr;
 		}
 	}
 }
@@ -93,6 +109,7 @@ CMotion::~CMotion()
 //============================================
 void CMotion::createKye()
 {
+	// リストの空いている所に生成
 	for (int nCntKye = 0; nCntKye < m_nNumKye; nCntKye++)
 	{
 		if (m_pKye[nCntKye] == nullptr)
@@ -109,9 +126,9 @@ void CMotion::createKye()
 //============================================
 CNowMotion::CNowMotion()
 {
-	m_nCntMotion = 0;
-	m_nCntKye = 0;
-	m_nCntFrame = 0;
+	m_nCntMotion = 0;	// モーション数初期化
+	m_nCntKye = 0;		// キーカウントを初期化
+	m_nCntFrame = 0;	// フレームカウントを初期化
 }
 //============================================
 // デストラ(現在モーション)
@@ -119,8 +136,6 @@ CNowMotion::CNowMotion()
 CNowMotion::~CNowMotion()
 {
 }
-
-
 
 //============================================
 // コンストラクタ(パーツ)
@@ -140,14 +155,17 @@ CParts::CParts()
 	m_xMove.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_xMove.scl = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	m_nParent = -1;
+	m_nParent = -1;	// パーツを初期化
 
 	m_bDisplay = 0;		// 表示するかどうか
 
-	m_pNowMotion = new CNowMotion;
+	m_bDoMotion = true;	// モーションをするか設定
+
+	m_pNowMotion = new CNowMotion;	// モーション生成
 
 	SetNormalUpdate(false);
 }
+
 CParts::CParts(int nPriority) : 
 	CObjectX(nPriority)
 {

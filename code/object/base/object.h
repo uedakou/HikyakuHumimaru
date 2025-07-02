@@ -6,20 +6,16 @@
 //============================================
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
-
-#include "../../base/manager.h"		// 全体マネージャー
+#include "../../base/pch.h"	//プリコンパイルヘッダ
 #include "../../base/calculation.h"	// 計算用
-#include <vector>
-#include <algorithm>
-#include <cmath>
+
 
 // オブジェクト
-#define DEFALT_PRIORITY (3)	// 優先度未設定時の優先度
 class CObject
 {
 public:
 	CObject();
-	CObject(const int nPriority);
+	CObject(const int nPriority);	// 優先度付き
 	virtual ~CObject();
 	virtual bool Init() = 0;	// 初期化
 	virtual void Uninit() = 0;	// 終了
@@ -37,16 +33,8 @@ public:
 	static CObject* GetMyObject(int nPriorty) { return m_pTop[nPriorty]; };	// オブジェクト取得(優先度毎)
 	static void Sort();
 
-	static void CalculateDistanceToCamera();
-	void CalculateDistance(D3DXVECTOR3 pos);
-	//// ソート関数
-	//static bool CompareByDistance(const CObject& a, const CObject& b) {
-	//	return a.m_fDistance > b.m_fDistance; // 距離が大きい順
-	//}
-	//// ソート処理
-	//static void SortObjectsByDistance(std::vector<CObject>& objects) {
-	//	std::sort(objects.begin(), objects.end(), CompareByDistance);
-	//}
+	static void CalculateDistanceToCamera();	// カメラからの距離でソート
+	void CalculateDistance(D3DXVECTOR3 pos);	/// カメラからの距離を計算
 	// リスト
 	virtual void SetNext(CObject* pNext) { m_pNext = pNext; }	// 次設定
 	virtual void SetPrev(CObject* pPrev) { m_pPrev = pPrev; }	// 前設定
@@ -149,6 +137,7 @@ private:
 	bool m_bReleaseScene;					// シーンでリリースするか
 
 	bool m_bDeath;							// 死  亡フラグ
+	static constexpr int s_nDefalut_Priority = 3;	// 優先度未設定時の優先度
 };
 
 #endif // !_OBJECT_H_

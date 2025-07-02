@@ -12,19 +12,20 @@ class CEffectGeneratorBase : public CObject
 public:
 	CEffectGeneratorBase();
 	virtual ~CEffectGeneratorBase();
-	bool Init()		override;
-	void Uninit()	override;
-	void Update()	override;
-	void Draw()		override;
+	bool Init()		override;	// 初期化
+	void Uninit()	override;	// 終了	
+	void Update()	override;	// 更新
+	void Draw()		override;	// 描画
 
 	// 時間
-	void SetLifeSpan(int nSpan) { m_nLife = nSpan; }
-	int GetLifeSpan() { return m_nLife; }
-	int GetCntTime() { return m_nCntLifeTime; }
+	void SetLife(int nSpan) { m_nLife = nSpan; }	// 寿命設定
+	int GetLife() { return m_nLife; }	// 寿命取得
+	int GetCntTime() { return m_nCntLifeTime; }	// 経過時間取得
 
 private:
 	// 時間管理
 	int m_nLife;	// エフェクトの寿命
 	int m_nCntLifeTime;	// 現在の経過時間
+
 };
 #endif // !_EFFECT_GENERATOR__BASE_H_

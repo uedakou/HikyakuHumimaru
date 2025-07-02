@@ -10,8 +10,8 @@
 //============================================
 CEffectGeneratorBase::CEffectGeneratorBase()
 {
-	m_nLife = -1;
-	m_nCntLifeTime = 0;
+	m_nLife = -1;			// ライフ
+	m_nCntLifeTime = 0;		// 経過時間
 	SetNormalDraw(false);	// 通常描画をしない
 	SetPoseDraw(false);		// ポーズ中描画しない
 
@@ -40,7 +40,11 @@ void CEffectGeneratorBase::Uninit()
 //============================================
 void CEffectGeneratorBase::Update()
 {
+	// 経過時間をカウント
 	m_nCntLifeTime++;
+
+	// 経過時間が寿命を越したら死亡フラグを立てる
+	// （-1の場合のみ寿命無視）
 	if (m_nLife != -1 &&
 		m_nCntLifeTime >= m_nLife)
 	{

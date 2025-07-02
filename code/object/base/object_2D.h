@@ -41,7 +41,7 @@ public:
 	virtual void SetSizX(const float x) { m_siz.x = x; };	// 大きさ設定
 	virtual void SetSizY(const float y) { m_siz.y = y; };	// 大きさ設定
 	virtual void SetSizZ(const float z) { m_siz.z = z; };	// 大きさ設定
-	virtual void SetUV(float nUp, float nLeft, float nDown, float nRight);	// UV設定
+	virtual void SetUV(D3DXVECTOR4 UV);	// UV設定
 
 
 	void SetColor(D3DXCOLOR col);	// 色設定
@@ -52,7 +52,7 @@ public:
 
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuff() { return m_pVtxBuff; }	// バッファ取得
 	D3DXCOLOR GetColor() { return m_col; }	// 色取得
-	D3DXVECTOR3 GetSiz() { return m_siz; }	// 大きさ取得
+	const D3DXVECTOR3 GetSiz() { return m_siz; }	// 大きさ取得
 
 	// 加算
 	virtual void AddX(X x) override;	// トランスフォーム設定
@@ -70,10 +70,6 @@ public:
 	virtual void AddSclY(const float y) override;	// 大きさ設定
 	virtual void AddSclZ(const float z) override;	// 大きさ設定
 
-
-
-
-
 	static CObject2D* create(D3DXVECTOR3 pos, D3DXVECTOR3 siz);					// 生成
 	static CObject2D* create(int nPriority, D3DXVECTOR3 pos, D3DXVECTOR3 siz);	// 生成
 private:
@@ -82,9 +78,14 @@ private:
 private:
 	// プライベート変数
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファへのポインタ
-	LPDIRECT3DTEXTURE9 m_pTexture;			// テクスチャ
-	D3DXCOLOR m_col;
-	D3DXVECTOR3 m_siz;
+	LPDIRECT3DTEXTURE9 m_pTexture;		// テクスチャ
+	D3DXCOLOR m_col;					// 色
+	D3DXVECTOR3 m_siz;					// 大きさ
+	int m_nNumVertices;	// 超点数
+
+
+	static const D3DXCOLOR s_colDef;	// 初期色
+	static const int s_nNumVertices;	// 初期超点数
 };
 
 #endif // !_OBJECT_H_

@@ -6,140 +6,177 @@
 //============================================
 #include "effect_generator_particle.h"	// エフェクトパーティクルジェネレーター
 #include "effect_particle.h"	// エフェクトパーティクル
+#include <iostream>
+#include <random>
 
-//============================================
-// コンスト
-//============================================
-CEffectGeneratorPaeticle::CEffectGeneratorPaeticle()
+const string CEffectGeneratorParticle::s_aDefltTexture = "data/TEXTURE/shadow000.jpg";	// 初期エフェクトパーティクルテクスチャ
+/// <summary>
+/// コンストラクタ
+/// </summary>
+CEffectGeneratorParticle::CEffectGeneratorParticle()
 {
 	// 生成情報
 	m_rot = { 0.0f, 0.0f, 0.0f };			// 向き
 	m_fLength = 0.0f;						// 距離
 	m_fDiffusion = 0.0f;					// 拡散量(角度)
 	m_pCor = { 0.0f, 0.0f, 0.0f, 0.0f };	// 色
-	m_aTexture = "data/TEXTURE/shadow000.jpg";					// テクスチャ
+	m_aTexture = s_aDefltTexture;			// テクスチャ
 	m_nLifeParticle = 0;					// パーティクルのライフ
 	// 時間管理
 	m_nCreatSpan = 0;		// 生成間隔
 	m_nCntCreatTime = 0;	// 生成時間
 }
-//============================================
-// コンスト
-//============================================
-CEffectGeneratorPaeticle::~CEffectGeneratorPaeticle()
+/// <summary>
+/// デストラクタ
+/// </summary>
+CEffectGeneratorParticle::~CEffectGeneratorParticle()
 {
 }
-//============================================
-// 初期化
-//============================================
-bool CEffectGeneratorPaeticle::Init()
+/// <summary>
+/// 初期化
+/// </summary>
+/// <returns>true : 初期化成功</returns>
+bool CEffectGeneratorParticle::Init()
 {
+	// エフェクトジェネレーターベース初期化
 	CEffectGeneratorBase::Init();
 	return true;
 }
-//============================================
-// 終了
-//============================================
-void CEffectGeneratorPaeticle::Uninit()
+/// <summary>
+/// 終了処理
+/// </summary>
+void CEffectGeneratorParticle::Uninit()
 {
+	// エフェクトジェネレーターベース終了
 	CEffectGeneratorBase::Uninit();
 }
-//============================================
-// 更新
-//============================================
-void CEffectGeneratorPaeticle::Update()
+/// <summary>
+///  更新処理
+/// </summary>
+void CEffectGeneratorParticle::Update()
 {
+	// 死亡フラグが立っていなけらば
 	if (IsDeathFlag() != true)
 	{
+		// エフェクトジェネレーターベース
 		CEffectGeneratorBase::Update();
+
+		// 生成カウントをカウントダウンする
 		m_nCntCreatTime--;
 		if (m_nCntCreatTime <= 0)
 		{
+			// カウントを戻す
 			m_nCntCreatTime = m_nCreatSpan;
 			// +-乱数
-			float B = 1000.0f;
-			D3DXVECTOR3 RandRotA = {};
-			RandRotA.x = (rand() %(int)(m_fDiffusion * 2.0f * B )) - m_fDiffusion * B;
-			RandRotA.y = (rand() %(int)(m_fDiffusion * 2.0f * B )) - m_fDiffusion * B;
-			RandRotA.z = (rand() %(int)(m_fDiffusion * 2.0f * B )) - m_fDiffusion * B;
-			RandRotA /= (float)B;
-			RandRotA += m_rot;
-			D3DXVec3Normalize(&RandRotA, &RandRotA);
+			int B = 1000.0f;	// 少数点以下の数字の乱数を入れるための変数
+			D3DXVECTOR3 RandRotA = {};	// 角度の計算用格納変数
+			// 範囲内で乱数を生成
+			// 乱数生成器（シード付き）
+			std::random_device rd;
+			std::mt19937 gen(rd()); // メルセンヌ・ツイスタ
+			// 乱数
+			std::uniform_real_distribution<float> dist(-m_fDiffusion, m_fDiffusion);
+			RandRotA.x = (dist(gen));
+			RandRotA.y = (dist(gen));
+			RandRotA.z = (dist(gen));
 
-			D3DXVECTOR3 move = RandRotA * m_fLength;
+			RandRotA += m_rot;	// ジェネレーターの向きを加算
+			D3DXVec3Normalize(&RandRotA, &RandRotA);	// ノーマライズ
+
+			D3DXVECTOR3 move = RandRotA * m_fLength;	// 移動量を乗算
+			//生成
 			CEffectParticle::create(GetPos(), move, m_pCor, m_aTexture, m_nLifeParticle);
 		}
 	}
 }
-//============================================
-// 描画
-//============================================
-void CEffectGeneratorPaeticle::Draw()
+/// <summary>
+/// 描画処理(ジェネレーターは描画しないため空)
+/// </summary>
+void CEffectGeneratorParticle::Draw()
 {}
-//============================================
-// テクスチャ設定
-//============================================
-void CEffectGeneratorPaeticle::SetTexture(const char* aFileName)
+/// <summary>
+/// テクスチャ設定
+/// </summary>
+/// <param name="aFileName">テクスチャファイルパス</param>
+void CEffectGeneratorParticle::SetTexture(const char* aFileName)
 {
+	// デスフラグが立っていなけらば
 	if (IsDeathFlag() != true)
 	{
 		m_aTexture = aFileName;
 	}
 }
-//============================================
-// 時間管理
-//============================================
-void CEffectGeneratorPaeticle::TimeController()
+/// <summary>
+/// 生成
+/// </summary>
+/// <param name="rot">パーティクルのベクトル</param>
+/// <param name="fLength">運動量</param>
+/// <param name="Diffusion">拡散量</param>
+/// <param name="Cor">色</param>
+/// <param name="nParticleLife">パーティクルのがどれぐらい滞留するか</param>
+/// <param name="nCreatSpan">生成間隔</param>
+/// <returns>// 作成したオブジェクトを返す</returns>
+CEffectGeneratorParticle* CEffectGeneratorParticle::create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan)
 {
-	//DWORD dwCuppentTime = 0;	// 現在時刻
-	//DWORD dwExecLastTime = 0;
-	//bool bDeath = false;
-	//while (bDeath == false)
-	//{
-	//	dwCuppentTime = timeGetTime();	// 現在時刻を取得
-	//	if ((dwCuppentTime - dwExecLastTime) >= m_nCreatSpan)
-	//	{
+	// ジェネレーター用インスタンス確保
+	CEffectGeneratorParticle* p = new CEffectGeneratorParticle();
+
+	// インスタンス確保を失敗していたら
+	if (!p)
+	{
+		return nullptr;
+	}
 
 
-	//		dwExecLastTime = dwCuppentTime;
-	//	}
-	//}
-}
-//============================================
-// 生成
-//============================================
-CEffectGeneratorPaeticle* CEffectGeneratorPaeticle::create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan)
-{
-	CEffectGeneratorPaeticle* p = new CEffectGeneratorPaeticle();
-
-	p->Init();
+	// 初期化
+	if (!(p->Init()))// 初期化失敗時は解放して null を返す
+	{
+		delete p;
+		p = nullptr;
+		return nullptr;
+	}
 
 	// 生成情報
-	D3DXVec3Normalize(&(p->m_rot),&rot);	// 向き
-	p->m_fLength = fLength;			// 距離
+	D3DXVec3Normalize(&(p->m_rot),&rot);		// 向き
+	p->m_fLength = fLength;						// 距離
 	p->m_fDiffusion = AngleToRadian(Diffusion);	// 拡散量(角度)
-	p->m_pCor = Cor;				// 色
-	p->m_nLifeParticle = nParticleLife;		// パーティクルのライフ
+	p->m_pCor = Cor;							// 色
+	p->m_nLifeParticle = nParticleLife;			// パーティクルのライフ
 	// 時間管理
 	p->m_nCreatSpan = nCreatSpan;	// 生成間隔
 
+	// 作成したオブジェクトを返す
 	return p;
 }
-CEffectGeneratorPaeticle* CEffectGeneratorPaeticle::create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan, int nLife)
+/// <summary>
+/// 生成
+/// </summary>
+/// <param name="rot">パーティクルのベクトル</param>
+/// <param name="fLength">運動量</param>
+/// <param name="Diffusion">拡散量</param>
+/// <param name="Cor">色</param>
+/// <param name="nParticleLife">パーティクルのがどれぐらい滞留するか</param>
+/// <param name="nCreatSpan">生成間隔</param>
+/// <param name="nLife">ジェネレーター自体の寿命</param>
+/// <returns></returns>
+CEffectGeneratorParticle* CEffectGeneratorParticle::create(D3DXVECTOR3 rot, float fLength, float Diffusion, D3DXCOLOR Cor, int nParticleLife, int nCreatSpan, int nLife)
 {
-	CEffectGeneratorPaeticle* p = new CEffectGeneratorPaeticle();
+	// ジェネレーター用インスタンス確保
+	CEffectGeneratorParticle* p = new CEffectGeneratorParticle();
 
+	// 初期化
 	p->Init();
 
 	// 生成情報
 	D3DXVec3Normalize(&(p->m_rot), &rot);	// 向き
-	p->m_fLength = fLength;			// 距離
+	p->m_fLength = fLength;					// 距離
 	p->m_fDiffusion = AngleToRadian(Diffusion);	// 拡散量(角度)
-	p->m_pCor = Cor;				// 色
+	p->m_pCor = Cor;						// 色
 	p->m_nLifeParticle = nParticleLife;		// パーティクルのライフ
 	// 時間管理
-	p->m_nCreatSpan = nCreatSpan;	// 生成間隔
-	p->SetLifeSpan(nLife);
+	p->m_nCreatSpan = nCreatSpan;			// 生成間隔
+	p->SetLife(nLife);						// 寿命設定
 
+	// インスタンスを返す
 	return p;
 }
