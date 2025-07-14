@@ -47,6 +47,11 @@ namespace Scene {
 		CStage_000::CStage_000(CBase* scene) :
 			CStage_Base(scene)
 		{
+			CManager* pManager = CManager::GetInstance();	// 全体マネージャー
+			CCamera* pCamera = pManager->GetCamera();	// カメラ
+			CSound* pSound = pManager->GetSound();	// サウンド
+			pSound->PlaySound(CSound::SOUND_LABEL::SOUND_STAGE000);	// BGMを止める
+
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
@@ -116,8 +121,6 @@ namespace Scene {
 			pField->SetTexture("data/TEXTURE/Load_000.png");
 
 			// カメラ向き
-			CManager* pManager = CManager::GetInstance();
-			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
 
 
@@ -129,6 +132,10 @@ namespace Scene {
 		//============================================
 		CStage_000::~CStage_000()
 		{
+			CManager* pManager = CManager::GetInstance();	// マネージャー
+			CSound* pSound = pManager->GetSound();			// サウンド
+			pSound->StopSound(CSound::SOUND_LABEL::SOUND_STAGE000);	// BGMを止める
+
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
@@ -316,7 +323,7 @@ namespace Scene {
 		// 生成
 		//============================================
 		template<>
-		nsPrev::CBase* CGameManager::makeScene<CStage_000>() {
+		nsPrev::CBase* CBase::makeScene<CStage_000>() {
 			return new CStage_000(this);
 		}
 	}

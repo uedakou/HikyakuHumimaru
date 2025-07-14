@@ -31,7 +31,7 @@
 
 namespace Scene {
 	namespace Game {
-		//class CScen_Game_StageSelect;
+		class CScen_Game_StageSelect;
 
 		const float CStage_Base::s_fCameraRot = 2.6f;	// 初期プレイヤーからのカメラの角度
 		const D3DXVECTOR3 CStage_Base::NumScrollPos = { 100.0f, 100.0f, 0.0f };	// 初期プレイヤーからのカメラの角度
@@ -60,7 +60,7 @@ namespace Scene {
 				// 選択肢生成
 				for (int nCnt = 0; nCnt < static_cast<int>(Stage_Goal_Strategy::SelectGoal::MAX); nCnt++)
 				{
-					m_pGoal_Strategy_Select[nCnt] = CObject2D::create(6, D3DXVECTOR3(Stage_Goal_Strategy::s_SelectPos.x, Stage_Goal_Strategy::s_SelectPos.y + Stage_Goal_Strategy::s_SelectSiz.x * nCnt, Stage_Goal_Strategy::s_SelectPos.z), Stage_Goal_Strategy::s_SelectSiz);
+					m_pGoal_Strategy_Select[nCnt] = CObject2D::create(15, D3DXVECTOR3(Stage_Goal_Strategy::s_SelectPos.x, Stage_Goal_Strategy::s_SelectPos.y + Stage_Goal_Strategy::s_SelectSiz.x * nCnt, Stage_Goal_Strategy::s_SelectPos.z), Stage_Goal_Strategy::s_SelectSiz);
 					m_pGoal_Strategy_Select[nCnt]->SetNormalDraw(false);	// 通常時描画設定
 					m_pGoal_Strategy_Select[nCnt]->SetNormalUpdate(false);	// 通常時更新設定
 					m_pGoal_Strategy_Select[nCnt]->SetPoseDraw(false);		// ポーズ時時描画設定
@@ -78,24 +78,24 @@ namespace Scene {
 					}
 				}
 				// 選択物カーソル
-				m_pGoal_Strategy_SelectBG = CObject2D::create(5, m_pGoal_Strategy_Select[0]->GetPos(), m_pGoal_Strategy_Select[0]->GetSiz());
+				m_pGoal_Strategy_SelectBG = CObject2D::create(10, m_pGoal_Strategy_Select[0]->GetPos(), m_pGoal_Strategy_Select[0]->GetSiz());
 				m_pGoal_Strategy_SelectBG->SetNormalDraw(false);	// 通常時描画設定
-				m_pGoal_Strategy_SelectBG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pGoal_Strategy_SelectBG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pGoal_Strategy_SelectBG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pGoal_Strategy_SelectBG->SetPoseUpdate(false);	// ポーズ時時更新設定
 				// ポップアップ
-				m_pGoal_Strategy_GoalPopup = CObject2D::create(6, Stage_Goal_Strategy::s_PopupPos, Stage_Goal_Strategy::s_PopupSiz);// ポップアップ生成
+				m_pGoal_Strategy_GoalPopup = CObject2D::create(11, Stage_Goal_Strategy::s_PopupPos, Stage_Goal_Strategy::s_PopupSiz);// ポップアップ生成
 				m_pGoal_Strategy_GoalPopup->SetTexture("data/TEXTURE/StageClear_000.png");
 				m_pGoal_Strategy_GoalPopup->SetNormalDraw(false);	// 通常時描画設定
-				m_pGoal_Strategy_GoalPopup->SetNormalUpdate(false);	// 通常時更新設定
 				m_pGoal_Strategy_GoalPopup->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pGoal_Strategy_GoalPopup->SetNormalUpdate(false);	// 通常時更新設定
 				m_pGoal_Strategy_GoalPopup->SetPoseUpdate(false);	// ポーズ時時更新設定
 				// 背景
-				m_pGoal_Strategy_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+				m_pGoal_Strategy_BG = CObject2D::create(9, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
 				m_pGoal_Strategy_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 				m_pGoal_Strategy_BG->SetNormalDraw(false);	// 通常時描画設定
-				m_pGoal_Strategy_BG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pGoal_Strategy_BG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pGoal_Strategy_BG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pGoal_Strategy_BG->SetPoseUpdate(false);	// ポーズ時時更新設定
 			}
 
@@ -104,10 +104,10 @@ namespace Scene {
 				// 選択肢生成
 				for (int nCnt = 0; nCnt < static_cast<int>(Stage_Death_Strategy::SelectGoal::MAX); nCnt++)
 				{
-					m_pDeath_Strategy_Select[nCnt] = CObject2D::create(6, D3DXVECTOR3(Stage_Death_Strategy::s_SelectPos.x, Stage_Death_Strategy::s_SelectPos.y + Stage_Death_Strategy::s_SelectSiz.x * nCnt, Stage_Death_Strategy::s_SelectPos.z), Stage_Death_Strategy::s_SelectSiz);
+					m_pDeath_Strategy_Select[nCnt] = CObject2D::create(15, D3DXVECTOR3(Stage_Death_Strategy::s_SelectPos.x, Stage_Death_Strategy::s_SelectPos.y + Stage_Death_Strategy::s_SelectSiz.x * nCnt, Stage_Death_Strategy::s_SelectPos.z), Stage_Death_Strategy::s_SelectSiz);
 					m_pDeath_Strategy_Select[nCnt]->SetNormalDraw(false);	// 通常時描画設定
-					m_pDeath_Strategy_Select[nCnt]->SetNormalUpdate(false);	// 通常時更新設定
 					m_pDeath_Strategy_Select[nCnt]->SetPoseDraw(false);		// ポーズ時時描画設定
+					m_pDeath_Strategy_Select[nCnt]->SetNormalUpdate(false);	// 通常時更新設定
 					m_pDeath_Strategy_Select[nCnt]->SetPoseUpdate(false);	// ポーズ時時更新設定
 					switch (static_cast<Stage_Death_Strategy::SelectGoal>(nCnt))
 					{
@@ -122,24 +122,24 @@ namespace Scene {
 					}
 				}
 				// 選択物カーソル
-				m_pDeath_Strategy_SelectBG = CObject2D::create(5, m_pDeath_Strategy_Select[0]->GetPos(), m_pDeath_Strategy_Select[0]->GetSiz());
+				m_pDeath_Strategy_SelectBG = CObject2D::create(11, m_pDeath_Strategy_Select[0]->GetPos(), m_pDeath_Strategy_Select[0]->GetSiz());
 				m_pDeath_Strategy_SelectBG->SetNormalDraw(false);	// 通常時描画設定
-				m_pDeath_Strategy_SelectBG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_SelectBG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pDeath_Strategy_SelectBG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_SelectBG->SetPoseUpdate(false);	// ポーズ時時更新設定
 				// ポップアップ
-				m_pDeath_Strategy_GoalPopup = CObject2D::create(6, Stage_Death_Strategy::s_PopupPos, Stage_Death_Strategy::s_PopupSiz);// ポップアップ生成
+				m_pDeath_Strategy_GoalPopup = CObject2D::create(9, Stage_Death_Strategy::s_PopupPos, Stage_Death_Strategy::s_PopupSiz);// ポップアップ生成
 				m_pDeath_Strategy_GoalPopup->SetTexture("data/TEXTURE/StageClear_001.png");
 				m_pDeath_Strategy_GoalPopup->SetNormalDraw(false);	// 通常時描画設定
-				m_pDeath_Strategy_GoalPopup->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_GoalPopup->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pDeath_Strategy_GoalPopup->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_GoalPopup->SetPoseUpdate(false);	// ポーズ時時更新設定
 				// 背景
 				m_pDeath_Strategy_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
 				m_pDeath_Strategy_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 				m_pDeath_Strategy_BG->SetNormalDraw(false);	// 通常時描画設定
-				m_pDeath_Strategy_BG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_BG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pDeath_Strategy_BG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_BG->SetPoseUpdate(false);	// ポーズ時時更新設定
 
 									// 操作説明
@@ -389,6 +389,23 @@ namespace Scene {
 			{
 				m_pPrimary->m_gameData->m_nScore[nStage] = m_pPrimary->m_nNumScroll;
 			}
+
+			for (int nCnt = 0; nCnt < static_cast<int>(Stage_Death_Strategy::SelectGoal::MAX); nCnt++)
+			{
+				m_pPrimary->m_pDeath_Strategy_Select[nCnt]->SetNormalDraw(true);	// 通常時描画設定
+				m_pPrimary->m_pDeath_Strategy_Select[nCnt]->SetPoseDraw(true);		// ポーズ時時描画設定
+			}
+			m_pPrimary->m_pGoal_Strategy_SelectBG->SetNormalDraw(true);	// 通常時描画設定
+			m_pPrimary->m_pGoal_Strategy_SelectBG->SetPoseDraw(true);		// ポーズ時時描画設定
+
+			m_pPrimary->m_pGoal_Strategy_GoalPopup->SetNormalDraw(true);	// 通常時描画設定
+			m_pPrimary->m_pGoal_Strategy_GoalPopup->SetPoseDraw(true);		// ポーズ時時描画設定
+
+			m_pPrimary->m_pGoal_Strategy_BG->SetNormalDraw(true);	// 通常時描画設定
+			m_pPrimary->m_pGoal_Strategy_BG->SetPoseDraw(true);		// ポーズ時時描画設定
+
+
+
 			// 選択初期化
 			m_nSelect = 0;
 			m_nSelectOld = 0;
@@ -467,7 +484,7 @@ namespace Scene {
 					}
 					break;
 				case SelectGoal::StageSelect:	// ステージセレクト
-					//owner = m_pPrimary->makeScene<CScen_Game_StageSelect>();
+					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>();
 					break;
 				default:
 					break;
@@ -507,11 +524,23 @@ namespace Scene {
 			if (dynamic_cast<CStage_000*>(this))nStage = 0;
 			else if (dynamic_cast<CStage_001*>(this))nStage = 1;
 			else if (dynamic_cast<CStage_002*>(this))nStage = 1;
+			for (int nCnt = 0; nCnt < static_cast<int>(Stage_Death_Strategy::SelectGoal::MAX); nCnt++)
+			{
+				m_pPrimary->m_pDeath_Strategy_Select[nCnt]->SetNormalDraw(true);	// 通常時描画設定
+				m_pPrimary->m_pDeath_Strategy_Select[nCnt]->SetPoseDraw(true);		// ポーズ時時描画設定
+			}
+			m_pPrimary->m_pDeath_Strategy_SelectBG->SetNormalDraw(true);	// 通常時描画設定
+			m_pPrimary->m_pDeath_Strategy_SelectBG->SetPoseDraw(true);		// ポーズ時時描画設定
 
+			m_pPrimary->m_pDeath_Strategy_GoalPopup->SetNormalDraw(true);	// 通常時描画設定
+			m_pPrimary->m_pDeath_Strategy_GoalPopup->SetPoseDraw(true);		// ポーズ時時描画設定
+
+			m_pPrimary->m_pDeath_Strategy_BG->SetNormalDraw(true);	// 通常時描画設定
+			m_pPrimary->m_pDeath_Strategy_BG->SetPoseDraw(true);		// ポーズ時時描画設定
 
 			// 選択初期化
-			m_nSelect = 0;
-			m_nSelectOld = 0;
+			m_nSelect = 0;		// 現在選択を０に設定
+			m_nSelectOld = 0;	// 前選択を０に設定
 		}
 		/// <summary>
 		/// 死亡ストラテジ
@@ -579,7 +608,7 @@ namespace Scene {
 					}
 					break;
 				case SelectGoal::StageSelect:	// ステージセレクト
-					//owner = m_pPrimary->makeScene<CScen_Game_StageSelect>();
+					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>();
 					break;
 				default:
 					break;
@@ -679,10 +708,6 @@ namespace Scene {
 						CScroll::clate(pos, rot);
 						break;
 					default:
-#ifdef _DEBUG
-						OutputDebugStringA("デバッグ出力：存在しない障害物を生成しようとしました。\n");
-						Beep(1200, 300);
-#endif // _DEBUG
 						break;
 					}
 

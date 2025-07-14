@@ -37,7 +37,7 @@ namespace Scene {
 
 			//実体生成用関数
 			template<typename T>
-			nsPrev::CBase* makeScene(/*CGameManager* pGameManager*/);
+			nsPrev::CBase* makeScene();
 			// makeSceneをスレッド分けして終了したら
 			// ゲームマネージャーに次のシーンのポインタを渡す
 			// 

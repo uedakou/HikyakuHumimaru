@@ -30,8 +30,10 @@ namespace Scene {
 			CBase(*scene)
 		{
 			CObject::ReleaseScene();	// シーンリリース
-			CManager* pManager = CManager::GetInstance();
-			CCamera* pCamera = pManager->GetCamera();
+			CManager* pManager = CManager::GetInstance();	// 全体マネージャー
+			CCamera* pCamera = pManager->GetCamera();	// カメラ
+			CSound* pSound = pManager->GetSound();	// サウンド
+			pSound->PlaySound(CSound::SOUND_LABEL::SOUND_STAGE_SELECT_000);	// BGMを止める
 
 			m_bPose = false;	// ポーズ状態
 			m_nSetlect = 0;	// 現選択
@@ -92,6 +94,9 @@ namespace Scene {
 
 		CScen_Game_StageSelect::~CScen_Game_StageSelect()
 		{
+			CManager* pManager = CManager::GetInstance();	// 全体マネージャー
+			CSound* pSound = pManager->GetSound();	// サウンド
+			pSound->StopSound(CSound::SOUND_LABEL::SOUND_STAGE_SELECT_000);	// BGMを止める
 		}
 
 		nsPrev::CBase* CScen_Game_StageSelect::Update()

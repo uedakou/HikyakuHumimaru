@@ -41,7 +41,7 @@ namespace Scene {
 		// ƒTƒEƒ“ƒh
 		CSound* pSound = pManager->GetSound();
 		// Ä¶
-		pSound->PlaySoundA(CSound::SOUND_LABEL::SOUND_TITLE000);
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_TITLE000);
 
 		m_nCnt = 0;
 
