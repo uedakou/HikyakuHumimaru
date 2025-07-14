@@ -17,6 +17,7 @@
 #include "../../../object/obstacles_tall.h"	// 障害物
 #include "../../../object/obstacles_high.h"	// 障害物
 #include "../../../object/obstacles_low.h"	// 障害物
+#include "../scene_game_manager.h"		// ゲームマネージャー
 
 #include <fstream>	// ファイルの読み込みに必要
 #include <iostream>	// ファイルの読み込みに必要
@@ -31,8 +32,8 @@ namespace Scene {
 		//============================================
 		// コンスト
 		//============================================
-		CStage_002::CStage_002(CBase* scene, CGameData* gameData) :
-			CStage_Base(scene, gameData)
+		CStage_002::CStage_002(CBase* scene) :
+			CStage_Base(scene)
 		{
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 
@@ -108,8 +109,8 @@ namespace Scene {
 		// 生成
 		//============================================
 		template<>
-		nsPrev::CBase* CBase::makeScene<CStage_002>(CGameData* gamaData) {
-			return new CStage_002(this, gamaData);
+		nsPrev::CBase* CGameManager::makeScene<CStage_002>() {
+			return new CStage_002(this);
 		}
 	}
 }

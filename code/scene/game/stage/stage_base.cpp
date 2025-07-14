@@ -7,6 +7,8 @@
 #include "stage_base.h"		// ステージ
 #include "stage_000.h"		// ステージ000
 #include "stage_001.h"		// ステージ001
+#include "stage_002.h"		// ステージ001
+
 #include "scene_debug.h"	// ステージデバッグ
 
 #include "../../../object/player.h"	// プレイヤー
@@ -25,9 +27,11 @@
 #include <fstream>	// ファイルの読み込みに必要
 #include <iostream>	// ファイルの読み込みに必要
 
+#include "../scene_game_manager.h"		// ゲームマネージャー
+
 namespace Scene {
 	namespace Game {
-		class CScen_Game_StageSelect;
+		//class CScen_Game_StageSelect;
 
 		const float CStage_Base::s_fCameraRot = 2.6f;	// 初期プレイヤーからのカメラの角度
 		const D3DXVECTOR3 CStage_Base::NumScrollPos = { 100.0f, 100.0f, 0.0f };	// 初期プレイヤーからのカメラの角度
@@ -35,10 +39,11 @@ namespace Scene {
 		//============================================
 		// コンスト
 		//============================================
-		CStage_Base::CStage_Base(CBase* scene, CGameData* gameData) :
-			CBase(scene, gameData),
+		CStage_Base::CStage_Base(CBase* scene) :
+			CBase(*scene),
 			m_nNumScroll(0), m_nNumScrollOld(0), m_bPose(false) , m_bCameraFollowPlayer(true) , m_fGool(0)
 		{
+			CObject::ReleaseScene();
 			m_fCameraRot = s_fCameraRot;
 			m_pStrategy = new Stage_Play_Strategy(this);
 			// 巻物取得数表示
@@ -50,12 +55,169 @@ namespace Scene {
 				m_pNumScroll[nCnt]->SetTexture("data/TEXTURE/Scroll_000.png");
 				m_pNumScroll[nCnt]->SetColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
 			}
+			// ゴール時
+			{
+				// 選択肢生成
+				for (int nCnt = 0; nCnt < static_cast<int>(Stage_Goal_Strategy::SelectGoal::MAX); nCnt++)
+				{
+					m_pGoal_Strategy_Select[nCnt] = CObject2D::create(6, D3DXVECTOR3(Stage_Goal_Strategy::s_SelectPos.x, Stage_Goal_Strategy::s_SelectPos.y + Stage_Goal_Strategy::s_SelectSiz.x * nCnt, Stage_Goal_Strategy::s_SelectPos.z), Stage_Goal_Strategy::s_SelectSiz);
+					m_pGoal_Strategy_Select[nCnt]->SetNormalDraw(false);	// 通常時描画設定
+					m_pGoal_Strategy_Select[nCnt]->SetNormalUpdate(false);	// 通常時更新設定
+					m_pGoal_Strategy_Select[nCnt]->SetPoseDraw(false);		// ポーズ時時描画設定
+					m_pGoal_Strategy_Select[nCnt]->SetPoseUpdate(false);	// ポーズ時時更新設定
+					switch (static_cast<Stage_Goal_Strategy::SelectGoal>(nCnt))
+					{
+					case Stage_Goal_Strategy::SelectGoal::StageSelect:	// ステージセレクトに戻る
+						m_pGoal_Strategy_Select[nCnt]->SetTexture("data/TEXTURE/Select_StageSelect_000.png");
+						break;
+					case Stage_Goal_Strategy::SelectGoal::ReTry:	// リトライ
+						m_pGoal_Strategy_Select[nCnt]->SetTexture("data/TEXTURE/Retry_000.png");
+						break;
+					default:
+						break;
+					}
+				}
+				// 選択物カーソル
+				m_pGoal_Strategy_SelectBG = CObject2D::create(5, m_pGoal_Strategy_Select[0]->GetPos(), m_pGoal_Strategy_Select[0]->GetSiz());
+				m_pGoal_Strategy_SelectBG->SetNormalDraw(false);	// 通常時描画設定
+				m_pGoal_Strategy_SelectBG->SetNormalUpdate(false);	// 通常時更新設定
+				m_pGoal_Strategy_SelectBG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pGoal_Strategy_SelectBG->SetPoseUpdate(false);	// ポーズ時時更新設定
+				// ポップアップ
+				m_pGoal_Strategy_GoalPopup = CObject2D::create(6, Stage_Goal_Strategy::s_PopupPos, Stage_Goal_Strategy::s_PopupSiz);// ポップアップ生成
+				m_pGoal_Strategy_GoalPopup->SetTexture("data/TEXTURE/StageClear_000.png");
+				m_pGoal_Strategy_GoalPopup->SetNormalDraw(false);	// 通常時描画設定
+				m_pGoal_Strategy_GoalPopup->SetNormalUpdate(false);	// 通常時更新設定
+				m_pGoal_Strategy_GoalPopup->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pGoal_Strategy_GoalPopup->SetPoseUpdate(false);	// ポーズ時時更新設定
+				// 背景
+				m_pGoal_Strategy_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+				m_pGoal_Strategy_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
+				m_pGoal_Strategy_BG->SetNormalDraw(false);	// 通常時描画設定
+				m_pGoal_Strategy_BG->SetNormalUpdate(false);	// 通常時更新設定
+				m_pGoal_Strategy_BG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pGoal_Strategy_BG->SetPoseUpdate(false);	// ポーズ時時更新設定
+			}
+
+			// 死亡
+			{
+				// 選択肢生成
+				for (int nCnt = 0; nCnt < static_cast<int>(Stage_Death_Strategy::SelectGoal::MAX); nCnt++)
+				{
+					m_pDeath_Strategy_Select[nCnt] = CObject2D::create(6, D3DXVECTOR3(Stage_Death_Strategy::s_SelectPos.x, Stage_Death_Strategy::s_SelectPos.y + Stage_Death_Strategy::s_SelectSiz.x * nCnt, Stage_Death_Strategy::s_SelectPos.z), Stage_Death_Strategy::s_SelectSiz);
+					m_pDeath_Strategy_Select[nCnt]->SetNormalDraw(false);	// 通常時描画設定
+					m_pDeath_Strategy_Select[nCnt]->SetNormalUpdate(false);	// 通常時更新設定
+					m_pDeath_Strategy_Select[nCnt]->SetPoseDraw(false);		// ポーズ時時描画設定
+					m_pDeath_Strategy_Select[nCnt]->SetPoseUpdate(false);	// ポーズ時時更新設定
+					switch (static_cast<Stage_Death_Strategy::SelectGoal>(nCnt))
+					{
+					case Stage_Death_Strategy::SelectGoal::StageSelect:	// ステージセレクトに戻る
+						m_pDeath_Strategy_Select[nCnt]->SetTexture("data/TEXTURE/Select_StageSelect_000.png");
+						break;
+					case Stage_Death_Strategy::SelectGoal::ReTry:	// リトライ
+						m_pDeath_Strategy_Select[nCnt]->SetTexture("data/TEXTURE/Retry_000.png");
+						break;
+					default:
+						break;
+					}
+				}
+				// 選択物カーソル
+				m_pDeath_Strategy_SelectBG = CObject2D::create(5, m_pDeath_Strategy_Select[0]->GetPos(), m_pDeath_Strategy_Select[0]->GetSiz());
+				m_pDeath_Strategy_SelectBG->SetNormalDraw(false);	// 通常時描画設定
+				m_pDeath_Strategy_SelectBG->SetNormalUpdate(false);	// 通常時更新設定
+				m_pDeath_Strategy_SelectBG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pDeath_Strategy_SelectBG->SetPoseUpdate(false);	// ポーズ時時更新設定
+				// ポップアップ
+				m_pDeath_Strategy_GoalPopup = CObject2D::create(6, Stage_Death_Strategy::s_PopupPos, Stage_Death_Strategy::s_PopupSiz);// ポップアップ生成
+				m_pDeath_Strategy_GoalPopup->SetTexture("data/TEXTURE/StageClear_001.png");
+				m_pDeath_Strategy_GoalPopup->SetNormalDraw(false);	// 通常時描画設定
+				m_pDeath_Strategy_GoalPopup->SetNormalUpdate(false);	// 通常時更新設定
+				m_pDeath_Strategy_GoalPopup->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pDeath_Strategy_GoalPopup->SetPoseUpdate(false);	// ポーズ時時更新設定
+				// 背景
+				m_pDeath_Strategy_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+				m_pDeath_Strategy_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
+				m_pDeath_Strategy_BG->SetNormalDraw(false);	// 通常時描画設定
+				m_pDeath_Strategy_BG->SetNormalUpdate(false);	// 通常時更新設定
+				m_pDeath_Strategy_BG->SetPoseDraw(false);		// ポーズ時時描画設定
+				m_pDeath_Strategy_BG->SetPoseUpdate(false);	// ポーズ時時更新設定
+
+									// 操作説明
+				CObject2D* m_pControlDescription;
+				m_pControlDescription = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H - SCREEN_H / 10 * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H / 10, 0.0f));
+				m_pControlDescription->SetTexture("data/TEXTURE/SelectedOption_Play_000.png");
+			}
 		}
 		//============================================
 		// デストラクタ
 		//============================================
 		CStage_Base::~CStage_Base()
 		{
+			// ゴール
+			{
+				// セレクト解放
+				for (int nCnt = 0; nCnt < static_cast<int>(Stage_Goal_Strategy::SelectGoal::MAX); nCnt++)
+				{
+					if (!m_pGoal_Strategy_Select[nCnt])
+					{
+						m_pGoal_Strategy_Select[nCnt]->Release();
+						m_pGoal_Strategy_Select[nCnt] = nullptr;
+					}
+				}
+				// セレクト
+				if (!m_pGoal_Strategy_SelectBG)
+				{
+					m_pGoal_Strategy_SelectBG->Release();
+					m_pGoal_Strategy_SelectBG = nullptr;
+				}
+
+
+				// ポップアップ解放
+				if (!m_pGoal_Strategy_GoalPopup)
+				{
+					m_pGoal_Strategy_GoalPopup->Release();
+					m_pGoal_Strategy_GoalPopup = nullptr;
+				}
+				// 背景
+				if (!m_pGoal_Strategy_BG)
+				{
+					m_pGoal_Strategy_BG->Release();
+					m_pGoal_Strategy_BG = nullptr;
+				}
+			}
+			// 死亡
+			{
+				// セレクト解放
+				for (int nCnt = 0; nCnt < static_cast<int>(Stage_Goal_Strategy::SelectGoal::MAX); nCnt++)
+				{
+					if (!m_pDeath_Strategy_Select[nCnt])
+					{
+						m_pDeath_Strategy_Select[nCnt]->Release();
+						m_pDeath_Strategy_Select[nCnt] = nullptr;
+					}
+				}
+				// セレクト
+				if (!m_pDeath_Strategy_SelectBG)
+				{
+					m_pDeath_Strategy_SelectBG->Release();
+					m_pDeath_Strategy_SelectBG = nullptr;
+				}
+
+
+				// ポップアップ解放
+				if (!m_pDeath_Strategy_GoalPopup)
+				{
+					m_pDeath_Strategy_GoalPopup->Release();
+					m_pDeath_Strategy_GoalPopup = nullptr;
+				}
+				// 背景
+				if (!m_pDeath_Strategy_BG)
+				{
+					m_pDeath_Strategy_BG->Release();
+					m_pDeath_Strategy_BG = nullptr;
+				}
+			}
+
 		}
 		//============================================
 		// 更新
@@ -221,10 +383,7 @@ namespace Scene {
 			int nStage = 0;// ステージ
 			if (dynamic_cast<CStage_000*>(this))nStage = 0;
 			else if (dynamic_cast<CStage_001*>(this))nStage = 1;
-			//else if(dynamic_cast<CStage_002*>(this))nStage = 1;
-
-
-
+			else if(dynamic_cast<CStage_002*>(this))nStage = 2;
 			// スクロール数が前より多ければ足す
 			if (m_pPrimary->m_gameData->m_nScore[nStage] < m_pPrimary->m_nNumScroll)
 			{
@@ -233,33 +392,6 @@ namespace Scene {
 			// 選択初期化
 			m_nSelect = 0;
 			m_nSelectOld = 0;
-
-			// 選択肢生成
-			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
-			{
-				m_pSelect[nCnt] = CObject2D::create(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
-				switch (static_cast<SelectGoal>(nCnt))
-				{
-				case SelectGoal::StageSelect:	// ステージセレクトに戻る
-					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Select_StageSelect_000.png");
-					break;
-				case SelectGoal::ReTry:	// リトライ
-					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Retry_000.png");
-					break;
-				default:
-					break;
-				}
-			}
-			// 選択物カーソル
-			m_pSelectBG = CObject2D::create(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
-
-			// ポップアップ
-			m_GoalPopup = CObject2D::create(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
-			m_GoalPopup->SetTexture("data/TEXTURE/StageClear_000.png");
-
-			// 背景
-			m_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
-			m_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 		}
 
 		/// <summary>
@@ -274,21 +406,6 @@ namespace Scene {
 			pPlActiv->SetInDown(true);		// 下入力設定
 			pPlActiv->SetInLeft(true);		// 左入力設定
 			pPlActiv->SetInRight(true);	// 右入力設定
-			// セレクト解放
-			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
-			{
-				if (m_pSelect[nCnt] != nullptr)
-				{
-					m_pSelect[nCnt]->Release();
-					m_pSelect[nCnt] = nullptr;
-				}
-			}
-			// ポップアップ解放
-			if (m_GoalPopup != nullptr)
-			{
-				m_GoalPopup->Release();
-				m_GoalPopup = nullptr;
-			}
 		}
 		/// <summary>
 		/// クリア更新
@@ -326,7 +443,7 @@ namespace Scene {
 			if (m_nSelect != m_nSelectOld)
 			{
 				// 位置を変える
-				m_pSelectBG->SetPos(m_pSelect[m_nSelect]->GetPos());
+				m_pPrimary->m_pGoal_Strategy_SelectBG->SetPos(m_pPrimary->m_pGoal_Strategy_Select[m_nSelect]->GetPos());
 			}
 
 			if (pKey->GetTrigger(DIK_RETURN) ||
@@ -338,19 +455,19 @@ namespace Scene {
 					m_pPrimary;
 					if (dynamic_cast<CStage_000*>(m_pPrimary))
 					{
-						owner = m_pPrimary->makeScene<CStage_000>(m_pPrimary->m_gameData);
+						owner = m_pPrimary->makeScene<CStage_000>();
 					}
 					else if (dynamic_cast<CStage_001*>(m_pPrimary))
 					{
-						owner = m_pPrimary->makeScene<CStage_001>(m_pPrimary->m_gameData);
+						owner = m_pPrimary->makeScene<CStage_001>();
 					}
 					else if (dynamic_cast<CSceneDebug*>(m_pPrimary))
 					{
-						owner = m_pPrimary->makeScene<CSceneDebug>(m_pPrimary->m_gameData);
+						owner = m_pPrimary->makeScene<CSceneDebug>();
 					}
 					break;
 				case SelectGoal::StageSelect:	// ステージセレクト
-					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+					//owner = m_pPrimary->makeScene<CScen_Game_StageSelect>();
 					break;
 				default:
 					break;
@@ -389,45 +506,12 @@ namespace Scene {
 			int nStage = 0;// ステージ
 			if (dynamic_cast<CStage_000*>(this))nStage = 0;
 			else if (dynamic_cast<CStage_001*>(this))nStage = 1;
-			//else if(dynamic_cast<CStage_002*>(this))nStage = 1;
+			else if (dynamic_cast<CStage_002*>(this))nStage = 1;
 
 
-
-			// スクロール数が前より多ければ足す
-			if (m_pPrimary->m_gameData->m_nScore[nStage] < m_pPrimary->m_nNumScroll)
-			{
-				m_pPrimary->m_gameData->m_nScore[nStage] = m_pPrimary->m_nNumScroll;
-			}
 			// 選択初期化
 			m_nSelect = 0;
 			m_nSelectOld = 0;
-
-			// 選択肢生成
-			for (int nCnt = 0; nCnt < static_cast<int>(SelectGoal::MAX); nCnt++)
-			{
-				m_pSelect[nCnt] = CObject2D::create(6, D3DXVECTOR3(s_SelectPos.x, s_SelectPos.y + s_SelectSiz.x * nCnt, s_SelectPos.z), s_SelectSiz);
-				switch (static_cast<SelectGoal>(nCnt))
-				{
-				case SelectGoal::StageSelect:	// ステージセレクトに戻る
-					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Select_StageSelect_000.png");
-					break;
-				case SelectGoal::ReTry:	// リトライ
-					m_pSelect[nCnt]->SetTexture("data/TEXTURE/Retry_000.png");
-					break;
-				default:
-					break;
-				}
-			}
-			// 選択物カーソル
-			m_pSelectBG = CObject2D::create(5, m_pSelect[0]->GetPos(), m_pSelect[0]->GetSiz());
-
-			// ポップアップ
-			m_GoalPopup = CObject2D::create(6, s_PopupPos, s_PopupSiz);// ポップアップ生成
-			m_GoalPopup->SetTexture("data/TEXTURE/StageClear_001.png");
-
-			// 背景
-			m_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
-			m_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 		}
 		/// <summary>
 		/// 死亡ストラテジ
@@ -471,7 +555,7 @@ namespace Scene {
 			if (m_nSelect != m_nSelectOld)
 			{
 				// 位置を変える
-				m_pSelectBG->SetPos(m_pSelect[m_nSelect]->GetPos());
+				m_pPrimary->m_pDeath_Strategy_SelectBG->SetPos(m_pPrimary->m_pDeath_Strategy_Select[m_nSelect]->GetPos());
 			}
 
 			if (pKey->GetTrigger(DIK_RETURN) ||
@@ -483,19 +567,19 @@ namespace Scene {
 					m_pPrimary;
 					if (dynamic_cast<CStage_000*>(m_pPrimary))
 					{
-						owner = m_pPrimary->makeScene<CStage_000>(m_pPrimary->m_gameData);
+						owner = m_pPrimary->makeScene<CStage_000>();
 					}
 					else if (dynamic_cast<CStage_001*>(m_pPrimary))
 					{
-						owner = m_pPrimary->makeScene<CStage_001>(m_pPrimary->m_gameData);
+						owner = m_pPrimary->makeScene<CStage_001>();
 					}
 					else if (dynamic_cast<CSceneDebug*>(m_pPrimary))
 					{
-						owner = m_pPrimary->makeScene<CSceneDebug>(m_pPrimary->m_gameData);
+						owner = m_pPrimary->makeScene<CSceneDebug>();
 					}
 					break;
 				case SelectGoal::StageSelect:	// ステージセレクト
-					owner = m_pPrimary->makeScene<CScen_Game_StageSelect>(m_pPrimary->m_gameData);
+					//owner = m_pPrimary->makeScene<CScen_Game_StageSelect>();
 					break;
 				default:
 					break;

@@ -16,7 +16,7 @@ namespace Scene {
 		class CStage_002 : public CStage_Base
 		{
 		public:
-			CStage_002(CBase* game, CGameData* gameData);
+			CStage_002(CBase* game);
 			virtual ~CStage_002();
 			virtual nsPrev::CBase* Update()	override;
 			virtual void Draw() const override;

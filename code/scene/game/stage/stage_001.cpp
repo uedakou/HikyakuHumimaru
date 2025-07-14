@@ -20,7 +20,7 @@
 
 #include <fstream>	// ファイルの読み込みに必要
 #include <iostream>	// ファイルの読み込みに必要
-
+#include "../scene_game_manager.h"		// ゲームマネージャー
 namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
@@ -31,9 +31,15 @@ namespace Scene {
 		//============================================
 		// コンスト
 		//============================================
-		CStage_001::CStage_001(CBase* scene, CGameData* gameData) :
-			CStage_Base(scene, gameData)
+		CStage_001::CStage_001(CBase* scene) :
+			CStage_Base(scene)
 		{
+			CManager* pManager = CManager::GetInstance();	// 全体マネージャー取得
+			// サウンド
+			CSound* pSound = pManager->GetSound();
+			// 再生
+			pSound->PlaySoundA(CSound::SOUND_LABEL::SOUND_STAGE000);
+
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 
 			// メンバ変数設定
@@ -50,8 +56,7 @@ namespace Scene {
 			pPlayer->SetMove(true);	// 動きを設定
 			pPlayer->SetLife(1);	// 体力設定
 
-			// カメラ向き
-			CManager* pManager = CManager::GetInstance();
+			// カメラ向き 
 			CCamera* pCamera = pManager->GetCamera();
 			pCamera->SetRotX(1.3f);
 
@@ -72,6 +77,10 @@ namespace Scene {
 		//============================================
 		CStage_001::~CStage_001()
 		{
+			CManager* pManager = CManager::GetInstance();	// マネージャー
+			CSound* pSound = pManager->GetSound();			// サウンド
+			pSound->StopSound(CSound::SOUND_LABEL::SOUND_STAGE000);	// BGMを止める
+
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
 
@@ -108,8 +117,11 @@ namespace Scene {
 		// 生成
 		//============================================
 		template<>
-		nsPrev::CBase* CBase::makeScene<CStage_001>(CGameData* gamaData) {
-			return new CStage_001(this, gamaData);
+		nsPrev::CBase* CBase::makeScene<CStage_001>() {
+			nsPrev::CBase* p = new CStage_001(this);
+			// ここでゲームマネージャーのネクストに生成したインスタンスを渡す
+
+			return p;
 		}
 	}
 }

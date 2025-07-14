@@ -4,7 +4,9 @@
 // Auther:UedaKou
 // 
 //===========================================
-#include "stage_000.h"		// チュートリアル
+#include "stage_000.h"		// チュートリアルステージ
+#include "../scene_game_stageselect.h"	// ステージ選択シーン
+#include "../scene_game_manager.h"		// ゲームマネージャー
 
 #include "../../../object/player.h"	// プレイヤー
 #include "../../../object/base/object_2D.h"	// ポップアップ用2D
@@ -42,8 +44,8 @@ namespace Scene {
 		//============================================
 		// コンスト
 		//============================================
-		CStage_000::CStage_000(CBase* scene, CGameData* gameData) :
-			CStage_Base(scene, gameData)
+		CStage_000::CStage_000(CBase* scene) :
+			CStage_Base(scene)
 		{
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得
@@ -156,7 +158,7 @@ namespace Scene {
 				if (playerPos.z > s_fGool &&
 					playerPos.z < s_fGool + 3.0f)
 				{
-					return makeScene<CScen_Game_StageSelect>(m_gameData);
+					return makeScene<CScen_Game_StageSelect>();
 				}
 				else if (playerPos.z < s_fTutorial_000 &&
 					playerPos.z > s_fTutorial_000 - m_fTutorialRange)
@@ -314,8 +316,8 @@ namespace Scene {
 		// 生成
 		//============================================
 		template<>
-		nsPrev::CBase* CBase::makeScene<CStage_000>(CGameData* gamaData) {
-			return new CStage_000(this, gamaData);
+		nsPrev::CBase* CGameManager::makeScene<CStage_000>() {
+			return new CStage_000(this);
 		}
 	}
 }

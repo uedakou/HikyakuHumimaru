@@ -13,7 +13,7 @@ namespace Scene {
 	public:
 		CCommonData() {}
 		virtual ~CCommonData(){}
-
+		int a = 0;
 	private:
 	};
 }

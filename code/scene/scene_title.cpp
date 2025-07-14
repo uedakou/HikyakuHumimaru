@@ -9,7 +9,9 @@
 #include "../base/manager.h"		// 全体マネージャー
 #include "../object/base/object_2D.h"		// オブジェクト２D
 #include "../object/base/object_fade.h"
-#include "../object/base/object_billboard.h"
+#include "../object/base/object_billboard.h"	// ビルボード
+
+#include "game/scene_game_manager.h"		// ゲームマネージャー
 
 namespace Scene {
 	namespace Game {
@@ -34,9 +36,11 @@ namespace Scene {
 
 		srand((unsigned int)time(NULL)); // 現在時刻の情報で初期化
 
-		CManager* pManager = CManager::GetInstance();
-		CSound* pSound = pManager->GetSound();
+		CManager* pManager = CManager::GetInstance();	// 全体マネージャー取得
 
+		// サウンド
+		CSound* pSound = pManager->GetSound();
+		// 再生
 		pSound->PlaySoundA(CSound::SOUND_LABEL::SOUND_TITLE000);
 
 		m_nCnt = 0;
@@ -72,7 +76,12 @@ namespace Scene {
 
 		m_pSelectedOption = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, 500.0f , 0),D3DXVECTOR3(210.0f, 100.0f, 0));
 		m_pSelectedOption->SetColor(m_Selected);	// 選択中の色設定
-		//m_pSelectedOption->SetTexture("d+ata/TEXTURE/Provisional/End_000.png");
+
+		// 操作説明
+		CObject2D* m_pControlDescription;
+		m_pControlDescription = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H - SCREEN_H / 10 * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H / 10, 0.0f));
+		m_pControlDescription->SetTexture("data/TEXTURE/SelectedOption_Title_000.png");
+
 
 		m_bNext = false;
 
@@ -87,6 +96,7 @@ namespace Scene {
 		CManager* pManager = CManager::GetInstance();	// マネージャー
 		CSound* pSound = pManager->GetSound();	// サウンド
 		pSound->StopSound(CSound::SOUND_LABEL::SOUND_TITLE000);	// BGMを止める
+
 		// タイトル
 		if (m_pTitle != nullptr)
 		{

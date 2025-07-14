@@ -22,7 +22,7 @@ namespace Scene {
 				MAX
 			};		// 次に移行するシーンの選択肢
 
-			CScen_Game_StageSelect(CBase* scene, CGameData* gameData);
+			CScen_Game_StageSelect(CBase* scene);
 			virtual ~CScen_Game_StageSelect();
 			virtual nsPrev::CBase* Update()	override;
 			virtual void Draw() const override;

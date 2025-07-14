@@ -26,8 +26,8 @@ namespace Scene {
 		const D3DXVECTOR3 CScen_Game_StageSelect::s_SelectSiz = { 100.0f, 100.0f, 0.0f };	// 入力開始カウント
 		const D3DXVECTOR3 CScen_Game_StageSelect::s_SelectEvaluationSiz = { 300.0f, 100.0f, 0.0f };	// 入力開始カウント
 
-		CScen_Game_StageSelect::CScen_Game_StageSelect(CBase* scene, CGameData* gameData) :
-			CBase(scene, gameData)
+		CScen_Game_StageSelect::CScen_Game_StageSelect(CBase* scene) :
+			CBase(*scene)
 		{
 			CObject::ReleaseScene();	// シーンリリース
 			CManager* pManager = CManager::GetInstance();
@@ -83,6 +83,11 @@ namespace Scene {
 			pPlayer->SetPoseDraw(false);		// ポーズ時描画設定
 			pPlayer->SetMove(false);	// モーションの動きを設定
 			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 位置を初期位置に戻す
+
+					// 操作説明
+			CObject2D* m_pControlDescription;
+			m_pControlDescription = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H - SCREEN_H / 10 * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H / 10, 0.0f));
+			m_pControlDescription->SetTexture("data/TEXTURE/SelectedOption_StageSelect_000.png");
 		}
 
 		CScen_Game_StageSelect::~CScen_Game_StageSelect()
@@ -259,13 +264,13 @@ namespace Scene {
 					{
 					case Select::STAGE_000:
 
-						return makeScene<CStage_000>(m_gameData);
+						return makeScene<CStage_000>();
 						break;
 					case Select::STAGE_001:
-						return makeScene<CStage_001>(m_gameData);
+						return makeScene<CStage_001>();
 						break;
 					case Select::STAGE_002:
-						return makeScene<CStage_002>(m_gameData);
+						return makeScene<CStage_002>();
 						break;
 					default:
 						break;
@@ -287,8 +292,8 @@ namespace Scene {
 		// 生成
 		//============================================
 		template<>
-		nsPrev::CBase* CBase::makeScene<CScen_Game_StageSelect>(CGameData* gamaData) {
-			return new CScen_Game_StageSelect(this, gamaData);
+		nsPrev::CBase* CBase::makeScene<CScen_Game_StageSelect>() {
+			return new CScen_Game_StageSelect(this);
 		}
 	}
 }

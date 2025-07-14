@@ -6,6 +6,7 @@
 //===========================================
 #include "scene_game_manager.h"	// ゲームマネージャー	
 #include "game_data.h"			// ゲームデータ
+
 #define g_bDebug 1
 namespace nsThis = Scene::Game;
 namespace Scene {
@@ -22,9 +23,9 @@ namespace Scene {
 
 		{
 
-			m_pScene = makeScene<Play>(m_gameData);
+			m_pScene = makeScene<Play>();
 #if g_bDebug
-			m_pStageController = makeScene<CScen_Game_StageSelect>(m_gameData);
+			m_pStageController = makeScene<CScen_Game_StageSelect>();
 #else 
 			m_pStageController = makeScene<CSceneDebug>(m_gameData);
 #endif // 0
@@ -56,21 +57,6 @@ namespace Scene {
 			if (m_pScene != nullptr)
 			{
 				auto p = m_pScene->Update();
-				if (p != m_pScene)
-				{
-					delete m_pScene;
-					auto p2 = dynamic_cast<CBase*>(p);
-					if (p2 != nullptr)
-					{
-						m_pScene = p2;
-						return this;
-					}
-					else
-					{
-						m_pScene = nullptr;
-						return p;
-					}
-				}
 			}
 			if (m_pStageController != nullptr)
 			{
@@ -122,6 +108,29 @@ namespace Scene {
 				return m_pScene->GetPose();
 			}
 			return false;
+		}
+		/// <summary>
+		/// 次シーンが設定されていたら変える
+		/// </summary>
+		nsPrev::CBase* CGameManager::JoinNextScene()
+		{
+			// 次シーンが有るなら
+			if (m_pNextScene)
+			{
+				delete m_pScene;	// 現在シーンを破棄
+				auto p2 = dynamic_cast<CBase*>(m_pNextScene);
+				if (p2 != nullptr)
+				{
+					m_pScene = p2;
+					return this;
+				}
+				else
+				{
+					m_pScene = nullptr;
+					return m_pNextScene;
+				}
+			}
+			return nullptr;
 		}
 	}
 	template<>

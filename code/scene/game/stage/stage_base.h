@@ -15,7 +15,7 @@ namespace Scene {
 		class CStage_Base : public CBase
 		{
 		public:
-			CStage_Base(CBase* game, CGameData* gameData);
+			CStage_Base(CBase* game);
 			virtual ~CStage_Base();
 			virtual nsPrev::CBase* Update()	override;
 			virtual void Draw() const override;
@@ -53,16 +53,18 @@ namespace Scene {
 				virtual Stage_Strategy* update(nsPrev::CBase*& owner);
 				int m_nSelect;
 				int m_nSelectOld;
-				CObject2D* m_pSelect[static_cast<int>(SelectGoal::MAX)];	// セレクト
-				CObject2D* m_pSelectBG;	// セレクト
-				CObject2D* m_GoalPopup;	// ポップアップ
-				CObject2D* m_BG;	// ポップアップ
+
 				static const D3DXVECTOR3 s_SelectPos;	// セレクト位置
 				static const D3DXVECTOR3 s_SelectSiz;	// セレクト大きさ
 				static const D3DXVECTOR3 s_PopupPos;	// セレクト位置
 				static const D3DXVECTOR3 s_PopupSiz;	// セレクト大きさ
 
 			};
+			CObject2D* m_pGoal_Strategy_Select[static_cast<int>(Stage_Goal_Strategy::SelectGoal::MAX)];	// セレクト
+			CObject2D* m_pGoal_Strategy_SelectBG;	// セレクト
+			CObject2D* m_pGoal_Strategy_GoalPopup;	// ポップアップ
+			CObject2D* m_pGoal_Strategy_BG;	// 背景
+
 			// 死亡状態
 			class Stage_Death_Strategy : public Stage_Strategy
 			{
@@ -78,10 +80,6 @@ namespace Scene {
 				int m_nPLMotionCnt;
 				int m_nSelect;
 				int m_nSelectOld;
-				CObject2D* m_pSelect[static_cast<int>(SelectGoal::MAX)];	// セレクト
-				CObject2D* m_pSelectBG;	// セレクト
-				CObject2D* m_GoalPopup;	// ポップアップ
-				CObject2D* m_BG;	// ポップアップ
 				static const int s_nPLMotionCnt;
 				static const D3DXVECTOR3 s_SelectPos;	// セレクト位置
 				static const D3DXVECTOR3 s_SelectSiz;	// セレクト大きさ
@@ -89,6 +87,11 @@ namespace Scene {
 				static const D3DXVECTOR3 s_PopupSiz;	// セレクト大きさ
 
 			};
+			CObject2D* m_pDeath_Strategy_Select[static_cast<int>(Stage_Death_Strategy::SelectGoal::MAX)];	// セレクト
+			CObject2D* m_pDeath_Strategy_SelectBG;	// セレクト
+			CObject2D* m_pDeath_Strategy_GoalPopup;	// ポップアップ
+			CObject2D* m_pDeath_Strategy_BG;	// 背景
+
 			Stage_Strategy* m_pStrategy;	// 更新ストラテジ
 
 			// 関数
@@ -102,11 +105,13 @@ namespace Scene {
 			float m_fCameraRot;		// カメラの角度
 			float m_fGool;	// 距離
 			CObject2D* m_pNumScroll[static_cast<int>(CGameData::Stage::MAX)];	// スクロール取得数表示
+
+
 		private:
 			// メンバ変数の初期値
 			static const float s_fCameraRot;	// 初期プレイヤーからのカメラの角度
-			static const D3DXVECTOR3 NumScrollPos;	// スクロール取得数表示位置(一番目)
-			static const D3DXVECTOR3 NumScrollSiz;	// スクロール取得数表示大きさ
+			static const D3DXVECTOR3 NumScrollPos;	// 取得アイテム取得数表示位置(一番目)
+			static const D3DXVECTOR3 NumScrollSiz;	// 取得アイテム取得数表示大きさ
 		};
 	}
 }

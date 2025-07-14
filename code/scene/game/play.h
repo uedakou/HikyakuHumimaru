@@ -22,7 +22,7 @@ namespace Scene {
 		class Play : public CBase
 		{
 		public:
-			Play(CBase* game, CGameData* gameData);
+			Play(CBase* game);
 			virtual ~Play();
 			nsPrev::CBase* Update()	override;
 			bool GetPose()override;

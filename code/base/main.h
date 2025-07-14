@@ -8,6 +8,7 @@
 #define _MAIN_H_	// 二重インクルード防止のマクロ
 #include "pch.h"	// プリコンパイル済みヘッダ
 
+#define IS_DELAY_UPDATE (false)	// 遅延付き更新をするかどうか初期設定
 
 class CApplication
 {
@@ -27,6 +28,7 @@ private:
 	DWORD m_dwExecLastTime;		// 最後に処理を行った時間（ms）
 	DWORD m_dwFPSLostTime;		// 最後にFPSを計測した時間（ms）
 	DWORD m_dwFrameCount;		// フレーム数カウント（FPS計測用）
+	bool m_siDelayUpdate;		// 遅延付き更新をするかどうか
 };
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);	// ウィンドウプロシージャ
 int GetFPS();	// FPS取得

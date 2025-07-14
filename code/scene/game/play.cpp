@@ -7,6 +7,7 @@
 #include "play.h"// プレイシーン
 #include "../../object/player.h"	// プレイヤー
 #include "game_data.h"
+#include "scene_game_manager.h"
 
 namespace Scene {
 	class CTitle;
@@ -14,16 +15,17 @@ namespace Scene {
 		//============================================
 		// コンストラクタ
 		//============================================
-		Play::Play(CBase* scene, CGameData* gameData) :
-			CBase(scene, gameData)
+		Play::Play(CBase* scene) :
+			CBase(*scene)
 		{
+			CObject::ReleaseScene();
+
 			CPlayer* pPlayer = CPlayer::create();
 			pPlayer->SetReleaseScene(false);
 			//pPlayer->SetNormalDraw(false);
 			//pPlayer->SetPoseDraw(false);
 			m_gameData->SetPlayer(pPlayer);
 
-			CObject::ReleaseScene();
 
 			CManager* pManager = CManager::GetInstance();
 			CSound* pSound = pManager->GetSound();
@@ -152,8 +154,8 @@ namespace Scene {
 		// 生成
 		//============================================
 		template<>
-		nsPrev::CBase* CBase::makeScene<Play>(CGameData* gamaDate) {
-			return new Play(this, gamaDate);
+		nsPrev::CBase* CBase::makeScene<Play>(/*CGameManager* pGameManager*/) {
+			return new Play(this);
 		}
 	}
 }

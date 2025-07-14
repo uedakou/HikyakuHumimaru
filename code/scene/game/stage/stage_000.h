@@ -24,7 +24,7 @@ namespace Scene {
 				Tutorial_003,		// ƒAƒCƒeƒ€
 				MAX,
 			};
-			CStage_000(CBase* game, CGameData* gameData);
+			CStage_000(CBase* game);
 			virtual ~CStage_000();
 			virtual nsPrev::CBase* Update()	override;
 			virtual void Draw() const override;

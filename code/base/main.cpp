@@ -247,6 +247,9 @@ void CApplication::Run()
 			// 一定間隔（例：60FPSなら約16.66ms）で更新・描画処理
 			if ((dwCuppentTime - m_dwExecLastTime) >= (1000 / FPS))
 			{// 60分の1秒経過
+
+//  遅延補正付きの更新を使用するかどうか
+#if IS_DELAY_UPDATE
 				// ==============================
 				// 遅延補正付きの更新処理ループ
 				// ==============================
@@ -261,7 +264,10 @@ void CApplication::Run()
 					// フレーム数カウント（FPS計測用）
 					m_dwFrameCount++;
 				}
-
+#else
+				// 更新処理
+				instance->Update();
+#endif
 				// 描画処理 (1回だけ)
 				instance->Draw();
 			}

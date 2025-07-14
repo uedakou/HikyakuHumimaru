@@ -67,8 +67,7 @@ void CEffectGeneratorParticle::Update()
 		{
 			// カウントを戻す
 			m_nCntCreatTime = m_nCreatSpan;
-			// +-乱数
-			int B = 1000.0f;	// 少数点以下の数字の乱数を入れるための変数
+
 			D3DXVECTOR3 RandRotA = {};	// 角度の計算用格納変数
 			// 範囲内で乱数を生成
 			// 乱数生成器（シード付き）

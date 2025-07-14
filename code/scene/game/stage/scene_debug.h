@@ -16,7 +16,7 @@ namespace Scene {
 		class CSceneDebug : public CStage_Base
 		{
 		public:
-			CSceneDebug(CBase* scene, CGameData* gameData);
+			CSceneDebug(CBase* scene);
 			virtual ~CSceneDebug()		override;
 			virtual nsPrev::CBase* Update()	override;	// XV
 			virtual void Draw() const override;	// •`‰æ

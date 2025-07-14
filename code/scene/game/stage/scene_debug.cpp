@@ -12,6 +12,7 @@
 #include "../../../object/obstacles_tall.h"	// 障害物
 #include "../../../object/obstacles_high.h"	// 障害物
 #include "../../../object/obstacles_low.h"	// 障害物
+#include "../scene_game_manager.h"		// ゲームマネージャー
 
 namespace Scene {
 	namespace Game {
@@ -23,8 +24,8 @@ namespace Scene {
 		//============================================
 		// コンストラクタ
 		//============================================
-		CSceneDebug::CSceneDebug(CBase* scene, CGameData* gameData) :
-			CStage_Base(scene, gameData)
+		CSceneDebug::CSceneDebug(CBase* scene) :
+			CStage_Base(scene)
 		{
 			CObject::ReleaseScene();	// シーンリリース
 
@@ -111,8 +112,8 @@ namespace Scene {
 		}
 
 		template<>
-		nsPrev::CBase* CBase::makeScene<CSceneDebug>(CGameData* gamaData) {
-			return new CSceneDebug(this, gamaData);
+		nsPrev::CBase* CGameManager::makeScene<CSceneDebug>() {
+			return new CSceneDebug(this);
 		}
 	}
 }
