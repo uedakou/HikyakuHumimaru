@@ -12,9 +12,14 @@
 CSound::CSound()
 {
 	// サウンドファイル情報を初期化（ファイルパスとループ設定）
-	g_aSoundInfo[SOUND_TITLE000] =			{ "data\\BGM\\Title000.wav", -1 };					// BGM : タイトル
+	g_aSoundInfo[SOUND_TITLE_000] =			{ "data\\BGM\\Title000.wav", -1 };					// BGM : タイトル
 	g_aSoundInfo[SOUND_STAGE_SELECT_000] =	{ "data\\BGM\\StageSelect000.wav", -1 };	// BGM : リザルト
-	g_aSoundInfo[SOUND_STAGE000] =			{ "data\\BGM\\Stage000.wav", -1 };					// BGM : ステージ000
+	g_aSoundInfo[SOUND_STAGE_00] =			{ "data\\BGM\\Stage000.wav", -1 };					// BGM : ステージ000
+	g_aSoundInfo[SE_CHOICE_000] =			{ "data\\SE\\choice000.wav", 0 };					// BGM : ステージ000
+	g_aSoundInfo[SE_DECISION_000] =			{ "data\\SE\\decision000.wav", 0 };					// BGM : ステージ000
+	g_aSoundInfo[SE_FOOTSTEPS_000] =		{ "data\\SE\\footsteps000.wav", 0 };					// BGM : ステージ000
+
+
 }
 /// <summary>
 /// デストラクタ

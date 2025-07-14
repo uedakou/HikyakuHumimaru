@@ -38,7 +38,7 @@ namespace Scene {
 			CManager* pManager = CManager::GetInstance();	// 全体マネージャー
 			CCamera* pCamera = pManager->GetCamera();	// カメラ
 			CSound* pSound = pManager->GetSound();	// サウンド
-			pSound->PlaySound(CSound::SOUND_LABEL::SOUND_STAGE000);	// BGMを再生
+			pSound->PlaySound(CSound::SOUND_LABEL::SOUND_STAGE_00);	// BGMを再生
 
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 
@@ -78,7 +78,7 @@ namespace Scene {
 		{
 			CManager* pManager = CManager::GetInstance();	// マネージャー
 			CSound* pSound = pManager->GetSound();			// サウンド
-			pSound->StopSound(CSound::SOUND_LABEL::SOUND_STAGE000);	// BGMを止める
+			pSound->StopSound(CSound::SOUND_LABEL::SOUND_STAGE_00);	// BGMを止める
 
 			CPlayer* pPlayer = m_gameData->GetPlayer();	// プレイヤー取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// 行動ストラテジー取得

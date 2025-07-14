@@ -122,20 +122,20 @@ namespace Scene {
 					}
 				}
 				// 選択物カーソル
-				m_pDeath_Strategy_SelectBG = CObject2D::create(11, m_pDeath_Strategy_Select[0]->GetPos(), m_pDeath_Strategy_Select[0]->GetSiz());
+				m_pDeath_Strategy_SelectBG = CObject2D::create(10, m_pDeath_Strategy_Select[0]->GetPos(), m_pDeath_Strategy_Select[0]->GetSiz());
 				m_pDeath_Strategy_SelectBG->SetNormalDraw(false);	// 通常時描画設定
 				m_pDeath_Strategy_SelectBG->SetPoseDraw(false);		// ポーズ時時描画設定
 				m_pDeath_Strategy_SelectBG->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_SelectBG->SetPoseUpdate(false);	// ポーズ時時更新設定
 				// ポップアップ
-				m_pDeath_Strategy_GoalPopup = CObject2D::create(9, Stage_Death_Strategy::s_PopupPos, Stage_Death_Strategy::s_PopupSiz);// ポップアップ生成
+				m_pDeath_Strategy_GoalPopup = CObject2D::create(11, Stage_Death_Strategy::s_PopupPos, Stage_Death_Strategy::s_PopupSiz);// ポップアップ生成
 				m_pDeath_Strategy_GoalPopup->SetTexture("data/TEXTURE/StageClear_001.png");
 				m_pDeath_Strategy_GoalPopup->SetNormalDraw(false);	// 通常時描画設定
 				m_pDeath_Strategy_GoalPopup->SetPoseDraw(false);		// ポーズ時時描画設定
 				m_pDeath_Strategy_GoalPopup->SetNormalUpdate(false);	// 通常時更新設定
 				m_pDeath_Strategy_GoalPopup->SetPoseUpdate(false);	// ポーズ時時更新設定
 				// 背景
-				m_pDeath_Strategy_BG = CObject2D::create(4, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
+				m_pDeath_Strategy_BG = CObject2D::create(9, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0.0f));// ポップアップ生成
 				m_pDeath_Strategy_BG->SetColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f));
 				m_pDeath_Strategy_BG->SetNormalDraw(false);	// 通常時描画設定
 				m_pDeath_Strategy_BG->SetPoseDraw(false);		// ポーズ時時描画設定

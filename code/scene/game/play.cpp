@@ -29,14 +29,14 @@ namespace Scene {
 
 			CManager* pManager = CManager::GetInstance();
 			CSound* pSound = pManager->GetSound();
-			//pSound->PlaySound(CSound::SOUND_LABEL::SOUND_STAGE000);
+			//pSound->PlaySound(CSound::SOUND_LABEL::SOUND_STAGE_00);
 			bPause = false;
 		}
 		Play::~Play()
 		{
 			CManager* pManager = CManager::GetInstance();
 			CSound* pSound = pManager->GetSound();
-			pSound->StopSound(CSound::SOUND_LABEL::SOUND_STAGE000);
+			pSound->StopSound(CSound::SOUND_LABEL::SOUND_STAGE_00);
 		}
 
 		//============================================

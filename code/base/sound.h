@@ -17,9 +17,12 @@ public:
 	//*****************************************************************************
 	typedef enum
 	{
-		SOUND_TITLE000 = 0,		// タイトル音楽
+		SOUND_TITLE_000 = 0,		// タイトル音楽
 		SOUND_STAGE_SELECT_000,	// リザルト
-		SOUND_STAGE000,			// ステージ000
+		SOUND_STAGE_00,			// ステージ000
+		SE_CHOICE_000,		// 選択
+		SE_DECISION_000,	// 決定
+		SE_FOOTSTEPS_000,	// 足音
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
 	//*****************************************************************************

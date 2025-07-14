@@ -41,7 +41,7 @@ namespace Scene {
 		// サウンド
 		CSound* pSound = pManager->GetSound();
 		// 再生
-		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_TITLE000);
+		pSound->PlaySound(CSound::SOUND_LABEL::SOUND_TITLE_000);
 
 		m_nCnt = 0;
 
@@ -95,7 +95,7 @@ namespace Scene {
 	{
 		CManager* pManager = CManager::GetInstance();	// マネージャー
 		CSound* pSound = pManager->GetSound();	// サウンド
-		pSound->StopSound(CSound::SOUND_LABEL::SOUND_TITLE000);	// BGMを止める
+		pSound->StopSound(CSound::SOUND_LABEL::SOUND_TITLE_000);	// BGMを止める
 
 		// タイトル
 		if (m_pTitle != nullptr)
@@ -129,6 +129,8 @@ namespace Scene {
 			{
 				// フェードと次シーンへのフラグを立てる
 				m_bNext = true;
+				// 決定サウンド再生
+				pSound->PlaySoundA(CSound::SOUND_LABEL::SE_DECISION_000);
 			}
 			// Wを押したら
 			if (pKye->GetTrigger(DIK_W))
@@ -140,6 +142,8 @@ namespace Scene {
 				{
 					m_nSelect = static_cast<int>(SELECT_TYPE::MAX) - 1;
 				}
+				// 選択サウンド再生
+				pSound->PlaySoundA(CSound::SOUND_LABEL::SE_CHOICE_000);
 			}
 			// Sを押したら
 			else if (pKye->GetTrigger(DIK_S))
@@ -151,6 +155,8 @@ namespace Scene {
 				{
 					m_nSelect = 0;
 				}
+				// 選択サウンド再生
+				pSound->PlaySoundA(CSound::SOUND_LABEL::SE_CHOICE_000);
 			}
 			// セレクトを変更していたら色を変更する
 			if (nSelectOld != m_nSelect)

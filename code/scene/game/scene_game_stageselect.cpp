@@ -104,6 +104,7 @@ namespace Scene {
 
 			CManager* pManager = CManager::GetInstance();	// マネージャー
 			CInputKeyboard* pInKey = pManager->GetInKey();	// キーボード入力
+			CSound* pSound = pManager->GetSound();			// サウンド
 
 			if (pInKey->GetTrigger(DIK_P))
 			{
@@ -126,6 +127,8 @@ namespace Scene {
 						{
 							m_nSetlect = 0;
 						}
+						// 選択サウンド再生
+						pSound->PlaySoundA(CSound::SOUND_LABEL::SE_CHOICE_000);
 					}
 
 				}
@@ -166,6 +169,8 @@ namespace Scene {
 						{
 							m_nSetlect = static_cast<int>(Select::MAX) - 1;
 						}
+						// 選択サウンド再生
+						pSound->PlaySoundA(CSound::SOUND_LABEL::SE_CHOICE_000);
 					}
 				}
 				// 右入力し続けたら
@@ -201,6 +206,8 @@ namespace Scene {
 					pInKey->GetTrigger(DIK_SPACE))
 				{
 					m_bNext = true;
+					// 決定サウンド再生
+					pSound->PlaySoundA(CSound::SOUND_LABEL::SE_DECISION_000);
 				}
 				// 決定を入力したら
 				if (pInKey->GetTrigger(DIK_Q))
