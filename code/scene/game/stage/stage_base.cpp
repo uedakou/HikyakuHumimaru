@@ -277,6 +277,8 @@ namespace Scene {
 			CManager* pManager = CManager::GetInstance();	// マネージャー取得
 			CInputKeyboard* pKey = pManager->GetInKey();	// キーボード情報取得
 			CCamera* pCamera = pManager->GetCamera();		// カメラ取得
+			CSound* pSound = pManager->GetSound();			// サウンド取得
+
 			CPlayer* pPlayer = m_pPrimary->m_gameData->GetPlayer();
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
 			CPlayer::ActivityStrategy* pPlActiv = pPlayer->GetActivity();	// ストラテジー取得
@@ -338,6 +340,7 @@ namespace Scene {
 						{
 							m_pPrimary->m_nNumScroll++;
 							pScroll->Release();
+							pSound->PlaySound(CSound::SOUND_LABEL::SE_GET_ITEM_000);
 						}
 					}
 					pObject[nCnt] = pNext;

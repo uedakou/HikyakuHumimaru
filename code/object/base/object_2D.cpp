@@ -370,8 +370,8 @@ void CObject2D::SetUV(D3DXVECTOR4 UV)
 
 	// テクスチャ座標の設定
 	pVtx[0].tex = D3DXVECTOR2(UV.z, UV.x);
-	pVtx[1].tex = D3DXVECTOR2(UV.z, UV.x);
-	pVtx[2].tex = D3DXVECTOR2(UV.w, UV.y);
+	pVtx[1].tex = D3DXVECTOR2(UV.w, UV.x);
+	pVtx[2].tex = D3DXVECTOR2(UV.z, UV.y);
 	pVtx[3].tex = D3DXVECTOR2(UV.w, UV.y);
 
 	// 頂点バッファをロック

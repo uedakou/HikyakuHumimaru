@@ -289,12 +289,14 @@ void CPlayer::PlayerNomarActivity::InputRight()
 /// レーンチェンジ時コンストラクタ
 /// </summary>
 /// <param name="player">親</param>
+/// <param name="lr">左右</param>
 CPlayer::PlayerLaneChangeActivity::PlayerLaneChangeActivity(CPlayer* player, LR lr) :
 	ActivityStrategy(player)
-
 {
-	m_LR = lr;
-	m_type = Type::Ran;
+	m_LR = lr;			// 左右移動向き設定
+	m_type = Type::Ran;	// 次アクション初期化
+	m_nCnt = 0;			// アクションカウント初期化
+
 	if (lr == LR::L)
 	{
 		//m_pPrimary->AddPosX(-m_pPrimary->m_fLane);	// 左に移動

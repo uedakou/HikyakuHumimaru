@@ -23,6 +23,7 @@ public:
 		SE_CHOICE_000,		// ‘I‘ð
 		SE_DECISION_000,	// Œˆ’è
 		SE_FOOTSTEPS_000,	// ‘«‰¹
+		SE_GET_ITEM_000,	// ‘«‰¹
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
 	//*****************************************************************************

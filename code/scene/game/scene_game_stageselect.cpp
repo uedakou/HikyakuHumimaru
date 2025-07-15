@@ -37,7 +37,6 @@ namespace Scene {
 
 			m_bPose = false;	// ポーズ状態
 			m_nSetlect = 0;	// 現選択
-			m_nCntPressHold = 0;	// 長押しカウント
 			m_bNext = false;	// 次選択済みかどうか
 			// ステージ数繰り返す
 			for (int nCnt = 0; nCnt < static_cast<int>(Select::MAX); nCnt++ )
@@ -65,8 +64,8 @@ namespace Scene {
 			// ステージ評価作成
 			m_pStageEvaluation = CObject2D::create(6, D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5 + 200.0f, 0.0f), s_SelectEvaluationSiz);
 			m_pStageEvaluation->SetTexture("data/TEXTURE/Stor_000.png");	// テクスチャ
-			m_pStageEvaluation->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[0],0.0f, 0.25f + 0.25f * m_gameData->m_nScore[0], 1.0f });
+			// 評価UV設定
+			m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[0], 0.25f + 0.25f * m_gameData->m_nScore[0], 0.0f, 1.0f });
 
 			// 背景
 			CObject2D* pBG = nullptr;
@@ -132,29 +131,6 @@ namespace Scene {
 					}
 
 				}
-				// 左入力し続けたら
-				//else if (pInKey->GetRepeat(DIK_A) ||
-				//	pInKey->GetRepeat(DIK_LEFT))
-				//{
-				//	// 連続入力をカウントする
-				//	m_nCntPressHold++;
-				//	// c_nPressHoldLimit以上長押ししたら
-				//	if (m_nCntPressHold >= c_nPressHoldLimit)
-				//	{
-				//		// 選択が決定されていなかったら
-				//		if (m_bNext == false)
-				//		{
-				//			// 選択を一つ戻す
-				//			m_nSetlect--;
-				//			// 最小以下なら戻らないようにする
-				//			if (m_nSetlect < 0)
-				//			{
-				//				m_nSetlect = 0;
-				//			}
-				//		}
-				//	}
-
-				//}
 				// 右入力したら
 				else if (pInKey->GetTrigger(DIK_D) ||
 					pInKey->GetTrigger(DIK_RIGHT))
@@ -172,33 +148,6 @@ namespace Scene {
 						// 選択サウンド再生
 						pSound->PlaySoundA(CSound::SOUND_LABEL::SE_CHOICE_000);
 					}
-				}
-				// 右入力し続けたら
-				//else if (pInKey->GetRepeat(DIK_A) ||
-				//	pInKey->GetRepeat(DIK_LEFT))
-				//{
-				//	// 連続入力をカウントする
-				//	m_nCntPressHold++;
-				//	// c_nPressHoldLimit以上長押ししたら
-				//	if (m_nCntPressHold >= c_nPressHoldLimit)
-				//	{
-				//		// 選択が決定されていなかったら
-				//		if (m_bNext == false)
-				//		{
-				//			// 選択を一つ進める
-				//			m_nSetlect++;
-				//			// 最大以上なら先に進まないようにする
-				//			if (m_nSetlect >= static_cast<int>(Select::MAX))
-				//			{
-				//				m_nSetlect = static_cast<int>(Select::MAX) - 1;
-				//			}
-				//		}
-				//	}
-				//}
-				// 移動を入力されていなかったら
-				else
-				{
-					m_nCntPressHold = 0;
 				}
 
 				// 決定を入力したら
@@ -223,7 +172,8 @@ namespace Scene {
 					{
 						m_gameData->m_nScore[m_nSetlect] = 3;
 					}
-					m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f });
+					// 評価UV設定
+					m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[m_nSetlect], 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 1.0f });
 				}
 				if (pInKey->GetTrigger(DIK_S))
 				{
@@ -232,7 +182,8 @@ namespace Scene {
 					{
 						m_gameData->m_nScore[m_nSetlect] = 0;
 					}
-					m_pStageEvaluation->SetUV({0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f});
+					// 評価UV設定
+					m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[m_nSetlect], 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 1.0f });
 				}
 
 #endif // !_DEBUG
@@ -267,7 +218,7 @@ namespace Scene {
 						}
 					}
 					// 評価UV設定
-					m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 1.0f });
+					m_pStageEvaluation->SetUV({ 0.25f * m_gameData->m_nScore[m_nSetlect], 0.25f + 0.25f * m_gameData->m_nScore[m_nSetlect], 0.0f, 1.0f });
 				}
 
 				if (m_bNext == true)
