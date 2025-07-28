@@ -27,6 +27,7 @@ namespace Scene {
 
 		const float CStage_001::s_fGool = 20000.0f;	// ゴール距離
 		const string CStage_001::s_aStage = "data/STAGE/Stage_001.txt";		// ステージパス
+		const D3DXVECTOR3 CStage_001::s_PlayerFirstPos = { 0.0f, 0.0f, 0.0f };		// プレイヤー最初位置
 
 		//============================================
 		// コンスト
@@ -50,14 +51,17 @@ namespace Scene {
 			pPlayer->SetNormalUpdate(true);	// 通常時更新設定
 			pPlayer->SetNormalDraw(true);	// 通常時描画設定
 			pPlayer->SetPoseDraw(true);		// ポーズ時描画設定
-			pPlayer->SetPos(D3DXVECTOR3(0.0f, 0.0f, 0.0f));	// 位置を初期位置に戻す
+			pPlayer->SetPos(s_PlayerFirstPos);	// 位置を初期位置に戻す
 			pPlayer->SetMotion(static_cast<int>(CPlayer::Motion::ACTIVITY_MOVE));	// モーション設定
 			pPlayer->SetMotionMove(true);	// モーションの動きを設定
 			pPlayer->SetMove(true);	// 動きを設定
 			pPlayer->SetLife(1);	// 体力設定
 
-			// カメラ向き 
-			pCamera->SetRotX(1.3f);
+			D3DXVECTOR3 cameraPos = D3DXVECTOR3(s_PlayerFirstPos.x, s_PlayerFirstPos.y + sinf(m_fCameraRot) * m_fCameraRange, s_PlayerFirstPos.z + cosf(m_fCameraRot) * m_fCameraRange);
+			pCamera->SetPosV(cameraPos);	// カメラに適応
+
+			// カメラ向き
+			pCamera->SetRotX(D3DX_PI - 2.0f);
 
 			//フィールド生成
 			CObject3D* pField = nullptr;
@@ -94,9 +98,6 @@ namespace Scene {
 		//============================================
 		nsPrev::CBase* CStage_001::Update()
 		{
-
-			
-
 			return CStage_Base::Update();;
 		}
 		void CStage_001::Draw() const

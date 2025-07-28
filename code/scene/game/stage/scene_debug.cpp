@@ -62,17 +62,10 @@ namespace Scene {
 				D3DXVECTOR3(0.0f, 0.0f, 0.0f),
 				D3DXVECTOR3(100.0f, 0.0f, 100.0f + 1000.0f));
 			pField->SetBlock(100, static_cast<int>(s_fGool / 100.0f) + 1000);
-			pField->SetTexture("data/TEXTURE/Provisional/Glass000.png");
+			pField->SetTexture("data/TEXTURE/Glass000.png");
 
 			// 障害物
 			CObstaclesToll::clate(D3DXVECTOR3(0.0f, 0.0f, 1000.0f));
-
-			//CObstaclesHigh::clate(D3DXVECTOR3(0.0f, 0.0f, 2000.0f));
-
-			//CObstaclesLow::clate(D3DXVECTOR3(0.0f, 0.0f, 3000.0f));
-
-
-
 		}
 		//============================================
 		// デストラクタ

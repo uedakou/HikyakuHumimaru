@@ -33,25 +33,32 @@ END_OBSTACLES
 
 OBSTACLES
 	TYPE = 0			# 種類
-	POS = 200.0 0.0 3000.0	# 位置
+	POS = -200.0 0.0 3000.0	# 位置
 	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 1			# 種類
-	POS = -200.0 0.0 3000.0	# 位置
+	POS = 200.0 0.0 3000.0	# 位置
 	ROT = 0.0 90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 0			# 種類
-	POS = 0.0 0.0 4000.0	# 位置
+	POS = 200.0 0.0 4000.0	# 位置
 	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
 OBSTACLES
 	TYPE = 2			# 種類
 	POS = -200.0 0.0 4000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+
+OBSTACLES
+	TYPE = 3			# 種類
+	POS = 0.0 0.0 4000.0	# 位置
 	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 
@@ -82,6 +89,12 @@ END_OBSTACLES
 OBSTACLES
 	TYPE = 0			# 種類
 	POS = -200.0 0.0 7000.0	# 位置
+	ROT = 0.0 -90.0 0.0	# 向き
+END_OBSTACLES
+
+OBSTACLES
+	TYPE = 3			# 種類
+	POS = 200.0 0.0 7000.0	# 位置
 	ROT = 0.0 -90.0 0.0	# 向き
 END_OBSTACLES
 

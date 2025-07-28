@@ -103,13 +103,15 @@ namespace Scene {
 			bool m_bPose;	// ポーズ状態
 			bool m_bCameraFollowPlayer;	// カメラがプレイヤーを追従するかそうか
 			float m_fCameraRot;		// カメラの角度
+			float m_fCameraRange;	// カメラ距離
 			float m_fGool;	// 距離
 			CObject2D* m_pNumScroll[static_cast<int>(CGameData::Stage::MAX)];	// スクロール取得数表示
 
 
 		private:
 			// メンバ変数の初期値
-			static const float s_fCameraRot;	// 初期プレイヤーからのカメラの角度
+			static constexpr float s_fCameraRot = 2.25f;	// 初期プレイヤーからのカメラの角度
+			static constexpr float s_fCameraRange = 115.0f;
 			static const D3DXVECTOR3 NumScrollPos;	// 取得アイテム取得数表示位置(一番目)
 			static const D3DXVECTOR3 NumScrollSiz;	// 取得アイテム取得数表示大きさ
 		};

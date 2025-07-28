@@ -106,5 +106,5 @@ CObstaclesHigh* CObstaclesHigh::clate(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 /// </summary>
 CObstaclesHigh::CObstaclesHigh()
 {
-	SetID(CModelX::Load("data/MODEL/Obstacles/Obstacles_High/000/Obstacles_High_000.x"));
+	SetID(CModelX::Load("data/MODEL/Obstacles/Obstacles_High/Obstacles_High_000.x"));
 }

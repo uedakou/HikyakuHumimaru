@@ -28,6 +28,7 @@ namespace Scene {
 			// メンバ変数の初期値
 			static const float s_fGool;			// ゴール距離
 			static const string s_aStage;		// ステージパス
+			static const D3DXVECTOR3 s_PlayerFirstPos;		// ステージパス
 
 		};
 	}

@@ -56,25 +56,25 @@ namespace Scene {
 		{
 			if (m_pScene != nullptr)
 			{
-				auto p = m_pScene->Update();
+				auto pBaseScene = m_pScene->Update();
 			}
 			if (m_pStageController != nullptr)
 			{
-				auto p = m_pStageController->Update();
-				if (p != m_pStageController)
+				auto pBaseScene = m_pStageController->Update();
+				if (pBaseScene != m_pStageController)
 				{
 					delete m_pStageController;
 
-					auto p2 = dynamic_cast<CBase*>(p);
-					if (p2 != nullptr)
+					auto pBaseScene2 = dynamic_cast<CBase*>(pBaseScene);
+					if (pBaseScene2 != nullptr)
 					{
-						m_pStageController = p2;
+						m_pStageController = pBaseScene2;
 						return this;
 					}
 					else
 					{
 						m_pStageController = nullptr;
-						return p;
+						return pBaseScene;
 					}
 				}
 			}
@@ -130,7 +130,7 @@ namespace Scene {
 					return m_pNextScene;
 				}
 			}
-			return nullptr;
+			return this;
 		}
 	}
 	template<>

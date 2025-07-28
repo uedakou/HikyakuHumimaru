@@ -338,6 +338,9 @@
     <Text Include="data\STAGE\Stage_000.txt" />
     <Text Include="data\STAGE\Stage_002.txt" />
     <Text Include="data\SaveData\StageEvaluation.txt" />
+    <Text Include="data\CHARACTER\motion.txt" />
+    <Text Include="data\CHARACTER\motion_Humimaru.txt" />
+    <Text Include="data\CHARACTER\motion_Player.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\MODEL\Obstacles\Obstacles_High\000\Obstacles_High_000.x" />
@@ -398,5 +401,46 @@
     <Image Include="data\TEXTURE\Stor_000.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="data\TEXTURE\SelectedOption_Title_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\SelectedOption_Play_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\SelectedOption_StageSelect_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Scroll_000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\StageClear_001.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\Tutorial_003.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\BGM\Stage000.wav">
+      <Filter>リソース ファイル</Filter>
+    </Media>
+    <Media Include="data\BGM\StageSelect000.wav">
+      <Filter>リソース ファイル</Filter>
+    </Media>
+    <Media Include="data\BGM\Title000.wav">
+      <Filter>リソース ファイル</Filter>
+    </Media>
+    <Media Include="data\SE\Choice000.wav">
+      <Filter>リソース ファイル</Filter>
+    </Media>
+    <Media Include="data\SE\Decision000.wav">
+      <Filter>リソース ファイル</Filter>
+    </Media>
+    <Media Include="data\SE\Footsteps000.wav">
+      <Filter>リソース ファイル</Filter>
+    </Media>
+    <Media Include="data\SE\GetItem000.wav">
+      <Filter>リソース ファイル</Filter>
+    </Media>
   </ItemGroup>
 </Project>

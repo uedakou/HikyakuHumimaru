@@ -33,7 +33,6 @@ namespace Scene {
 	namespace Game {
 		class CScen_Game_StageSelect;
 
-		const float CStage_Base::s_fCameraRot = 2.6f;	// 初期プレイヤーからのカメラの角度
 		const D3DXVECTOR3 CStage_Base::NumScrollPos = { 100.0f, 100.0f, 0.0f };	// 初期プレイヤーからのカメラの角度
 		const D3DXVECTOR3 CStage_Base::NumScrollSiz = { 100.0f, 100.0f, 0.0f };	// 初期プレイヤーからのカメラの角度
 		//============================================
@@ -45,6 +44,7 @@ namespace Scene {
 		{
 			CObject::ReleaseScene();
 			m_fCameraRot = s_fCameraRot;
+			m_fCameraRange = s_fCameraRange;
 			m_pStrategy = new Stage_Play_Strategy(this);
 			// 巻物取得数表示
 
@@ -230,6 +230,21 @@ namespace Scene {
 			CPlayer* pPlayer = m_gameData->GetPlayer();
 			D3DXVECTOR3 playerPos = pPlayer->GetPos();	// プレイヤーの位置を取得
 
+
+			if (pKey->GetTrigger(DIK_N))
+			{
+				m_fCameraRot += 0.1f;
+			}
+			else if (pKey->GetTrigger(DIK_M))
+			{
+				m_fCameraRot -= 0.1f;
+
+			}
+			//// カメラ向き 
+			//D3DXVECTOR3 cameraPos = pCamera->GetPosV();
+			//float rotx = atan2(playerPos.y + 0.3f - cameraPos.y, playerPos.z - cameraPos.z);
+			//pCamera->SetRotX(-rotx);
+
 			nsPrev::CBase* result = this;
 			// ストラテジーが有ったら更新する
 			if (m_pStrategy != nullptr)
@@ -314,7 +329,7 @@ namespace Scene {
 					if (pPlayer != nullptr)
 					{
 						// カメラをプレイヤーに追従させる
-						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_pPrimary->m_fCameraRot) * 300.0f, playerPos.z + cosf(m_pPrimary->m_fCameraRot) * 300.0f));	// カメラに適応
+						pCamera->SetPosV(D3DXVECTOR3(playerPos.x, playerPos.y + sinf(m_pPrimary->m_fCameraRot) * m_pPrimary->m_fCameraRange, playerPos.z + cosf(m_pPrimary->m_fCameraRot) * m_pPrimary->m_fCameraRange));	// カメラに適応
 					}
 				}
 			}
@@ -384,9 +399,20 @@ namespace Scene {
 
 			// スクロール数を保存
 			int nStage = 0;// ステージ
-			if (dynamic_cast<CStage_000*>(this))nStage = 0;
-			else if (dynamic_cast<CStage_001*>(this))nStage = 1;
-			else if(dynamic_cast<CStage_002*>(this))nStage = 2;
+
+			if (dynamic_cast<CStage_000*>(pPrimary))
+			{
+				nStage = 0;
+			}
+			else if (dynamic_cast<CStage_001*>(pPrimary))
+			{
+				nStage = 1;
+			}
+
+			else if (dynamic_cast<CStage_002*>(pPrimary))
+			{
+				nStage = 2;
+			}
 			// スクロール数が前より多ければ足す
 			if (m_pPrimary->m_gameData->m_nScore[nStage] < m_pPrimary->m_nNumScroll)
 			{

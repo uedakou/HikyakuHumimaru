@@ -35,16 +35,17 @@ namespace Scene {
 	//============================================
 	CBase* CSceneManager::Update()
 	{
-		CBase* p = m_pScene->Update();
+		// シーン更新
+		CBase* pBaseScene = m_pScene->Update();
 
-		if (p != m_pScene)
-		{// 帰り値が変わっていたらシーン変更
+		if (pBaseScene != m_pScene)
+		{// 返り値が変わっていたらシーン変更
 			delete m_pScene;
-			if (p == nullptr)
+			if (pBaseScene == nullptr)
 			{
 				CManager::GetInstance()->SetEnd(true);
 			}
-			m_pScene = p;
+			m_pScene = pBaseScene;
 		}
 		return m_pScene;
 	}

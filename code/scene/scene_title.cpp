@@ -47,7 +47,7 @@ namespace Scene {
 
 		// 背景
 		m_pBG = CObject2D::create(D3DXVECTOR3(SCREEN_W * 0.5f, SCREEN_H * 0.5f, 0.0f), D3DXVECTOR3(SCREEN_W, SCREEN_H, 0));	// 生成
-		m_pBG->SetTexture("data/TEXTURE/Provisional/BG_000.png");	// テクスチャ
+		m_pBG->SetTexture("data/TEXTURE/BG_000.png");	// テクスチャ
 
 		// タイトル
 		m_pTitle = CObject2D::create(4, D3DXVECTOR3(300.0f, 150.0f, 0.0f), D3DXVECTOR3(500.0f, 200.0f, 0));	// 生成
@@ -63,10 +63,10 @@ namespace Scene {
 			switch (static_cast<SELECT_TYPE>(nCnt))
 			{
 			case SELECT_TYPE::STATE:
-				m_pOptions[nCnt]->SetTexture("data/TEXTURE/Provisional/Start_000.png");
+				m_pOptions[nCnt]->SetTexture("data/TEXTURE/START.png");
 				break;
 			case SELECT_TYPE::END:
-				m_pOptions[nCnt]->SetTexture("data/TEXTURE/Provisional/End_000.png");
+				m_pOptions[nCnt]->SetTexture("data/TEXTURE/QUITGAME.png");
 				break;
 			default:
 				break;

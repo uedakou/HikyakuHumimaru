@@ -29,7 +29,7 @@ CFog::CFog()
 	pDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_fFogEndPos));
 
 	// –§“xŽw’è
-	m_m_fFogDensity = 0.0002f;
+	m_m_fFogDensity = 0.002f;
 	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&m_m_fFogDensity));
 }
 /// <summary>
